@@ -26,7 +26,8 @@ const Navbar = () => {
       {menuOpen && (
         <ul className="md:hidden bg-gray-800 text-center p-4 space-y-3">
           <li><a href="#home" className="block hover:text-blue-400">Home</a></li>
-          <li><a href="#projects" className="block hover:text-blue-400">Projects</a></li>
+          <li><a href="#projects"
+          <li><a href="#projects" className="block hover:text-blue-400">About</a></li> className="block hover:text-blue-400">Projects</a></li>
           <li><a href="#skills" className="block hover:text-blue-400">Skills</a></li>
           <li><a href="#contact" className="block hover:text-blue-400">Contact</a></li>
         </ul>
