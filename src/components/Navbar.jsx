@@ -6,7 +6,7 @@ const Navbar = () => {
   return (
     <nav className="bg-gray-900 text-white p-4 fixed w-full top-0 shadow-md z-10">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-blue-400">My Portfolio</h1>
+        <h1 className="text-2xl font-bold text-blue-400">Welcome To My Portfolio</h1>
         
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-6">
