@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hakkan | Portfolio</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="scripts.js"></script>
+</head>
+<body>
+    <button id="toggle-theme" class="btn" style="position: fixed; top: 20px; right: 20px;">🌓</button>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">👨‍💻 Hakkan Parbej Shah</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="home">
+    <div class="hero-glass">
+      <img src="Profile Picture.jpeg" alt="Profile" class="hero-img" />
+      <h1>Hi, I'm <span class="highlight">Hakkan</span></h1>
+      <p>A Frontend Developer crafting <span class="highlight">beautiful UIs</span> and smooth user experiences</p>
+      <a href="#projects" class="btn">Explore Projects</a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="container glass">
+      <h2>About Me</h2>
+      <p>I’m a creative frontend developer with a passion for turning ideas into interactive, visually engaging web experiences. Proficient in HTML, CSS, JavaScript with love for animations, modern design, and performance.</p>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="projects" id="projects">
+    <div class="container">
+      <h2>Featured Projects</h2>
+      <div class="project-grid">
+        <div class="project-card glass">
+          <h3>Instagram Reels Downloader</h3>
+          <p>Download reels instantly with a clean, IG-themed UI. Built with Flask + HTML/CSS/JS.</p>
+        </div>
+        <div class="project-card glass">
+          <h3>Hit The Jhatu</h3>
+          <p>A hilarious meme game made with pure JS. Simple, addictive, and viral-worthy.</p>
+        </div>
+        <!-- Add more project-card -->
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="container glass">
+      <h2>Let’s Talk!</h2>
+      <form id="contact-form">
+        <input type="text" placeholder="Your Name" required />
+        <input type="email" placeholder="Your Email" required />
+        <textarea rows="5" placeholder="Your Message" required></textarea>
+        <button type="submit" class="btn">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>⚡ Made with ❤️ by Hakkan</p>
+    <div class="socials">
+      <a href="https://github.com/HakkanShah" target="_blank">GitHub</a>
+      <a href="https://linkedin.com/in/Hakkan" target="_blank">LinkedIn</a>
+    </div>
+  </footer>
+
+</body>
+</html>
