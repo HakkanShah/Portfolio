@@ -1,8 +1,4 @@
-// 🌗 Toggle Dark Mode if you want to implement it with a button
-// Just add a button with id="toggle-theme" to HTML
-// document.getElementById('toggle-theme').addEventListener('click', () => {
-//   document.body.classList.toggle('dark');
-// });
+
 
 /* 📩 Contact Form */
 const form = document.getElementById('contact-form');
