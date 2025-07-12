@@ -64,4 +64,4 @@ document.querySelectorAll('.project-card').forEach(card => {
   card.addEventListener('mouseleave', () => {
     card.style.transform = 'rotateX(0) rotateY(0) scale(1)';
   });
-});
+}); 
