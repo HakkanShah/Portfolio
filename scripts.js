@@ -41,7 +41,6 @@ function typeIt() {
 }
 window.addEventListener('load', typeIt);
 
-/* 🌀 Card Tilt Hover */
 document.querySelectorAll('.project-card').forEach(card => {
   card.addEventListener('mousemove', (e) => {
     const rect = card.getBoundingClientRect();
