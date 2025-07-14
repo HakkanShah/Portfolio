@@ -14,7 +14,6 @@ form.addEventListener('submit', function (e) {
   }
 });
 
-/* 🎯 Smooth Scroll Fallback */
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     e.preventDefault();
