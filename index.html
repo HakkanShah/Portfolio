@@ -1,94 +1,143 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hakkan Shah | Frontend Developer</title>
-
-    <!-- Tailwind CSS for modern styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Custom CSS -->
+   
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <button id="toggle-theme" class="btn" style="position: fixed; top: 20px; right: 20px;">🌓</button>
-
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="logo">👨‍💻 Hakkan Parbej Shah</div>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
-
-  <!-- HERO SECTION -->
-  <section class="hero" id="home">
-    <div class="hero-glass">
-      <img src="Profile Picture.jpeg" alt="Profile" class="hero-img" />
-      <h1>Hi, I'm <span class="highlight">Hakkan</span></h1>
-      <p>A Frontend Developer crafting <span class="highlight">beautiful UIs</span> and smooth user experiences</p>
-      <a href="#projects" class="btn">Explore Projects</a>
+    <div class="preloader">
+        <div class="loader"></div>
     </div>
-  </section>
 
-  <!-- ABOUT -->
-  <section class="about" id="about">
-    <div class="container glass">
-      <h2>About Me</h2>
-      <p>I’m a creative frontend developer with a passion for turning ideas into interactive, visually engaging web experiences. Proficient in HTML, CSS, JavaScript with love for animations, modern design, and performance.</p>
-    </div>
-  </section>
+    <header class="header">
+        <nav class="navbar">
+            <a href="#home" class="nav-logo">Hakkan Shah</a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="#projects" class="nav-link">Projects</a></li>
+                <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
 
-  <!-- PROJECTS -->
-  <section class="projects" id="projects">
-    <div class="container">
-      <h2>Featured Projects</h2>
-      <div class="project-grid">
-        <div class="project-card glass">
-          <h3>Instagram Reels Downloader</h3>
-          <p>Download reels instantly with a clean, IG-themed UI. Built with Flask + HTML/CSS/JS.</p>
+    <main>
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="wave">👋</span> Hi, I'm Hakkan Shah
+                </h1>
+                <h2 class="hero-subtitle">Frontend Developer & UI/UX Enthusiast</h2>
+                <p class="hero-description">I build beautiful and responsive web applications with a focus on user experience.</p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">My Work</a>
+                    <a href="your-resume-link.pdf" target="_blank" class="btn btn-secondary">View Resume</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="Profile Picture.jpeg" alt="Hakkan Shah">
+            </div>
+        </section>
+
+        <section class="about" id="about">
+            <div class="container">
+                <h2 class="section-title">About Me</h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p>I am a passionate frontend developer with a knack for creating dynamic and user-friendly web interfaces. With a strong foundation in HTML, CSS, and JavaScript, I enjoy bringing ideas to life in the browser. I'm always eager to learn new technologies and improve my craft.</p>
+                        <div class="skills">
+                            <h3 class="skills-title">My Skills</h3>
+                            <div class="skills-grid">
+                                <div class="skill-item">HTML5</div>
+                                <div class="skill-item">CSS3</div>
+                                <div class="skill-item">JavaScript</div>
+                                <div class="skill-item">React</div>
+                                <div class="skill-item">Tailwind CSS</div>
+                                <div class="skill-item">Git & GitHub</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="projects" id="projects">
+            <div class="container">
+                <h2 class="section-title">Featured Projects</h2>
+                <div class="project-grid">
+                    <div class="project-card">
+                        <div class="project-image">
+                            </div>
+                        <div class="project-info">
+                            <h3 class="project-title">Instagram Reels Downloader</h3>
+                            <p class="project-description">A web app to download Instagram Reels with a clean, user-friendly interface. Built with Flask and modern frontend technologies.</p>
+                            <div class="project-tags">
+                                <span>Flask</span>
+                                <span>HTML</span>
+                                <span>CSS</span>
+                                <span>JavaScript</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="#" class="btn-view-project">Live Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image">
+                             </div>
+                        <div class="project-info">
+                            <h3 class="project-title">Hit The Jhatu</h3>
+                            <p class="project-description">A fun and addictive meme game created with pure JavaScript, designed to be simple and shareable.</p>
+                            <div class="project-tags">
+                                <span>JavaScript</span>
+                                <span>HTML</span>
+                                <span>CSS</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="#" class="btn-view-project">Live Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact" id="contact">
+            <div class="container">
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="contact-description">I'm currently open to new opportunities. If you have a project in mind or just want to say hello, feel free to reach out!</p>
+                <div class="contact-info">
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:your-email@example.com" id="email-link">your-email@example.com</a>
+                    <button id="copy-email-btn" class="btn-copy-email" title="Copy to clipboard">
+                        <i class="far fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="social-links">
+                <a href="https://github.com/HakkanShah" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://linkedin.com/in/Hakkan" target="_blank"><i class="fab fa-linkedin"></i></a>
+            </div>
+            <p>&copy; 2024 Hakkan Shah. All rights reserved.</p>
         </div>
-        <div class="project-card glass">
-          <h3>Hit The Jhatu</h3>
-          <p>A hilarious meme game made with pure JS. Simple, addictive, and viral-worthy.</p>
+        <div class="theme-switcher">
+            <input type="checkbox" id="theme-toggle" class="theme-toggle-checkbox">
+            <label for="theme-toggle" class="theme-toggle-label"></label>
         </div>
-        <!-- Add more project-card -->
-      </div>
-    </div>
-  </section>
+    </footer>
 
-  <!-- CONTACT -->
-  <section class="contact" id="contact">
-    <div class="container glass">
-      <h2>Let’s Talk!</h2>
-      <form id="contact-form">
-        <input type="text" placeholder="Your Name" required />
-        <input type="email" placeholder="Your Email" required />
-        <textarea rows="5" placeholder="Your Message" required></textarea>
-        <button type="submit" class="btn">Send Message</button>
-      </form>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <p>⚡ Made with ❤️ by Hakkan</p>
-    <div class="socials">
-      <a href="https://github.com/HakkanShah" target="_blank">GitHub</a>
-      <a href="https://linkedin.com/in/Hakkan" target="_blank">LinkedIn</a>
-    </div>
-  </footer>
-
+    <script src="scripts.js"></script>
 </body>
 </html>
