@@ -311,7 +311,7 @@ Hero Section
   object-fit: cover;
   border-radius: 50%;
   border: 5px solid;
-  border-image: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) 1;
+  
   animation: morph 8s ease-in-out infinite;
 }
 
