@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -19,116 +19,76 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="dark">
+<body>
+    <button id="toggle-theme" class="btn" style="position: fixed; top: 20px; right: 20px;">🌓</button>
 
-    <!-- Header & Navbar -->
-    <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-accent">Hakkan</a>
-            <div id="nav-menu" class="hidden md:flex items-center space-x-8">
-                <a href="#home" class="nav-link">Home</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#projects" class="nav-link">Projects</a>
-                <a href="#contact" class="nav-link">Contact</a>
-                <!-- Theme switcher for desktop -->
-                <button id="theme-toggle" class="text-xl leading-none px-3 py-2 rounded-full hover:bg-glass">
-                    <i class="fas fa-sun"></i>
-                </button>
-            </div>
-            <!-- Mobile Menu Button -->
-            <button id="menu-btn" class="md:hidden text-2xl">
-                <i class="fas fa-bars"></i>
-            </button>
-        </nav>
-    </header>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">👨‍💻 Hakkan Parbej Shah</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
 
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden fixed inset-0 bg-bg bg-opacity-95 z-40">
-        <div class="flex flex-col items-center justify-center h-full space-y-8">
-            <a href="#home" class="mobile-nav-link text-3xl">Home</a>
-            <a href="#about" class="mobile-nav-link text-3xl">About</a>
-            <a href="#projects" class="mobile-nav-link text-3xl">Projects</a>
-            <a href="#contact" class="mobile-nav-link text-3xl">Contact</a>
-             <!-- Theme switcher for mobile -->
-            <button id="mobile-theme-toggle" class="text-2xl leading-none mt-8 px-4 py-3 rounded-full bg-glass">
-                <i class="fas fa-sun"></i>
-            </button>
-        </div>
+  <!-- HERO SECTION -->
+  <section class="hero" id="home">
+    <div class="hero-glass">
+      <img src="Profile Picture.jpeg" alt="Profile" class="hero-img" />
+      <h1>Hi, I'm <span class="highlight">Hakkan</span></h1>
+      <p>A Frontend Developer crafting <span class="highlight">beautiful UIs</span> and smooth user experiences</p>
+      <a href="#projects" class="btn">Explore Projects</a>
     </div>
+  </section>
 
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="container glass">
+      <h2>About Me</h2>
+      <p>I’m a creative frontend developer with a passion for turning ideas into interactive, visually engaging web experiences. Proficient in HTML, CSS, JavaScript with love for animations, modern design, and performance.</p>
+    </div>
+  </section>
 
-    <main>
-        <!-- Home/Hero Section -->
-        <section id="home" class="h-screen flex items-center justify-center text-center px-4">
-            <div class="reveal">
-                <img src="Profile Picture.jpeg" alt="Hakkan Shah" class="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full border-4 border-accent shadow-lg mb-6">
-                <h1 class="text-4xl md:text-6xl font-extrabold mb-2">Hakkan Shah</h1>
-                <p class="text-xl md:text-2xl font-light text-text/80">I'm a <span id="typing-text" class="font-semibold text-accent"></span></p>
-                <div class="mt-8 flex justify-center space-x-4">
-                    <a href="https://github.com/HakkanShah" target="_blank" class="social-icon"><i class="fab fa-github"></i></a>
-                    <a href="https://linkedin.com/in/hakkanshah" target="_blank" class="social-icon"><i class="fab fa-linkedin"></i></a>
-                    <a href="https://twitter.com/hakkanshah" target="_blank" class="social-icon"><i class="fab fa-twitter"></i></a>
-                </div>
-                 <a href="#projects" class="inline-block mt-10 px-8 py-3 bg-accent text-primary font-semibold rounded-full shadow-lg hover:scale-105 transition-transform duration-300">
-                    View My Work
-                </a>
-            </div>
-        </section>
+  <!-- PROJECTS -->
+  <section class="projects" id="projects">
+    <div class="container">
+      <h2>Featured Projects</h2>
+      <div class="project-grid">
+        <div class="project-card glass">
+          <h3>Instagram Reels Downloader</h3>
+          <p>Download reels instantly with a clean, IG-themed UI. Built with Flask + HTML/CSS/JS.</p>
+        </div>
+        <div class="project-card glass">
+          <h3>Hit The Jhatu</h3>
+          <p>A hilarious meme game made with pure JS. Simple, addictive, and viral-worthy.</p>
+        </div>
+        <!-- Add more project-card -->
+      </div>
+    </div>
+  </section>
 
-        <!-- About Section -->
-        <section id="about" class="py-24 px-4">
-            <div class="container mx-auto text-center reveal">
-                <h2 class="section-title">About Me</h2>
-                <div class="max-w-3xl mx-auto mt-8 glass p-8 rounded-xl">
-                    <p class="text-lg text-text/80 leading-relaxed">
-                        I'm a passionate Frontend Developer with a knack for creating beautiful, functional, and user-centered digital experiences. With a strong foundation in HTML, CSS, JavaScript, and modern frameworks like React, I thrive on turning complex problems into elegant, intuitive solutions. When I'm not coding, you can find me exploring new tech, contributing to open-source, or brewing a perfect cup of coffee.
-                    </p>
-                </div>
-            </div>
-        </section>
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="container glass">
+      <h2>Let’s Talk!</h2>
+      <form id="contact-form">
+        <input type="text" placeholder="Your Name" required />
+        <input type="email" placeholder="Your Email" required />
+        <textarea rows="5" placeholder="Your Message" required></textarea>
+        <button type="submit" class="btn">Send Message</button>
+      </form>
+    </div>
+  </section>
 
-        <!-- Projects Section -->
-        <section id="projects" class="py-24 px-4">
-            <div class="container mx-auto text-center">
-                <h2 class="section-title reveal">My Projects</h2>
-                <div id="projects-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
-                    <!-- Project cards will be injected here by JavaScript -->
-                </div>
-            </div>
-        </section>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>⚡ Made with ❤️ by Hakkan</p>
+    <div class="socials">
+      <a href="https://github.com/HakkanShah" target="_blank">GitHub</a>
+      <a href="https://linkedin.com/in/Hakkan" target="_blank">LinkedIn</a>
+    </div>
+  </footer>
 
-        <!-- Contact Section -->
-        <section id="contact" class="py-24 px-4">
-            <div class="container mx-auto text-center reveal">
-                <h2 class="section-title">Get In Touch</h2>
-                <p class="max-w-2xl mx-auto mt-4 text-text/80">Have a question or want to work together? Feel free to reach out!</p>
-                <div class="max-w-xl mx-auto mt-10 glass p-8 rounded-xl">
-                    <form action="#" method="POST">
-                        <div class="mb-6">
-                            <input type="text" placeholder="Your Name" class="form-input" required>
-                        </div>
-                        <div class="mb-6">
-                            <input type="email" placeholder="Your Email" class="form-input" required>
-                        </div>
-                        <div class="mb-6">
-                            <textarea placeholder="Your Message" rows="5" class="form-input" required></textarea>
-                        </div>
-                        <button type="submit" class="w-full px-8 py-4 bg-accent text-primary font-semibold rounded-lg shadow-lg hover:scale-105 transition-transform duration-300">
-                            Send Message
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="text-center py-6">
-        <p>&copy; 2025 Hakkan Shah. All Rights Reserved.</p>
-    </footer>
-
-    <!-- Custom JS -->
-    <script src="scripts.js"></script>
 </body>
 </html>
