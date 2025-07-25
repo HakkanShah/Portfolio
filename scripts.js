@@ -88,4 +88,46 @@ document.addEventListener('DOMContentLoaded', () => {
   sr.reveal(`.hero-image`, { origin: 'bottom' });
   sr.reveal(`.project-card`, { interval: 100 });
   sr.reveal(`.skills-grid, .contact-info, .footer`, { origin: 'bottom' });
+
+  // Draggable theme switcher
+  const themeSwitcher = document.querySelector('.theme-switcher');
+  let isDragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  themeSwitcher.style.position = 'fixed';
+
+  themeSwitcher.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      const rect = themeSwitcher.getBoundingClientRect();
+      offsetX = e.clientX - rect.left;
+      offsetY = e.clientY - rect.top;
+      themeSwitcher.style.transition = 'none'; // Disable transition while dragging
+  });
+
+  document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+
+      let left = e.clientX - offsetX;
+      let top = e.clientY - offsetY;
+
+      // Constrain within viewport
+      const maxLeft = window.innerWidth - themeSwitcher.offsetWidth;
+      const maxTop = window.innerHeight - themeSwitcher.offsetHeight;
+
+      if (left < 0) left = 0;
+      if (top < 0) top = 0;
+      if (left > maxLeft) left = maxLeft;
+      if (top > maxTop) top = maxTop;
+
+      themeSwitcher.style.left = left + 'px';
+      themeSwitcher.style.top = top + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+      if (isDragging) {
+          isDragging = false;
+          themeSwitcher.style.transition = ''; // Re-enable transition after dragging
+      }
+  });
 });
