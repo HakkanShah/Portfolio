@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   themeSwitcher.style.position = 'fixed';
 
-  themeSwitcher.addEventListener('mousedown', (e) => {
+ themeSwitcher.addEventListener('mousedown', (e) => {
       isDragging = true;
       const rect = themeSwitcher.getBoundingClientRect();
       offsetX = e.clientX - rect.left;
