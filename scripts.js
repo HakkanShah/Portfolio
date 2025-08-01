@@ -59,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
           localStorage.setItem('theme', 'light');
       }
   });
-
   // Email copy to clipboard
   const copyEmailBtn = document.getElementById('copy-email-btn');
   const emailLink = document.getElementById('email-link');
