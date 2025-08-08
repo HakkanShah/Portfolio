@@ -98,11 +98,7 @@ section {
   100% { transform: rotate(360deg); }
 }
 
-/*
-=============== 
-Header & Navbar
-===============
-*/
+
 .header {
   position: fixed;
   top: 0;
