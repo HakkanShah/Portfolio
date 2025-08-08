@@ -348,11 +348,7 @@ About Section
   color: var(--primary-color);
 }
 
-/*
-=============== 
-Projects Section
-===============
-*/
+
 .project-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
