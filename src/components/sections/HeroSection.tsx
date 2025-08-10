@@ -45,8 +45,6 @@ const HeroSection = () => {
             <div className="relative">
               <h1 className="font-comic-hero text-6xl md:text-8xl text-primary mb-4 drop-shadow-lg">
                 HAKKAN
-                <br />
-                PARBEJ SHAH
               </h1>
               <div className="absolute -right-8 -top-4 bg-accent text-accent-foreground px-4 py-2 rotate-12 transform comic-panel-inset">
                 <span className="font-comic-display text-sm">FULL STACK</span>
