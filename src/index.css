@@ -2,41 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Comic Book Design System - Ancient Comic Chronicles
+All colors MUST be HSL. Comic book inspired color palette and styling.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Ancient Comic Paper Background */
+    --background: 43 45% 94%; /* Aged parchment */
+    --foreground: 0 0% 5%; /* Deep black ink */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Comic Panel Cards */
+    --card: 48 100% 97%; /* Warm paper white */
+    --card-foreground: 0 0% 8%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Comic Popover Bubbles */
+    --popover: 48 100% 98%;
+    --popover-foreground: 0 0% 5%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Comic Hero Primary (Deep Blue) */
+    --primary: 218 89% 25%; /* Classic comic hero blue */
+    --primary-foreground: 48 100% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Comic Secondary (Warm Yellow) */
+    --secondary: 45 100% 85%; /* Comic book yellow */
+    --secondary-foreground: 0 0% 15%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Comic Muted (Faded Red) */
+    --muted: 0 65% 75%; /* Vintage comic red */
+    --muted-foreground: 0 0% 25%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Comic Accent (Bold Red) */
+    --accent: 348 83% 47%; /* Classic comic red */
+    --accent-foreground: 48 100% 98%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Comic Destructive */
+    --destructive: 0 84% 45%;
+    --destructive-foreground: 48 100% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Comic Borders & Effects */
+    --border: 0 0% 15%; /* Thick black comic borders */
+    --input: 43 25% 88%;
+    --ring: 348 83% 47%;
 
-    --radius: 0.5rem;
+    /* Comic Panel Radius */
+    --radius: 8px;
+
+    /* Comic Book Specific Colors */
+    --comic-burst: 45 100% 60%; /* Bright action yellow */
+    --comic-shadow: 0 0% 20%; /* Deep shadow */
+    --comic-highlight: 48 100% 95%; /* Paper highlight */
+    --comic-vintage: 30 25% 80%; /* Aged paper tone */
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,41 +72,49 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark comic mode - night time comic reading */
+    --background: 220 15% 12%; /* Dark comic background */
+    --foreground: 48 100% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 220 15% 15%;
+    --card-foreground: 48 100% 90%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 15% 15%;
+    --popover-foreground: 48 100% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 218 89% 45%; /* Brighter blue for dark mode */
+    --primary-foreground: 48 100% 98%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 220 15% 25%;
+    --secondary-foreground: 48 100% 85%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 220 15% 20%;
+    --muted-foreground: 45 25% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 348 83% 55%;
+    --accent-foreground: 48 100% 98%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 55%;
+    --destructive-foreground: 48 100% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 48 100% 85%;
+    --input: 220 15% 20%;
+    --ring: 348 83% 55%;
+
+    /* Dark comic specific */
+    --comic-burst: 45 100% 70%;
+    --comic-shadow: 0 0% 5%;
+    --comic-highlight: 48 100% 85%;
+    --comic-vintage: 30 15% 25%;
+    
+    --sidebar-background: 220 15% 12%;
+    --sidebar-foreground: 48 100% 85%;
+    --sidebar-primary: 218 89% 45%;
+    --sidebar-primary-foreground: 48 100% 98%;
+    --sidebar-accent: 220 15% 20%;
+    --sidebar-accent-foreground: 48 100% 85%;
+    --sidebar-border: 220 15% 25%;
+    --sidebar-ring: 348 83% 55%;
   }
 }
 
@@ -100,6 +124,138 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-comic;
+    background-image: 
+      radial-gradient(circle at 25% 25%, hsl(var(--comic-highlight)) 2px, transparent 2px),
+      radial-gradient(circle at 75% 75%, hsl(var(--comic-vintage)) 1px, transparent 1px);
+    background-size: 50px 50px, 30px 30px;
+    background-position: 0 0, 25px 25px;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Comic Book Typography System */
+@layer utilities {
+  .font-comic-hero {
+    font-family: 'Bangers', 'Permanent Marker', cursive;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .font-comic {
+    font-family: 'Comic Neue', cursive;
+  }
+
+  .font-comic-display {
+    font-family: 'Permanent Marker', cursive;
+  }
+
+  /* Comic Panel Styles */
+  .comic-panel {
+    @apply bg-card border-4 border-foreground rounded-lg shadow-lg;
+    box-shadow: 
+      4px 4px 0px hsl(var(--comic-shadow)),
+      8px 8px 0px hsl(var(--comic-shadow) / 0.3);
+  }
+
+  .comic-panel-inset {
+    @apply bg-card border-2 border-foreground rounded;
+    box-shadow: 
+      inset 2px 2px 0px hsl(var(--comic-highlight)),
+      inset -2px -2px 0px hsl(var(--comic-shadow) / 0.3);
+  }
+
+  /* Speech Bubble Styles */
+  .speech-bubble {
+    @apply bg-background border-2 border-foreground rounded-xl p-4 relative;
+    box-shadow: 2px 2px 0px hsl(var(--comic-shadow));
+  }
+
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid hsl(var(--foreground));
+  }
+
+  .speech-bubble::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 21px;
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 9px solid hsl(var(--background));
+  }
+
+  /* Comic Action Burst */
+  .comic-burst {
+    position: relative;
+    @apply bg-accent text-accent-foreground;
+  }
+
+  .comic-burst::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    background: radial-gradient(circle, hsl(var(--comic-burst)), transparent 70%);
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0.6;
+  }
+
+  /* Halftone Pattern */
+  .halftone-pattern {
+    background-image: 
+      radial-gradient(circle, hsl(var(--primary)) 2px, transparent 2px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+  }
+
+  /* Comic Shake Animation */
+  @keyframes comic-shake {
+    0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+    25% { transform: translateX(-2px) translateY(1px) rotate(-0.5deg); }
+    50% { transform: translateX(2px) translateY(-1px) rotate(0.5deg); }
+    75% { transform: translateX(-1px) translateY(2px) rotate(-0.3deg); }
+  }
+
+  .comic-shake:hover {
+    animation: comic-shake 0.3s ease-in-out infinite;
+  }
+
+  /* Page Flip Transition */
+  @keyframes page-flip {
+    0% { transform: rotateY(0deg); }
+    50% { transform: rotateY(-15deg); }
+    100% { transform: rotateY(0deg); }
+  }
+
+  .page-flip {
+    animation: page-flip 0.6s ease-in-out;
+  }
+
+  /* Comic Zoom In */
+  @keyframes zoom-pow {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  .zoom-pow:hover {
+    animation: zoom-pow 0.4s ease-in-out;
   }
 }
