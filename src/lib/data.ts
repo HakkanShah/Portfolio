@@ -145,7 +145,7 @@ export const PROJECTS: Project[] = [
     why: 'it is a prank and experimental game to check my logical reasoning skills',
     thumbnail: '/project-images/jhatugame.png',
     tags: ['Node.js', 'HTML', 'CSS', 'JavaScript'],
-    liveUrl: 'https://jhatugame.vercel.app/',
+    liveUrl: 'https://hakkanshah.github.io/Hit-The-Jhatu/',
     repoUrl: 'https://github.com/HakkanShah/Hit-The-Jhatu',
     aiHint: 'hit the jhatu',
   },
