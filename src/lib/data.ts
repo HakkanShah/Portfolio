@@ -194,7 +194,7 @@ export const SKILLS = [
     skills: [
       { name: "Git", icon: SiGit, color: "#F05032" },
       { name: "GitHub", icon: SiGithub, color: "#181717" },
-      { name: "VS Code", icon: SiVercel, color: "#007ACC" },
+      { name: "VS Code", icon: SiVisualstudiocode, color: "#007ACC" },
       { name: "Firebase", icon: SiFirebase, color: "#FFCA28" },
       { name: "Vercel", icon: SiVercel, color: "#000000" },
       { name: "Netlify", icon: SiNetlify, color: "#00C7B7" },
