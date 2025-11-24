@@ -34,7 +34,7 @@ const FullScreenImageModal = ({ project, isOpen, onClose }: FullScreenImageModal
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-transparent border-none shadow-none p-0 w-screen h-screen max-w-none flex items-center justify-center">
+      <DialogContent hideClose className="bg-transparent border-none shadow-none p-0 w-screen h-screen max-w-none flex items-center justify-center">
         <DialogTitle className="sr-only">{project.title}</DialogTitle>
         <div className="relative w-full h-full" onClick={onClose}>
             <Image

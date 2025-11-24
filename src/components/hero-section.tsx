@@ -9,6 +9,8 @@ import { Download, RotateCcw, Trophy } from 'lucide-react';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 
+import ResumePreviewModal from './resume-preview-modal';
+
 interface PuzzlePiece {
   id: number;
   currentPosition: number;
@@ -22,6 +24,7 @@ const HeroSection = () => {
   const fullText = "Turning Ideas into Reality – One Line of Code at a Time";
   const imageRef = useRef<HTMLDivElement>(null);
   const [isPuzzleMode, setIsPuzzleMode] = useState(false);
+  const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [pieces, setPieces] = useState<PuzzlePiece[]>([]);
   const [draggedPiece, setDraggedPiece] = useState<number | null>(null);
   const [isComplete, setIsComplete] = useState(false);
@@ -43,15 +46,24 @@ const HeroSection = () => {
   // Typing animation
   useEffect(() => {
     let index = 0;
-    const timer = setInterval(() => {
-      if (index <= fullText.length) {
-        setTypedText(fullText.slice(0, index));
-        index++;
-      } else {
-        clearInterval(timer);
-      }
-    }, 50);
-    return () => clearInterval(timer);
+    let timer: NodeJS.Timeout;
+    
+    // Start typing after 1.5s delay (wait for enter animation)
+    const startTimer = setTimeout(() => {
+      timer = setInterval(() => {
+        if (index <= fullText.length) {
+          setTypedText(fullText.slice(0, index));
+          index++;
+        } else {
+          clearInterval(timer);
+        }
+      }, 50);
+    }, 1500);
+
+    return () => {
+      clearTimeout(startTimer);
+      clearInterval(timer);
+    };
   }, []);
 
   const handleImageMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -198,24 +210,57 @@ const HeroSection = () => {
             </p>
           </AnimatedDiv>
           <AnimatedDiv delay={400} className="mt-8 max-w-xl mx-auto md:mx-0">
-            <div className="relative p-4 sm:p-6 bg-background rounded-lg border-2 border-foreground shadow-lg">
-              <p className="text-base sm:text-lg text-foreground/90 italic min-h-[3rem] sm:min-h-[4rem]">
-                "{typedText}
-                <span className="inline-block w-0.5 h-5 bg-primary ml-1 animate-pulse" />
-                "
-              </p>
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-background border-l-2 border-t-2 border-foreground transform rotate-45 md:left-8"></div>
+            <div className="relative bg-[#1e1e1e] rounded-lg border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+              {/* Terminal Header */}
+              <div className="flex items-center gap-2 px-4 py-2 bg-[#2d2d2d] border-b-2 border-foreground/20">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]" />
+                  <div className="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#dea123]" />
+                  <div className="w-3 h-3 rounded-full bg-[#27c93f] border border-[#1aab29]" />
+                </div>
+                <div className="ml-4 text-[10px] sm:text-xs text-gray-400 font-mono flex-1 text-center pr-12">
+                  mission_statement.sh
+                </div>
+              </div>
+              
+              {/* Terminal Content */}
+              <div className="p-4 sm:p-6 font-mono text-sm sm:text-base min-h-[5rem] sm:min-h-[6rem]">
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2 text-gray-400 text-xs">
+                    <span>$</span>
+                    <span className="text-green-400">run</span>
+                    <span>start-dev-journey</span>
+                  </div>
+                  <div className="flex flex-wrap text-gray-100">
+                    <span className="text-green-400 mr-2">➜</span>
+                    <span className="text-blue-400 mr-2">~</span>
+                    <span>
+                      {typedText}
+                      <span className="inline-block w-2.5 h-5 bg-green-400 ml-1 animate-pulse align-middle shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </AnimatedDiv>
+
           <AnimatedDiv delay={600} className="mt-10 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 sm:gap-6">
-            <Link href="/Hakkan_Parbej_Shah_Resume.pdf" download="Hakkan_Parbej_Shah_Resume.pdf" passHref>
-              <MagneticButton>
-                <Button className="font-headline text-lg sm:text-xl tracking-wider border-2 border-foreground shadow-md hover:shadow-xl transition-all">
-                  <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                  My Resume
-                </Button>
-              </MagneticButton>
-            </Link>
+            <MagneticButton>
+              <Button 
+                onClick={() => setIsResumeOpen(true)}
+                className="font-headline text-lg sm:text-xl tracking-wider border-2 border-foreground shadow-md hover:shadow-xl transition-all"
+              >
+                <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                My Resume
+              </Button>
+            </MagneticButton>
+            
+            <ResumePreviewModal 
+              isOpen={isResumeOpen} 
+              onClose={() => setIsResumeOpen(false)} 
+              resumeUrl="/Hakkan_Parbej_Shah_Resume.pdf" 
+            />
+
             <div className="flex items-center space-x-3 sm:space-x-4">
               {SOCIAL_LINKS.map((social, index) => (
                 <AnimatedDiv key={social.name} delay={700 + index * 100} variant="scale">

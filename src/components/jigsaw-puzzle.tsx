@@ -68,6 +68,36 @@ const JigsawPuzzle = ({ imageUrl, isOpen, onClose }: JigsawPuzzleProps) => {
     e.preventDefault();
   };
 
+  const playSwapSound = () => {
+    if (typeof window !== 'undefined') {
+      try {
+        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        
+        // Create a satisfying "pop" sound
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.frequency.value = 800; // High pitch for a nice pop
+        oscillator.type = 'sine';
+        
+        const now = audioContext.currentTime;
+        
+        // Quick attack and decay for a pop sound
+        gainNode.gain.setValueAtTime(0, now);
+        gainNode.gain.linearRampToValueAtTime(0.3, now + 0.01);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.start(now);
+        oscillator.stop(now + 0.1);
+      } catch (error) {
+        console.log('Audio context error:', error);
+      }
+    }
+  };
+
   const handleDrop = (targetPosition: number) => {
     if (draggedPiece === null) return;
 
@@ -84,6 +114,9 @@ const JigsawPuzzle = ({ imageUrl, isOpen, onClose }: JigsawPuzzleProps) => {
       setPieces(newPieces);
       setMoves(prev => prev + 1);
       setDraggedPiece(null);
+
+      // Play swap sound
+      playSwapSound();
 
       // Check if puzzle is complete
       checkCompletion(newPieces);
@@ -129,6 +162,7 @@ const JigsawPuzzle = ({ imageUrl, isOpen, onClose }: JigsawPuzzleProps) => {
       });
     }
   };
+
 
   const getPieceStyle = (piece: PuzzlePiece) => {
     const pieceSize = 100 / gridSize;
@@ -206,7 +240,7 @@ const JigsawPuzzle = ({ imageUrl, isOpen, onClose }: JigsawPuzzleProps) => {
                     onDragStart={() => handleDragStart(piece.id)}
                     onDragOver={handleDragOver}
                     onDrop={() => handleDrop(piece.currentPosition)}
-                    className={`relative cursor-move border-2 border-foreground rounded-sm overflow-hidden ${
+                    className={`relative cursor-move border-2 border-foreground rounded-sm overflow-hidden touch-none select-none ${
                       piece.currentPosition === piece.correctPosition
                         ? 'ring-2 ring-green-500'
                         : ''

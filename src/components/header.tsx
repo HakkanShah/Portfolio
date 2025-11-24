@@ -8,6 +8,7 @@ import { useScrollSpy } from '@/hooks/use-scroll-spy';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from './theme-toggle';
 import AnimatedHamburgerIcon from './animated-hamburger-icon';
+import AnimatedTitle from './animated-title';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,8 +37,8 @@ const Header = () => {
       )}
     >
       <div className="section-container flex h-20 items-center justify-between">
-        <Link href="/" className="font-headline text-3xl font-bold text-primary tracking-wider">
-          Hakkan
+        <Link href="/" className="block">
+          <AnimatedTitle />
         </Link>
         
         <nav className="hidden md:flex items-center space-x-1">

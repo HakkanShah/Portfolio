@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { EXPERIENCE } from '@/lib/data';
 import AnimatedDiv from './animated-div';
-import { Briefcase, FileText, X } from 'lucide-react';
+import { Briefcase, Sparkles, ShieldCheck, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
@@ -168,7 +168,7 @@ const ExperienceSection = () => {
                           }`}
                           onClick={() => setSelectedDetails(exp)}
                         >
-                          <Briefcase className="w-4 h-4" />
+                          <Sparkles className="w-4 h-4" />
                           {isRealityMode ? "What I Actually Did" : "View Details"}
                         </Button>
 
@@ -182,7 +182,7 @@ const ExperienceSection = () => {
                           }`}
                           onClick={() => setSelectedOfferLetter({ url: exp.offerLetter, title: `${exp.company} Offer Letter` })}
                         >
-                          <FileText className="w-4 h-4" />
+                          <ShieldCheck className="w-4 h-4" />
                           {isRealityMode ? "Proof I Actually Did It" : "View Offer Letter"}
                         </Button>
                       </div>

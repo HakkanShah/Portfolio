@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { PROJECTS, type Project } from '@/lib/data';
 import AnimatedDiv from './animated-div';
 import Card3D from './3d-card';
-import { Eye, ExternalLink, Github } from 'lucide-react';
+import { Eye, ExternalLink, Github, ChevronDown, ChevronUp } from 'lucide-react';
 import ProjectDetailsModal from './project-details-modal';
 import FullScreenImageModal from './full-screen-image-modal';
 import { motion } from 'framer-motion';
@@ -17,6 +17,11 @@ import { motion } from 'framer-motion';
 const ProjectsSection = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [fullScreenProject, setFullScreenProject] = useState<Project | null>(null);
+  const [showAll, setShowAll] = useState(false);
+
+  const INITIAL_PROJECTS_COUNT = 6;
+  const displayedProjects = showAll ? PROJECTS : PROJECTS.slice(0, INITIAL_PROJECTS_COUNT);
+  const hasMoreProjects = PROJECTS.length > INITIAL_PROJECTS_COUNT;
 
   const handleImageClick = (project: Project) => {
     setSelectedProject(null);
@@ -41,7 +46,7 @@ const ProjectsSection = () => {
           </AnimatedDiv>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {PROJECTS.map((project, index) => (
+            {displayedProjects.map((project, index) => (
               <AnimatedDiv key={project.title} delay={index * 100} variant="slide">
                 <Card3D className="h-full" intensity={10}>
                   <motion.div 
@@ -118,56 +123,87 @@ const ProjectsSection = () => {
                       </div>
 
                       {/* Action Buttons */}
-                      <div className="flex flex-col sm:flex-row gap-2 mt-auto">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="font-bold border-2 border-foreground text-xs sm:text-sm flex-1 h-8 sm:h-9"
-                          onClick={() => setSelectedProject(project)}
-                        >
-                          <Eye className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                          Details
-                        </Button>
-                        <Link 
-                          href={project.liveUrl || '#'} 
-                          target="_blank" 
-                          className="flex-1"
-                        >
-                          <Button 
-                            size="sm" 
-                            className="font-bold border-2 border-foreground text-xs sm:text-sm w-full h-8 sm:h-9" 
-                            disabled={!project.liveUrl || project.liveUrl === '#'}
-                          >
-                            <ExternalLink className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                            <span className="hidden sm:inline">Live Demo</span>
-                            <span className="sm:hidden">Demo</span>
-                          </Button>
-                        </Link>
-                      </div>
-
-                      {/* GitHub Link (if available) */}
-                      {project.repoUrl && project.repoUrl !== '#' && (
-                        <Link 
-                          href={project.repoUrl} 
-                          target="_blank"
-                          className="mt-2"
-                        >
+                      <div className="flex flex-col gap-2 mt-auto">
+                        {/* Top row: Details and Demo side by side */}
+                        <div className="flex gap-2">
                           <Button
-                            variant="ghost"
+                            variant="outline"
                             size="sm"
-                            className="w-full text-xs border border-foreground/30 hover:border-foreground h-7 sm:h-8"
+                            className="font-bold border-2 border-foreground text-xs sm:text-sm flex-1 h-9 sm:h-10"
+                            onClick={() => setSelectedProject(project)}
                           >
-                            <Github className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                            View Code
+                            <Eye className="mr-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                            Details
                           </Button>
-                        </Link>
-                      )}
+                          <Link 
+                            href={project.liveUrl || '#'} 
+                            target="_blank" 
+                            className="flex-1"
+                          >
+                            <Button 
+                              size="sm" 
+                              className="font-bold border-2 border-foreground text-xs sm:text-sm w-full h-9 sm:h-10" 
+                              disabled={!project.liveUrl || project.liveUrl === '#'}
+                            >
+                              <ExternalLink className="mr-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                              <span className="hidden sm:inline">Live Demo</span>
+                              <span className="sm:hidden">Demo</span>
+                            </Button>
+                          </Link>
+                        </div>
+
+                        {/* Bottom row: View Code full width (if available) */}
+                        {project.repoUrl && project.repoUrl !== '#' && (
+                          <Link 
+                            href={project.repoUrl} 
+                            target="_blank"
+                          >
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="w-full text-xs sm:text-sm border-2 border-foreground/50 hover:border-foreground h-9 sm:h-10 font-bold"
+                            >
+                              <Github className="mr-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                              View Code
+                            </Button>
+                          </Link>
+                        )}
+                      </div>
                     </div>
                   </motion.div>
                 </Card3D>
               </AnimatedDiv>
             ))}
           </div>
+
+          {/* View More Projects Button */}
+          {hasMoreProjects && (
+            <motion.div 
+              className="flex justify-center mt-12"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <Button
+                variant="default"
+                size="default"
+                className="gap-2 font-bold text-sm px-6 py-5 shadow-[0_0_15px_rgba(var(--primary),0.4)] hover:shadow-[0_0_20px_rgba(var(--primary),0.6)] transition-all duration-300 border-2 border-foreground"
+                onClick={() => setShowAll(!showAll)}
+              >
+                {showAll ? (
+                  <>
+                    <ChevronUp className="w-5 h-5" />
+                    Show Less Projects
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="w-5 h-5 animate-bounce" />
+                    View More Projects ({PROJECTS.length - INITIAL_PROJECTS_COUNT} more)
+                  </>
+                )}
+              </Button>
+            </motion.div>
+          )}
         </div>
       </section>
       

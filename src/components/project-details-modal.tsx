@@ -23,31 +23,32 @@ const ProjectDetailsModal = ({ project, isOpen, onClose, onImageClick }: Project
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent 
-        className="max-w-4xl w-[95vw] sm:w-full p-0 border-4 border-foreground bg-background max-h-[90vh] overflow-hidden"
+        className="max-w-4xl w-[95vw] sm:w-full p-0 border-4 border-foreground bg-background max-h-[90vh] flex flex-col"
         hideClose={true}
       >
-        <div className="flex flex-col h-full">
-          {/* Header with Custom Close Button */}
-          <div className="relative p-4 sm:p-6 border-b-4 border-foreground bg-muted/30">
-            <DialogHeader>
-              <DialogTitle className="font-headline text-2xl sm:text-3xl md:text-4xl text-primary tracking-wider pr-12">
-                {project.title}
-              </DialogTitle>
-            </DialogHeader>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="absolute top-4 right-4 border-2 border-foreground hover:bg-destructive/10 hover:border-destructive"
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
+        {/* Header with Custom Close Button */}
+        <div className="relative p-4 sm:p-6 border-b-4 border-foreground bg-muted/30 flex-shrink-0">
+          <DialogHeader>
+            <DialogTitle className="font-headline text-2xl sm:text-3xl md:text-4xl text-primary tracking-wider pr-12">
+              {project.title}
+            </DialogTitle>
+          </DialogHeader>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="absolute top-4 right-4 border-2 border-foreground hover:bg-destructive/10 hover:border-destructive"
+          >
+            <X className="h-5 w-5" />
+          </Button>
+        </div>
 
-          <div className="flex flex-col lg:flex-row overflow-y-auto flex-1 min-h-0">
-            {/* Project Image */}
+        {/* Scrollable Content */}
+        <div className="flex flex-col lg:flex-row flex-1 overflow-y-auto lg:overflow-hidden">
+          {/* Project Image - Scrolls on mobile, fixed on desktop */}
+          <div className="lg:w-2/5 flex-shrink-0 lg:overflow-hidden">
             <motion.div 
-              className="lg:w-2/5 relative h-64 sm:h-80 lg:h-auto cursor-pointer group"
+              className="relative h-64 sm:h-80 lg:h-full cursor-pointer group"
               onClick={() => onImageClick(project)}
               whileHover={{ scale: 1.02 }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -70,10 +71,12 @@ const ProjectDetailsModal = ({ project, isOpen, onClose, onImageClick }: Project
                 </div>
               </div>
             </motion.div>
+          </div>
 
-            {/* Project Details */}
-            <div className="lg:w-3/5 p-4 sm:p-6 flex flex-col">
-              <div className="space-y-4 sm:space-y-6 flex-1 pr-2">
+          {/* Project Details - Scrollable on desktop only */}
+          <div className="lg:w-3/5 lg:overflow-y-auto flex-1">
+            <div className="p-4 sm:p-6 flex flex-col h-full">
+              <div className="space-y-4 sm:space-y-6 flex-1">
                 {/* Description */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
