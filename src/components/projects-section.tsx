@@ -25,7 +25,7 @@ const ProjectsSection = () => {
 
   return (
     <>
-      <section id="projects" className="section-padding relative overflow-hidden">
+      <section id="projects" className="section-padding relative overflow-hidden border-b-4 border-foreground">
         {/* Background decoration */}
         <div className="absolute top-20 right-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
         <div className="absolute bottom-20 left-10 w-64 h-64 bg-accent/5 rounded-full blur-3xl" />

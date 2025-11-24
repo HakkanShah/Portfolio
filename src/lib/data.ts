@@ -35,10 +35,10 @@ export const NAV_LINKS = [
   { name: 'Home', href: '#home' },
   { name: 'About', href: '#about' },
   { name: 'Projects', href: '#projects' },
+  { name: 'Experience', href: '#experience' },
   { name: 'Skills', href: '#skills' },
   { name: 'Education', href: '#education' },
   { name: 'Certifications', href: '#certifications' },
-  { name: 'Contact', href: '#contact' },
 ];
 
 export const SOCIAL_LINKS = [
@@ -60,7 +60,7 @@ export type Project = {
 };
 
 export const PROJECTS: Project[] = [
-    {
+  {
     title: 'MockHick',
     description: 'Voice-Driven AI-powered web app that simulates mock interviews.',
     longDescription: 'MockHick is an innovative, AI-powered web application designed to help users prepare for job interviews. Inspired by the Hindi word "Maukhik" (मौखिक), which means oral or spoken, the app simulates a realistic interview experience. It leverages Gemini AI to dynamically generate questions, provide real-time transcription, and deliver detailed, personalized feedback to help users build confidence and land their dream job.',
@@ -143,7 +143,7 @@ export const PROJECTS: Project[] = [
     longDescription: 'A scientific calculator with Unit Convertor',
     why: 'testing javascipt logic ',
     thumbnail: '/project-images/calculator.png',
-    tags: [ 'html', 'css', 'javascript'],
+    tags: ['html', 'css', 'javascript'],
     liveUrl: 'https://hakkanshah.github.io/Math-o-Matic/',
     repoUrl: 'https://github.com/HakkanShah/Math-o-Matic',
     aiHint: 'calculator',
@@ -236,42 +236,61 @@ export const SKILLS = [
   }
 ];
 
+export const EXPERIENCE = [
+  {
+    role: 'React and NextJS Developer Intern',
+    company: 'AIKing Solutions',
+    period: 'Present', // Or specific dates if you have them
+    description: 'Working on cutting-edge web applications using React and Next.js, focusing on performance optimization and modern UI/UX practices.',
+    reality: 'Centering divs, fighting with hydration errors, and pretending I understand useEffect dependencies. Basically Stack Overflow with extra steps.',
+    offerLetter: '/AIKing_Solutions_Internship_Offer_Letter.pdf',
+  },
+  {
+    role: 'Full Stack Developer Intern',
+    company: 'UDRCRAFTS INDIA PVT. LTD.',
+    period: 'Previous', // Or specific dates
+    description: 'Developed full-stack solutions, handling both frontend interfaces and backend logic to deliver robust web products.',
+    reality: 'Blaming the backend for frontend bugs and the frontend for backend bugs. Mastered the art of "it works on my machine."',
+    offerLetter: '/UdrCrafts_Internship_Offer_Letter.pdf',
+  },
+];
+
 export const EDUCATION = [
-    {
-        degree: 'B.Tech CSE',
-        institution: 'Greater Kolkata College of Engineering and Management',
-        period: '2022 – 2026',
-        details: 'CGPA: 7.5/10',
-    },
-    {
-        degree: 'Higher Secondary',
-        institution: 'WBCHSE',
-        period: '2022',
-        details: 'Percentage: 85%',
-    },
-    {
-        degree: 'Secondary',
-        institution: 'WBBSE',
-        period: '2020',
-        details: 'Percentage: 80%',
-    }
+  {
+    degree: 'B.Tech CSE',
+    institution: 'Greater Kolkata College of Engineering and Management',
+    period: '2022 – 2026',
+    details: 'CGPA: 7.5/10',
+  },
+  {
+    degree: 'Higher Secondary',
+    institution: 'WBCHSE',
+    period: '2022',
+    details: 'Percentage: 85%',
+  },
+  {
+    degree: 'Secondary',
+    institution: 'WBBSE',
+    period: '2020',
+    details: 'Percentage: 80%',
+  }
 ];
 
 export const CERTIFICATIONS = [
-    { name: 'Full-Stack(MERN) BCT Training', issuer: 'Euphoria GenX', url: 'https://drive.google.com/file/d/1EFpyLejBPAHJbNjRSWPk2-EvdYJKpisG/view?usp=sharing' },
-    { name: 'AWS AI-ML Virtual Internship', issuer: 'Eduskills Foundation & AWS', url: 'https://drive.google.com/file/d/17ak5Lc2GkG4X2Hh0WGLOOwajs1GQYq5J/view?usp=sharing' },
-    { name: 'Palo Alto Cybersecurity', issuer: 'Eduskills Foundation & Palo Alto', url: 'https://drive.google.com/file/d/18Bm-x7BD8kj4-EZnPQYFQt6WbV6I0Jiv/view?usp=sharing' },
-    { name: 'Blue Prism Automation', issuer: 'Eduskills Foundation & Blue Prism', url: 'https://drive.google.com/file/d/1S2qRZhRRxTqQg2U6mso1ljgzTKaVRALT/view?usp=sharing' },
-    { name: 'Zscaler Zero Trust Security', issuer: 'Eduskills Foundation & Zscaler', url: 'https://drive.google.com/file/d/1V31whUog2M8rhOW69HgZjBil1mazVY13/view?usp=sharing' },
+  { name: 'Full-Stack(MERN) BCT Training', issuer: 'Euphoria GenX', url: 'https://drive.google.com/file/d/1EFpyLejBPAHJbNjRSWPk2-EvdYJKpisG/view?usp=sharing' },
+  { name: 'AWS AI-ML Virtual Internship', issuer: 'Eduskills Foundation & AWS', url: 'https://drive.google.com/file/d/17ak5Lc2GkG4X2Hh0WGLOOwajs1GQYq5J/view?usp=sharing' },
+  { name: 'Palo Alto Cybersecurity', issuer: 'Eduskills Foundation & Palo Alto', url: 'https://drive.google.com/file/d/18Bm-x7BD8kj4-EZnPQYFQt6WbV6I0Jiv/view?usp=sharing' },
+  { name: 'Blue Prism Automation', issuer: 'Eduskills Foundation & Blue Prism', url: 'https://drive.google.com/file/d/1S2qRZhRRxTqQg2U6mso1ljgzTKaVRALT/view?usp=sharing' },
+  { name: 'Zscaler Zero Trust Security', issuer: 'Eduskills Foundation & Zscaler', url: 'https://drive.google.com/file/d/1V31whUog2M8rhOW69HgZjBil1mazVY13/view?usp=sharing' },
 ];
 
 export const CONTACT_INFO = [
-    { name: 'Email', value: 'hakkanparbej@gmail.com', icon: Mail, href: 'mailto:hakkanparbej@gmail.com', color: '#EA4335' },
-    { name: 'Phone', value: '+91-7810843038', icon: Phone, href: 'tel:+917810843038', color: '#43C59E' },
-    { name: 'GitHub', value: 'HakkanShah', icon: Github, href: 'https://github.com/HakkanShah', color: '#181717' },
-    { name: 'LinkedIn', value: 'hakkan', icon: Linkedin, href: 'https://www.linkedin.com/in/hakkan/', color: '#0A66C2' },
+  { name: 'Email', value: 'hakkanparbej@gmail.com', icon: Mail, href: 'mailto:hakkanparbej@gmail.com', color: '#EA4335' },
+  { name: 'Phone', value: '+91-7810843038', icon: Phone, href: 'tel:+917810843038', color: '#43C59E' },
+  { name: 'GitHub', value: 'HakkanShah', icon: Github, href: 'https://github.com/HakkanShah', color: '#181717' },
+  { name: 'LinkedIn', value: 'hakkan', icon: Linkedin, href: 'https://www.linkedin.com/in/hakkan/', color: '#0A66C2' },
 ];
 
 export const ABOUT_ME = "Innovative and detail-oriented B.Tech CSE student passionate about building impactful web applications, blending creativity with technical expertise. Experienced in frontend & backend development, AI integration, and UI/UX design. Skilled at leading teams, solving complex problems, and delivering high-quality solutions under deadlines."
 
-    
+

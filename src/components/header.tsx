@@ -58,7 +58,12 @@ const Header = () => {
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden md:flex items-center gap-4">
+            <Link href="#contact">
+              <Button variant="default" className="font-bold border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all active:translate-x-[4px] active:translate-y-[4px] active:shadow-none dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] dark:hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
+                Contact Me
+              </Button>
+            </Link>
             <ThemeToggle />
         </div>
 
@@ -89,6 +94,15 @@ const Header = () => {
                 </Button>
               </Link>
             ))}
+            <Link href="#contact" className="w-full px-4 pt-2">
+              <Button 
+                variant="default" 
+                className="w-full font-bold border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] dark:active:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]"
+                onClick={() => setIsOpen(false)}
+              >
+                Contact Me
+              </Button>
+            </Link>
           </nav>
         </div>
       )}
