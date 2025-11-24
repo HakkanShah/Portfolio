@@ -1,3 +1,5 @@
+'use client';
+
 const AiToolIcon = ({ name }: { name: string }) => {
     const initial = name.charAt(0).toUpperCase();
     return (

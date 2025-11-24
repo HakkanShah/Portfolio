@@ -1,53 +1,66 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
+import { motion, Variants } from 'framer-motion';
 
 type AnimatedDivProps = {
   children: React.ReactNode;
   className?: string;
   delay?: number;
+  variant?: 'fade' | 'slide' | 'scale' | 'slideLeft' | 'slideRight';
+  duration?: number;
   as?: keyof JSX.IntrinsicElements;
 };
 
-const AnimatedDiv: React.FC<AnimatedDivProps> = ({ children, className, delay = 0, as: Component = 'div' }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+const AnimatedDiv: React.FC<AnimatedDivProps> = ({ 
+  children, 
+  className, 
+  delay = 0, 
+  variant = 'slide',
+  duration = 0.6,
+  as = 'div' 
+}) => {
+  const variants: Record<string, Variants> = {
+    fade: {
+      hidden: { opacity: 0 },
+      visible: { opacity: 1 },
+    },
+    slide: {
+      hidden: { opacity: 0, y: 30 },
+      visible: { opacity: 1, y: 0 },
+    },
+    slideLeft: {
+      hidden: { opacity: 0, x: -30 },
+      visible: { opacity: 1, x: 0 },
+    },
+    slideRight: {
+      hidden: { opacity: 0, x: 30 },
+      visible: { opacity: 1, x: 0 },
+    },
+    scale: {
+      hidden: { opacity: 0, scale: 0.8 },
+      visible: { opacity: 1, scale: 1 },
+    },
+  };
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1,
-      }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, []);
+  const MotionComponent = motion[as as keyof typeof motion] as any;
 
   return (
-    <Component
-      ref={ref}
-      className={cn('transition-all duration-700', isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5', className)}
-      style={{ transitionDelay: `${delay}ms` }}
+    <MotionComponent
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-50px' }}
+      variants={variants[variant]}
+      transition={{
+        duration,
+        delay: delay / 1000,
+        ease: [0.25, 0.4, 0.25, 1],
+      }}
+      className={cn(className)}
     >
       {children}
-    </Component>
+    </MotionComponent>
   );
 };
 
