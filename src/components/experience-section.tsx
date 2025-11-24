@@ -4,12 +4,13 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { EXPERIENCE } from '@/lib/data';
 import AnimatedDiv from './animated-div';
-import { Briefcase, Calendar, FileText, X } from 'lucide-react';
+import { Briefcase, FileText, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const ExperienceSection = () => {
   const [selectedOfferLetter, setSelectedOfferLetter] = useState<{ url: string; title: string } | null>(null);
+  const [selectedDetails, setSelectedDetails] = useState<typeof EXPERIENCE[0] | null>(null);
   const [isRealityMode, setIsRealityMode] = useState(false);
 
   return (
@@ -156,19 +157,35 @@ const ExperienceSection = () => {
                         </motion.p>
                       </div>
 
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className={`w-full sm:w-auto gap-2 transition-all duration-300 ${
-                          isRealityMode 
-                            ? 'border-rose-500/50 text-rose-500 hover:bg-rose-500 hover:text-white hover:border-rose-500' 
-                            : 'border-foreground/20 hover:border-primary hover:text-primary'
-                        }`}
-                        onClick={() => setSelectedOfferLetter({ url: exp.offerLetter, title: `${exp.company} Offer Letter` })}
-                      >
-                        <FileText className="w-4 h-4" />
-                        {isRealityMode ? "Proof I Actually Did It" : "View Offer Letter"}
-                      </Button>
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className={`flex-1 sm:flex-none gap-2 font-bold transition-all duration-300 ${
+                            isRealityMode 
+                              ? 'border-rose-500/50 text-rose-500 hover:bg-rose-500/10' 
+                              : 'border-primary/50 text-primary hover:bg-primary/10'
+                          }`}
+                          onClick={() => setSelectedDetails(exp)}
+                        >
+                          <Briefcase className="w-4 h-4" />
+                          {isRealityMode ? "What I Actually Did" : "View Details"}
+                        </Button>
+
+                        <Button 
+                          variant="default" 
+                          size="sm" 
+                          className={`flex-1 sm:flex-none gap-2 font-bold transition-all duration-300 ${
+                            isRealityMode 
+                              ? 'bg-rose-500 text-white hover:bg-rose-600 shadow-[0_0_15px_rgba(244,63,94,0.6)] hover:shadow-[0_0_25px_rgba(244,63,94,0.8)]' 
+                              : 'bg-primary text-white hover:bg-primary/90 shadow-[0_0_15px_rgba(var(--primary),0.6)] hover:shadow-[0_0_25px_rgba(var(--primary),0.8)]'
+                          }`}
+                          onClick={() => setSelectedOfferLetter({ url: exp.offerLetter, title: `${exp.company} Offer Letter` })}
+                        >
+                          <FileText className="w-4 h-4" />
+                          {isRealityMode ? "Proof I Actually Did It" : "View Offer Letter"}
+                        </Button>
+                      </div>
                     </div>
                   </motion.div>
                 </div>
@@ -181,9 +198,119 @@ const ExperienceSection = () => {
         </div>
       </div>
 
+      {/* Work Details Modal */}
+      <Dialog open={!!selectedDetails} onOpenChange={() => setSelectedDetails(null)}>
+        <DialogContent hideClose className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto bg-background/95 backdrop-blur-xl border-foreground/20">
+          <div className="relative">
+            <div className="flex items-center justify-between mb-6 sticky top-0 bg-background/95 backdrop-blur-xl pb-4 border-b border-foreground/10 z-10">
+              <DialogHeader>
+                <DialogTitle className="font-headline text-2xl text-primary">
+                  {selectedDetails?.role}
+                </DialogTitle>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {selectedDetails?.company}
+                </p>
+              </DialogHeader>
+              <Button variant="ghost" size="icon" onClick={() => setSelectedDetails(null)}>
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+
+            {selectedDetails?.details && (
+              <div className="space-y-6">
+                {/* Overview */}
+                <div>
+                  <h3 className="font-headline text-lg font-bold text-primary mb-2 flex items-center gap-2">
+                    <span className="w-1 h-6 bg-primary rounded-full" />
+                    Project Overview
+                  </h3>
+                  <p className="text-foreground/80 leading-relaxed pl-3">
+                    {selectedDetails.details.overview}
+                  </p>
+                </div>
+
+                {/* Responsibilities */}
+                <div>
+                  <h3 className={`font-headline text-lg font-bold mb-3 flex items-center gap-2 ${
+                    isRealityMode ? 'text-rose-500' : 'text-primary'
+                  }`}>
+                    <span className={`w-1 h-6 rounded-full ${
+                      isRealityMode ? 'bg-rose-500' : 'bg-primary'
+                    }`} />
+                    {isRealityMode ? 'What I Actually Dealt With' : 'Key Responsibilities'}
+                  </h3>
+                  <ul className="space-y-2 pl-3">
+                    {/* @ts-ignore - realityResponsibilities might not be in type definition yet */}
+                    {(isRealityMode && selectedDetails.details.realityResponsibilities 
+                      ? selectedDetails.details.realityResponsibilities 
+                      : selectedDetails.details.responsibilities
+                    ).map((item, idx) => (
+                      <li key={idx} className={`flex items-start gap-3 ${
+                        isRealityMode ? 'text-foreground/90 font-mono text-sm' : 'text-foreground/80'
+                      }`}>
+                        <span className={`mt-1.5 text-xs ${
+                          isRealityMode ? 'text-rose-500' : 'text-primary'
+                        }`}>▸</span>
+                        <span className="flex-1">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Technologies */}
+                <div>
+                  <h3 className="font-headline text-lg font-bold text-primary mb-3 flex items-center gap-2">
+                    <span className="w-1 h-6 bg-primary rounded-full" />
+                    Technologies Used
+                  </h3>
+                  <div className="flex flex-wrap gap-2 pl-3">
+                    {selectedDetails.details.technologies.map((tech, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-full text-sm font-medium"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Achievements */}
+                <div>
+                  <h3 className={`font-headline text-lg font-bold mb-3 flex items-center gap-2 ${
+                    isRealityMode ? 'text-rose-500' : 'text-primary'
+                  }`}>
+                    <span className={`w-1 h-6 rounded-full ${
+                      isRealityMode ? 'bg-rose-500' : 'bg-primary'
+                    }`} />
+                    {isRealityMode ? 'What I Actually Achieved' : 'Key Achievements'}
+                  </h3>
+                  <ul className="space-y-2 pl-3">
+                    {/* @ts-ignore - realityAchievements might not be in type definition yet */}
+                    {(isRealityMode && selectedDetails.details.realityAchievements 
+                      ? selectedDetails.details.realityAchievements 
+                      : selectedDetails.details.achievements
+                    ).map((item, idx) => (
+                      <li key={idx} className={`flex items-start gap-3 ${
+                        isRealityMode ? 'text-foreground/90 font-mono text-sm' : 'text-foreground/80'
+                      }`}>
+                        <span className={`mt-1.5 ${
+                          isRealityMode ? 'text-rose-500' : 'text-primary'
+                        }`}>✓</span>
+                        <span className="flex-1">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Offer Letter Preview Modal */}
       <Dialog open={!!selectedOfferLetter} onOpenChange={() => setSelectedOfferLetter(null)}>
-        <DialogContent className="max-w-5xl w-[95vw] h-[90vh] p-0 bg-background/95 backdrop-blur-xl border-foreground/20">
+        <DialogContent hideClose className="max-w-5xl w-[95vw] h-[90vh] p-0 bg-background/95 backdrop-blur-xl border-foreground/20">
           <div className="flex flex-col h-full">
             <div className="flex items-center justify-between p-4 border-b border-foreground/10">
               <DialogHeader>

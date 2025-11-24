@@ -238,20 +238,82 @@ export const SKILLS = [
 
 export const EXPERIENCE = [
   {
-    role: 'React and NextJS Developer Intern',
-    company: 'AIKing Solutions',
-    period: 'Present', // Or specific dates if you have them
-    description: 'Working on cutting-edge web applications using React and Next.js, focusing on performance optimization and modern UI/UX practices.',
-    reality: 'Centering divs, fighting with hydration errors, and pretending I understand useEffect dependencies. Basically Stack Overflow with extra steps.',
-    offerLetter: '/AIKing_Solutions_Internship_Offer_Letter.pdf',
-  },
-  {
     role: 'Full Stack Developer Intern',
     company: 'UDRCRAFTS INDIA PVT. LTD.',
-    period: 'Previous', // Or specific dates
+    period: 'Present',
     description: 'Developed full-stack solutions, handling both frontend interfaces and backend logic to deliver robust web products.',
     reality: 'Blaming the backend for frontend bugs and the frontend for backend bugs. Mastered the art of "it works on my machine."',
     offerLetter: '/UdrCrafts_Internship_Offer_Letter.pdf',
+    details: {
+      overview: 'Developed a comprehensive e-commerce platform from scratch, handling both frontend and backend development.',
+      responsibilities: [
+        'Built responsive homepage components with modern UI/UX design',
+        'Implemented advanced search functionality and product grid layouts',
+        'Created product listing pages with filtering and sorting capabilities',
+        'Developed backend APIs for fetching product details, pricing, and owner information',
+        'Designed and implemented route handling for seamless navigation',
+        'Managed database operations for product details and inventory',
+        'Integrated payment gateway for secure transactions',
+      ],
+      realityResponsibilities: [
+        'Spent 3 hours making a button perfectly centered, then the client said "move it 2px left"',
+        'Implemented search that works 60% of the time, every time. The other 40%? "Feature, not a bug"',
+        'Created product grids that look perfect on my screen but break on literally every other device',
+        'Copy-pasted Stack Overflow code for APIs, then spent 2 days figuring out why it doesn\'t work',
+        'Routing? More like "rerouting my life choices" after dealing with nested route hell',
+        'Database operations: AKA googling "MongoDB queries" for the 47th time this week',
+        'Payment gateway integration: Praying it works in production because it barely works locally',
+      ],
+      technologies: ['React', 'Node.js', 'Express', 'MongoDB', 'Payment Gateway APIs', 'RESTful APIs', 'Database Design'],
+      achievements: [
+        'Delivered a fully functional e-commerce platform',
+        'Implemented secure payment processing system',
+        'Optimized database queries for improved performance',
+      ],
+      realityAchievements: [
+        'Successfully convinced myself that "it works on localhost" counts as deployment-ready',
+        'Implemented a payment system that I\'m 70% sure won\'t accidentally charge people twice',
+        'Optimized queries from "painfully slow" to "just slow enough to blame on the internet"',
+      ],
+    },
+  },
+  {
+    role: 'React and NextJS Developer Intern',
+    company: 'AIKing Solutions',
+    period: 'Previous',
+    description: 'Working on cutting-edge web applications using React and Next.js, focusing on performance optimization and modern UI/UX practices.',
+    reality: 'Centering divs, fighting with hydration errors, and pretending I understand useEffect dependencies. Basically Stack Overflow with extra steps.',
+    offerLetter: '/AIKing_Solutions_Internship_Offer_Letter.pdf',
+    details: {
+      overview: 'Built an AI-powered voice/video-driven mock interview system enabling users to practice interviews with real-time AI feedback.',
+      responsibilities: [
+        'Designed and implemented seamless AI interviewer and user communication system',
+        'Developed dynamic question and cross-question generation algorithms',
+        'Enhanced AI interviewer voice to sound more human-like, similar to Gemini and other advanced AI models',
+        'Implemented live voice transcription using Google TTS and WaveNet',
+        'Fixed critical UI, functional, and UX bugs to improve user experience',
+        'Enabled one-click download of recorded interview videos with audio',
+      ],
+      realityResponsibilities: [
+        'Built a communication system that\'s "seamless" until someone\'s internet hiccups for 0.5 seconds',
+        'Developed an algorithm that generates questions... and sometimes the same question 3 times in a row',
+        'Made the AI voice sound "human-like" by adjusting pitch until it stopped sounding like a demon',
+        'Implemented live transcription that works great, except when you have an accent, speak fast, or breathe',
+        'Fixed bugs by creating new bugs, then fixing those bugs with more bugs. It\'s bugs all the way down',
+        'One-click download that sometimes takes 5 clicks and a browser refresh. Close enough',
+      ],
+      technologies: ['React', 'Next.js', 'Google TTS', 'WaveNet', 'AI/ML Integration', 'WebRTC', 'Real-time Communication'],
+      achievements: [
+        'Successfully created a production-ready AI interview platform',
+        'Improved voice quality to achieve near-human conversational experience',
+        'Reduced user friction with streamlined download functionality',
+      ],
+      realityAchievements: [
+        'Created a platform that\'s "production-ready" if we ignore the 23 open issues labeled "fix later"',
+        'Made the AI voice sound less robotic and more like a very tired human who hates their job',
+        'Reduced user friction by removing features that didn\'t work anyway and calling it "minimalism"',
+      ],
+    },
   },
 ];
 
