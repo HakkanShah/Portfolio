@@ -28,6 +28,7 @@ import {
   SiGoogle,
   SiSpring,
 } from 'react-icons/si';
+import { VscVscode } from 'react-icons/vsc';
 import { DiJava } from 'react-icons/di';
 import { FaLightbulb, FaUsers, FaComments } from 'react-icons/fa';
 
@@ -203,8 +204,8 @@ export const SKILLS = [
     name: "Tools",
     skills: [
       { name: "Git", icon: SiGit, color: "#F05032" },
-      { name: "GitHub", icon: SiGithub, color: "#181717" },
-      { name: "VS Code", icon: SiVercel, color: "#007ACC" },
+      { name: "GitHub", icon: SiGithub, color: "#FFFFFF" },
+      { name: "VS Code", icon: VscVscode, color: "#007ACC" },
       { name: "Firebase", icon: SiFirebase, color: "#FFCA28" },
       { name: "Vercel", icon: SiVercel, color: "#000000" },
       { name: "Netlify", icon: SiNetlify, color: "#00C7B7" },
@@ -349,7 +350,7 @@ export const CERTIFICATIONS = [
 export const CONTACT_INFO = [
   { name: 'Email', value: 'hakkanparbej@gmail.com', icon: Mail, href: 'mailto:hakkanparbej@gmail.com', color: '#EA4335' },
   { name: 'Phone', value: '+91-7810843038', icon: Phone, href: 'tel:+917810843038', color: '#43C59E' },
-  { name: 'GitHub', value: 'HakkanShah', icon: Github, href: 'https://github.com/HakkanShah', color: '#181717' },
+  { name: 'GitHub', value: 'HakkanShah', icon: Github, href: 'https://github.com/HakkanShah', color: '#FFFFFF' },
   { name: 'LinkedIn', value: 'hakkan', icon: Linkedin, href: 'https://www.linkedin.com/in/hakkan/', color: '#0A66C2' },
 ];
 

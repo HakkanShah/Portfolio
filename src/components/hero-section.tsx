@@ -283,12 +283,15 @@ const HeroSection = () => {
         </div>
         
         <AnimatedDiv delay={400} className="relative flex flex-col justify-center items-center gap-4">
+          {/* Background Blur */}
+          <div className="absolute bg-accent w-64 h-64 sm:w-80 sm:h-80 md:w-[30rem] md:h-[30rem] rounded-full blur-3xl opacity-30 animate-pulse pointer-events-none"></div>
+
           {/* Puzzle Controls */}
           {isPuzzleMode && (
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-2"
+              className="relative z-10 flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-2"
             >
               <div className="px-3 sm:px-4 py-1.5 sm:py-2 bg-background border-2 border-foreground rounded-lg font-headline text-xs sm:text-sm">
                 Moves: <span className="text-primary font-bold">{moves}</span>
@@ -313,7 +316,7 @@ const HeroSection = () => {
             </motion.div>
           )}
 
-          <div className="absolute bg-accent w-64 h-64 sm:w-80 sm:h-80 md:w-[30rem] md:h-[30rem] rounded-full blur-3xl opacity-30 animate-pulse"></div>
+
           
           {!isPuzzleMode ? (
             // Normal Image with 3D effect
@@ -327,7 +330,7 @@ const HeroSection = () => {
                 rotateY,
                 transformStyle: 'preserve-3d',
               }}
-              className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-xl overflow-hidden border-4 border-foreground shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] cursor-pointer group"
+              className="relative z-10 w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-xl overflow-hidden border-4 border-foreground shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] cursor-pointer group"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -359,7 +362,7 @@ const HeroSection = () => {
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 bg-muted/20 rounded-xl border-4 border-foreground overflow-hidden shadow-2xl"
+              className="relative z-10 w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 bg-muted/20 rounded-xl border-4 border-foreground overflow-hidden shadow-2xl"
             >
               <div className="grid grid-cols-3 gap-1 p-1 h-full bg-background/50 backdrop-blur-sm">
                 {sortedPieces.map((piece) => (

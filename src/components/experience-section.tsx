@@ -161,7 +161,7 @@ const ExperienceSection = () => {
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          className={`flex-1 sm:flex-none gap-2 font-bold transition-all duration-300 ${
+                          className={`flex-1 sm:flex-none gap-2 font-bold transition-all duration-300 h-10 sm:h-9 py-2 sm:py-0 ${
                             isRealityMode 
                               ? 'border-rose-500/50 text-rose-500 hover:bg-rose-500/10' 
                               : 'border-primary/50 text-primary hover:bg-primary/10'
@@ -175,7 +175,7 @@ const ExperienceSection = () => {
                         <Button 
                           variant="default" 
                           size="sm" 
-                          className={`flex-1 sm:flex-none gap-2 font-bold transition-all duration-300 ${
+                          className={`flex-1 sm:flex-none gap-2 font-bold transition-all duration-300 h-10 sm:h-9 py-2 sm:py-0 ${
                             isRealityMode 
                               ? 'bg-rose-500 text-white hover:bg-rose-600 shadow-[0_0_15px_rgba(244,63,94,0.6)] hover:shadow-[0_0_25px_rgba(244,63,94,0.8)]' 
                               : 'bg-primary text-white hover:bg-primary/90 shadow-[0_0_15px_rgba(var(--primary),0.6)] hover:shadow-[0_0_25px_rgba(var(--primary),0.8)]'

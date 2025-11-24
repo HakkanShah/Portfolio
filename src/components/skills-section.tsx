@@ -86,7 +86,10 @@ const SkillsSection = () => {
                         whileHover={{ rotate: [0, -10, 10, -10, 0] }}
                         transition={{ duration: 0.5 }}
                       >
-                        <IconComponent className="h-7 w-7 sm:h-8 sm:w-8 text-foreground/80 group-hover:text-primary transition-colors" />
+                        <IconComponent 
+                          className="h-7 w-7 sm:h-8 sm:w-8 transition-colors" 
+                          style={{ color: skill.color }}
+                        />
                       </motion.div>
                       <span className="text-[10px] sm:text-xs font-bold text-foreground leading-tight">
                         {skill.name}
