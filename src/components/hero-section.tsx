@@ -313,7 +313,7 @@ const HeroSection = () => {
             </motion.div>
           )}
 
-          <div className="absolute bg-accent w-48 h-48 sm:w-60 sm:h-60 md:w-80 md:h-80 rounded-full blur-3xl opacity-30 animate-pulse"></div>
+          <div className="absolute bg-accent w-64 h-64 sm:w-80 sm:h-80 md:w-[30rem] md:h-[30rem] rounded-full blur-3xl opacity-30 animate-pulse"></div>
           
           {!isPuzzleMode ? (
             // Normal Image with 3D effect
@@ -327,8 +327,8 @@ const HeroSection = () => {
                 rotateY,
                 transformStyle: 'preserve-3d',
               }}
-              className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-lg overflow-hidden border-4 border-foreground shadow-2xl cursor-pointer group"
-              whileHover={{ scale: 1.05 }}
+              className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-xl overflow-hidden border-4 border-foreground shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] cursor-pointer group"
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             >
@@ -337,8 +337,8 @@ const HeroSection = () => {
                 <Image
                   src="https://github.com/HakkanShah.png"
                   alt="Hakkan Parbej Shah"
-                  width={320}
-                  height={320}
+                  width={400}
+                  height={400}
                   className="object-cover w-full h-full"
                   priority
                 />
@@ -357,28 +357,33 @@ const HeroSection = () => {
           ) : (
             // Puzzle Grid
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-80 md:h-80 bg-muted/20 rounded-lg border-4 border-foreground overflow-hidden"
+              className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 bg-muted/20 rounded-xl border-4 border-foreground overflow-hidden shadow-2xl"
             >
-              <div className="grid grid-cols-3 gap-0.5 sm:gap-1 p-0.5 sm:p-1 h-full">
+              <div className="grid grid-cols-3 gap-1 p-1 h-full bg-background/50 backdrop-blur-sm">
                 {sortedPieces.map((piece) => (
                   <motion.div
                     key={piece.id}
-                    layout
+                    layoutId={`piece-${piece.id}`}
                     draggable
                     onDragStart={() => handleDragStart(piece.id)}
                     onDragOver={handleDragOver}
                     onDrop={() => handleDrop(piece.currentPosition)}
-                    className={`relative cursor-move border-[3px] rounded-sm overflow-hidden ${
+                    className={`relative cursor-grab active:cursor-grabbing border-2 rounded-md overflow-hidden shadow-sm transition-shadow ${
                       piece.currentPosition === piece.correctPosition
-                        ? 'border-green-500 ring-2 ring-green-400'
-                        : 'border-foreground/80'
+                        ? 'border-green-500/50 z-0'
+                        : 'border-white/20 hover:border-primary z-10 hover:z-20 hover:shadow-lg'
                     }`}
                     style={getPieceStyle(piece)}
-                    whileHover={{ scale: 1.05, zIndex: 10 }}
+                    whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    transition={{ 
+                      type: 'spring', 
+                      stiffness: 400, 
+                      damping: 25,
+                      layout: { duration: 0.2 } 
+                    }}
                   />
                 ))}
               </div>
