@@ -66,7 +66,7 @@ export const PROJECTS: Project[] = [
     longDescription: 'MockHick is an innovative, AI-powered web application designed to help users prepare for job interviews. Inspired by the Hindi word "Maukhik" (मौखिक), which means oral or spoken, the app simulates a realistic interview experience. It leverages Gemini AI to dynamically generate questions, provide real-time transcription, and deliver detailed, personalized feedback to help users build confidence and land their dream job.',
     why: 'I built MockHick to help students and job seekers practice interviews in a realistic way without needing another person. Many people feel underconfident or don’t always have someone available to take their mock interviews. MockHick uses AI, voice interaction (Web Speech API), and clean UI (ShadCN UI) to simulate real interview scenarios, provide feedback, and build communication confidence. The main goal is to make interview preparation more accessible, interactive, and less stressful.',
     thumbnail: '/project-images/mockhick.png',
-    tags: ['Next.js', 'Web Speech API', 'Gemini AI', 'TypeScript', 'Firebase', 'TailwindCSS', 'ShadCN'],
+    tags: ['Next.js', 'Gemini AI', 'TypeScript', 'Firebase', 'Web Speech API', 'TailwindCSS', 'ShadCN'],
     liveUrl: 'https://mockhick.vercel.app/',
     repoUrl: 'https://github.com/HakkanShah/mockhick',
     aiHint: 'ai interview coach',

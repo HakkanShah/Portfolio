@@ -15,7 +15,7 @@ const DialogClose = DialogPrimitive.Close
 
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay> & { className?: string }
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
@@ -28,10 +28,16 @@ const DialogOverlay = React.forwardRef<
 ))
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
+interface DialogContentProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
+  hideClose?: boolean;
+  children?: React.ReactNode;
+  className?: string;
+}
+
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  DialogContentProps
+>(({ className, children, hideClose, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
@@ -43,16 +49,18 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
-      <DialogPrimitive.Close
-  className="absolute -top-5 -right-5 bg-gradient-to-br from-accent to-accent/70 
-  text-white rounded-full w-12 h-12 flex items-center justify-center font-semibold 
-  shadow-[0_0_15px_var(--tw-shadow-color)] shadow-accent 
-  backdrop-blur-md border border-accent/40 transition-all duration-300 
-  hover:scale-110 hover:rotate-90 hover:shadow-[0_0_25px_var(--tw-shadow-color)] 
-  active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background">
-  ✕
-</DialogPrimitive.Close>
-
+      {!hideClose && (
+        <DialogPrimitive.Close
+          className="absolute -top-5 -right-5 bg-gradient-to-br from-accent to-accent/70 
+          text-white rounded-full w-12 h-12 flex items-center justify-center font-semibold 
+          shadow-[0_0_15px_var(--tw-shadow-color)] shadow-accent 
+          backdrop-blur-md border border-accent/40 transition-all duration-300 
+          hover:scale-110 hover:rotate-90 hover:shadow-[0_0_25px_var(--tw-shadow-color)] 
+          active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+        >
+          ✕
+        </DialogPrimitive.Close>
+      )}
     </DialogPrimitive.Content>
   </DialogPortal>
 ))
@@ -88,7 +96,7 @@ DialogFooter.displayName = "DialogFooter"
 
 const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title> & { className?: string; children?: React.ReactNode }
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
@@ -103,7 +111,7 @@ DialogTitle.displayName = DialogPrimitive.Title.displayName
 
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description> & { className?: string; children?: React.ReactNode }
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
