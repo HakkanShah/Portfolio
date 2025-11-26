@@ -675,7 +675,7 @@ const HeroSection = () => {
             {/* Compact Terminal View */}
             <div
               onClick={expandTerminal}
-              className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] rounded-xl border-2 border-[#2d2d2d] shadow-[0_0_40px_rgba(0,255,157,0.15),0_20px_60px_rgba(0,0,0,0.8)] hover:shadow-[0_0_60px_rgba(0,255,157,0.3),0_30px_80px_rgba(0,0,0,0.9)] overflow-hidden group hover:-translate-y-1 hover:scale-[1.02] hover:border-[#00ff9d] transition-all duration-300 cursor-pointer"
+              className="relative bg-black rounded-xl border-2 border-[#2d2d2d] shadow-[0_0_40px_rgba(0,255,157,0.15),0_20px_60px_rgba(0,0,0,0.8)] hover:shadow-[0_0_60px_rgba(0,255,157,0.3),0_30px_80px_rgba(0,0,0,0.9)] overflow-hidden group hover:-translate-y-1 hover:scale-[1.02] hover:border-[#00ff9d] transition-all duration-300 cursor-pointer"
             >
               {/* CRT Scanlines Effect */}
               <div className="absolute inset-0 pointer-events-none z-10 animate-terminal-scanlines opacity-30" style={{
@@ -706,7 +706,7 @@ const HeroSection = () => {
                   <span className="text-[#64b5f6]" style={{ textShadow: '0 0 8px rgba(100,181,246,0.4)' }}>~</span>
                   <span>$</span>
                   <span className="text-gray-500">Click to open terminal...</span>
-                  <span className="inline-block w-2 h-4 bg-[#00ff9d] animate-pulse shadow-[0_0_15px_rgba(74,222,128,0.8)] animate-terminal-cursor-glow ml-2" />
+                  <span className="inline-block w-2 h-4 bg-[#00ff9d] animate-pulse ml-2" />
                 </div>
               </div>
             </div>
@@ -745,12 +745,12 @@ const HeroSection = () => {
                     damping: 30
                   }}
                   className={`fixed top-1/2 left-1/2 z-[99999] ${isMobile
-                    ? 'w-[95vw] h-[50vh]'
-                    : 'w-[95vw] sm:w-[90vw] md:w-[800px] h-[50vh] sm:h-[65vh] md:h-[500px]'
+                    ? 'w-[95vw] h-[45vh]'
+                    : 'w-[95vw] sm:w-[90vw] md:w-[800px] h-[45vh] sm:h-[65vh] md:h-[500px]'
                     }`}
                   style={{ x: '-50%', y: '-50%' }}
                 >
-                  <div className={`relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] border-[#00ff9d] overflow-hidden h-full flex flex-col ${isMobile
+                  <div className={`relative bg-black border-[#00ff9d] overflow-hidden h-full flex flex-col cursor-default no-custom-cursor ${isMobile
                     ? 'rounded-lg border shadow-lg'
                     : 'rounded-xl border-2 shadow-[0_0_60px_rgba(0,255,157,0.4),0_30px_100px_rgba(0,0,0,0.9)]'
                     }`}>
@@ -818,7 +818,7 @@ const HeroSection = () => {
 
                     {/* Terminal Content - Traditional Style */}
                     <div
-                      className="flex-1 p-3 sm:p-4 md:p-6 font-mono text-sm sm:text-base relative z-[11] overflow-hidden flex flex-col text-left"
+                      className="flex-1 p-3 sm:p-4 md:p-6 font-mono text-sm sm:text-base relative z-[11] overflow-hidden flex flex-col text-left cursor-text"
                       onClick={handleTerminalClick}
                     >
                       {/* Scrollable Container - Output + Current Input */}
@@ -865,7 +865,7 @@ const HeroSection = () => {
                             autoCapitalize="off"
                           />
                           <span
-                            className={`inline-block w-2 h-4 bg-[#00ff9d] shadow-[0_0_15px_rgba(74,222,128,0.8)] transition-opacity ${isTerminalFocused ? 'animate-pulse' : 'opacity-50'
+                            className={`inline-block w-2 h-4 bg-[#00ff9d] transition-opacity ${isTerminalFocused ? 'animate-pulse' : 'opacity-50'
                               }`}
                           />
                         </form>

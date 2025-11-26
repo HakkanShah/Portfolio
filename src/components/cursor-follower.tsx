@@ -7,6 +7,7 @@ const CursorFollower = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
     // Only show on desktop
@@ -19,6 +20,14 @@ const CursorFollower = () => {
 
     const handleMouseEnter = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
+
+      // Check if cursor should be hidden
+      if (target.closest('.no-custom-cursor')) {
+        setIsHidden(true);
+      } else {
+        setIsHidden(false);
+      }
+
       if (target.tagName === 'BUTTON' || target.tagName === 'A' || target.closest('button') || target.closest('a')) {
         setIsHovering(true);
       }
@@ -52,7 +61,8 @@ const CursorFollower = () => {
         animate={{
           x: mousePosition.x - 16,
           y: mousePosition.y - 16,
-          scale: isHovering ? 1.5 : 1,
+          scale: isHidden ? 0 : (isHovering ? 1.5 : 1),
+          opacity: isHidden ? 0 : 1,
         }}
         transition={{
           type: 'spring',
@@ -67,6 +77,7 @@ const CursorFollower = () => {
         animate={{
           x: mousePosition.x - 3,
           y: mousePosition.y - 3,
+          opacity: isHidden ? 0 : 1,
         }}
         transition={{
           type: 'spring',
