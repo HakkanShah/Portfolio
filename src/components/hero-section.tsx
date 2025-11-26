@@ -745,14 +745,14 @@ const HeroSection = () => {
                     damping: 30
                   }}
                   className={`fixed top-1/2 left-1/2 z-[99999] ${isMobile
-                      ? 'w-[95vw] h-[85vh]'
-                      : 'w-[95vw] sm:w-[90vw] md:w-[800px] h-[60vh] sm:h-[65vh] md:h-[500px]'
+                    ? 'w-[95vw] h-[50vh]'
+                    : 'w-[95vw] sm:w-[90vw] md:w-[800px] h-[50vh] sm:h-[65vh] md:h-[500px]'
                     }`}
                   style={{ x: '-50%', y: '-50%' }}
                 >
                   <div className={`relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] border-[#00ff9d] overflow-hidden h-full flex flex-col ${isMobile
-                      ? 'rounded-lg border shadow-lg'
-                      : 'rounded-xl border-2 shadow-[0_0_60px_rgba(0,255,157,0.4),0_30px_100px_rgba(0,0,0,0.9)]'
+                    ? 'rounded-lg border shadow-lg'
+                    : 'rounded-xl border-2 shadow-[0_0_60px_rgba(0,255,157,0.4),0_30px_100px_rgba(0,0,0,0.9)]'
                     }`}>
                     {/* Visual Effects - Desktop Only */}
                     {!isMobile && (
