@@ -78,6 +78,41 @@ const COMMANDS = {
   }
 };
 
+// Magnetic Button Component
+const MagneticButton = ({ children, strength = 0.5 }: { children: React.ReactNode; strength?: number }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current || window.innerWidth < 768) return;
+
+    const rect = ref.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    x.set((e.clientX - centerX) * strength);
+    y.set((e.clientY - centerY) * strength);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ x, y }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 const HeroSection = () => {
   // Terminal state
   const [commandInput, setCommandInput] = useState('');
@@ -522,6 +557,17 @@ const HeroSection = () => {
       terminalInputRef.current?.focus();
     }, 100);
   };
+  // Mobile detection for performance
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // ESC key handler for expanded terminal
   useEffect(() => {
@@ -596,18 +642,18 @@ const HeroSection = () => {
           <AnimatePresence>
             {isTerminalExpanded && (
               <>
-                {/* Backdrop */}
+                {/* Backdrop - lighter blur on mobile for performance */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={handleRedButton}
-                  className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99998]"
+                  className={`fixed inset-0 bg-black/60 z-[99998] ${isMobile ? '' : 'backdrop-blur-sm'}`}
                 />
 
-                {/* Terminal Window - Draggable */}
+                {/* Terminal Window - Draggable only on desktop */}
                 <motion.div
-                  drag
+                  drag={!isMobile}
                   dragConstraints={{
                     left: -window.innerWidth / 2 + 200,
                     right: window.innerWidth / 2 - 200,
@@ -619,7 +665,11 @@ const HeroSection = () => {
                   initial={{ opacity: 0, scale: 0.95, y: 20, x: '-50%' }}
                   animate={{ opacity: 1, scale: 1, y: '-50%', x: '-50%' }}
                   exit={{ opacity: 0, scale: 0.95, y: 20, x: '-50%' }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  transition={{ 
+                    type: 'spring', 
+                    stiffness: isMobile ? 200 : 300, 
+                    damping: isMobile ? 25 : 30 
+                  }}
                   className="fixed top-1/2 left-1/2 z-[99999] w-[95vw] sm:w-[90vw] md:w-[800px] h-[60vh] sm:h-[65vh] md:h-[500px]"
                   style={{ x: '-50%', y: '-50%' }}
                 >
@@ -686,7 +736,7 @@ const HeroSection = () => {
                     
                     {/* Terminal Content - Traditional Style */}
                     <div 
-                      className="flex-1 p-2 sm:p-4 md:p-6 font-mono text-xs sm:text-sm md:text-base relative z-[11] overflow-hidden flex flex-col"
+                      className="flex-1 p-2 sm:p-4 md:p-6 font-mono text-xs sm:text-sm md:text-base relative z-[11] overflow-hidden flex flex-col text-left"
                       onClick={handleTerminalClick}
                     >
                       {/* Scrollable Container - Output + Current Input */}
@@ -1001,39 +1051,6 @@ const HeroSection = () => {
   );
 };
 
-// Magnetic Button Component
-const MagneticButton = ({ children, strength = 0.5 }: { children: React.ReactNode; strength?: number }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current || window.innerWidth < 768) return;
-
-    const rect = ref.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-
-    x.set((e.clientX - centerX) * strength);
-    y.set((e.clientY - centerY) * strength);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  return (
-    <motion.div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ x, y }}
-      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-    >
-      {children}
-    </motion.div>
-  );
-};
 
 export default HeroSection;
