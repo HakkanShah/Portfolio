@@ -124,10 +124,10 @@ const HeroSection = () => {
   ]);
   const [currentSection, setCurrentSection] = useState('home');
   const [isTerminalFocused, setIsTerminalFocused] = useState(false);
-  
+
   // Terminal popup state
   const [isTerminalExpanded, setIsTerminalExpanded] = useState(false);
-  
+
   const terminalInputRef = useRef<HTMLInputElement>(null);
   const terminalOutputRef = useRef<HTMLDivElement>(null);
 
@@ -188,7 +188,7 @@ const HeroSection = () => {
         col: i % gridSize,
       });
     }
-    
+
     // Shuffle pieces
     const shuffled = [...newPieces];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -197,7 +197,7 @@ const HeroSection = () => {
       shuffled[i].currentPosition = shuffled[j].currentPosition;
       shuffled[j].currentPosition = tempPos;
     }
-    
+
     setPieces(shuffled);
     setIsComplete(false);
     setMoves(0);
@@ -331,7 +331,7 @@ const HeroSection = () => {
       case 'help':
         addOutput('info', '📚 Available Commands:');
         addOutput('info', '────────────────────────────────────────');
-        
+
         const HelpItem = ({ cmd, desc }: { cmd: string, desc: string }) => (
           <div className="flex flex-col items-start sm:flex-row sm:items-baseline gap-1 sm:gap-2 text-left">
             <span className="min-w-[150px] whitespace-nowrap">
@@ -357,7 +357,7 @@ const HeroSection = () => {
         addOutput('success', '🛠️  Utilities:');
         addOutput('info', <HelpItem cmd="help" desc="Show this help message" />);
         addOutput('info', <HelpItem cmd="clear" desc="Clear terminal history" />);
-        addOutput('info', <HelpItem cmd="whoami" desc="Display user info" />);
+        addOutput('info', <HelpItem cmd="hakkan" desc="Display user info" />);
         addOutput('info', '');
 
         addOutput('success', '🎮 Fun:');
@@ -406,10 +406,13 @@ const HeroSection = () => {
         setTerminalOutput([]);
         break;
 
-      case 'whoami':
-        addOutput('info', '👨‍💻 Hakkan Parbej Shah');
-        addOutput('info', '💼 Full Stack Developer');
-        addOutput('info', '🚀 Turning Ideas into Reality – One Line of Code at a Time');
+      case 'hakkan':
+        addOutput('info', '👨‍💻 Hello There! I am Hakkan Parbej Shah');
+        addOutput('info', '💼 Full Stack Developer — MERN & Next.js Specialist');
+        addOutput('info', '🧠 Building scalable apps, debugging chaos, and shipping clean code');
+        addOutput('info', '⚙️ Loves architecture planning, API design & smooth user experiences');
+        addOutput('info', '🌐 Currently crafting modern web apps with speed + precision');
+        addOutput('info', '📚 Always learning — performance, security, and production best practices');
         addOutput('info', '');
         addOutput('info', '📧 Want to connect? Try "cd contact"');
         break;
@@ -443,7 +446,7 @@ const HeroSection = () => {
         setTimeout(() => {
           setIsTerminalExpanded(false);
         }, 1000);
-        break; 
+        break;
 
       case 'email':
         addOutput('success', '📧 Opening email client...');
@@ -489,11 +492,11 @@ const HeroSection = () => {
     if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (commandHistory.length === 0) return;
-      
-      const newIndex = historyIndex === -1 
-        ? commandHistory.length - 1 
+
+      const newIndex = historyIndex === -1
+        ? commandHistory.length - 1
         : Math.max(0, historyIndex - 1);
-      
+
       setHistoryIndex(newIndex);
       setCommandInput(commandHistory[newIndex]);
     } else if (e.key === 'ArrowDown') {
@@ -511,7 +514,7 @@ const HeroSection = () => {
     } else if (e.key === 'Tab') {
       e.preventDefault();
       const input = commandInput.toLowerCase().trim();
-      
+
       // Auto-complete commands
       const matchingCommands = Object.keys(COMMANDS).filter(cmd => cmd.startsWith(input));
       if (matchingCommands.length === 1) {
@@ -599,7 +602,7 @@ const HeroSection = () => {
           </AnimatedDiv>
           <AnimatedDiv delay={400} className="mt-8 max-w-xl mx-auto md:mx-0">
             {/* Compact Terminal View */}
-            <div 
+            <div
               onClick={expandTerminal}
               className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] rounded-xl border-2 border-[#2d2d2d] shadow-[0_0_40px_rgba(0,255,157,0.15),0_20px_60px_rgba(0,0,0,0.8)] hover:shadow-[0_0_60px_rgba(0,255,157,0.3),0_30px_80px_rgba(0,0,0,0.9)] overflow-hidden group hover:-translate-y-1 hover:scale-[1.02] hover:border-[#00ff9d] transition-all duration-300 cursor-pointer"
             >
@@ -607,12 +610,12 @@ const HeroSection = () => {
               <div className="absolute inset-0 pointer-events-none z-10 animate-terminal-scanlines opacity-30" style={{
                 background: 'repeating-linear-gradient(0deg, rgba(0,255,157,0.03) 0px, transparent 1px, transparent 2px, rgba(0,255,157,0.03) 3px)'
               }} />
-              
+
               {/* Radial Vignette */}
               <div className="absolute inset-0 pointer-events-none z-[9]" style={{
                 background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 100%)'
               }} />
-              
+
               {/* Terminal Header */}
               <div className="flex items-center gap-2 px-4 py-3 bg-gradient-to-b from-[#2d2d2d] to-[#1e1e1e] border-b-2 border-[rgba(0,255,157,0.2)] relative z-[11]">
                 <div className="flex gap-1.5">
@@ -624,12 +627,12 @@ const HeroSection = () => {
                   portfolio.terminal
                 </div>
               </div>
-              
+
               {/* Compact Terminal Preview */}
               <div className="p-4 sm:p-6 font-mono text-sm sm:text-base min-h-[5rem] relative z-[11]">
                 <div className="flex items-center gap-2 text-gray-400">
                   <span className="text-[#00ff9d] animate-terminal-arrow-glow">➜</span>
-                  <span className="text-[#64b5f6]" style={{textShadow: '0 0 8px rgba(100,181,246,0.4)'}}>~</span>
+                  <span className="text-[#64b5f6]" style={{ textShadow: '0 0 8px rgba(100,181,246,0.4)' }}>~</span>
                   <span>$</span>
                   <span className="text-gray-500">Click to open terminal...</span>
                   <span className="inline-block w-2 h-4 bg-[#00ff9d] animate-pulse shadow-[0_0_15px_rgba(74,222,128,0.8)] animate-terminal-cursor-glow ml-2" />
@@ -665,10 +668,10 @@ const HeroSection = () => {
                   initial={{ opacity: 0, scale: 0.95, y: 20, x: '-50%' }}
                   animate={{ opacity: 1, scale: 1, y: '-50%', x: '-50%' }}
                   exit={{ opacity: 0, scale: 0.95, y: 20, x: '-50%' }}
-                  transition={{ 
-                    type: 'spring', 
-                    stiffness: isMobile ? 200 : 300, 
-                    damping: isMobile ? 25 : 30 
+                  transition={{
+                    type: 'spring',
+                    stiffness: isMobile ? 200 : 300,
+                    damping: isMobile ? 25 : 30
                   }}
                   className="fixed top-1/2 left-1/2 z-[99999] w-[95vw] sm:w-[90vw] md:w-[800px] h-[60vh] sm:h-[65vh] md:h-[500px]"
                   style={{ x: '-50%', y: '-50%' }}
@@ -678,12 +681,12 @@ const HeroSection = () => {
                     <div className="absolute inset-0 pointer-events-none z-10 animate-terminal-scanlines opacity-30" style={{
                       background: 'repeating-linear-gradient(0deg, rgba(0,255,157,0.03) 0px, transparent 1px, transparent 2px, rgba(0,255,157,0.03) 3px)'
                     }} />
-                    
+
                     {/* Radial Vignette */}
                     <div className="absolute inset-0 pointer-events-none z-[9]" style={{
                       background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 100%)'
                     }} />
-                    
+
                     {/* Terminal Header with Traffic Lights - Draggable Handle */}
                     <div className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-b from-[#2d2d2d] to-[#1e1e1e] border-b-2 border-[rgba(0,255,157,0.2)] relative z-[11] cursor-move select-none">
                       <div className="flex gap-1.5 sm:gap-2" onClick={(e) => e.stopPropagation()}>
@@ -700,7 +703,7 @@ const HeroSection = () => {
                             background: 'radial-gradient(circle, rgba(255,95,86,0.6) 0%, transparent 70%)'
                           }} />
                         </button>
-                        
+
                         {/* Yellow - Minimize */}
                         <button
                           onClick={(e) => {
@@ -714,7 +717,7 @@ const HeroSection = () => {
                             background: 'radial-gradient(circle, rgba(255,189,46,0.6) 0%, transparent 70%)'
                           }} />
                         </button>
-                        
+
                         {/* Green - Close */}
                         <button
                           onClick={(e) => {
@@ -733,14 +736,14 @@ const HeroSection = () => {
                         portfolio.terminal - {currentSection}
                       </div>
                     </div>
-                    
+
                     {/* Terminal Content - Traditional Style */}
-                    <div 
+                    <div
                       className="flex-1 p-2 sm:p-4 md:p-6 font-mono text-xs sm:text-sm md:text-base relative z-[11] overflow-hidden flex flex-col text-left"
                       onClick={handleTerminalClick}
                     >
                       {/* Scrollable Container - Output + Current Input */}
-                      <div 
+                      <div
                         ref={terminalOutputRef}
                         className="flex-1 overflow-y-auto pr-2 scrollbar-thin"
                       >
@@ -751,13 +754,12 @@ const HeroSection = () => {
                             initial={{ opacity: 0, y: -5 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.2 }}
-                            className={`mb-1 ${
-                              output.type === 'command' ? 'text-gray-400' :
-                              output.type === 'success' ? 'text-[#00ff9d]' :
-                              output.type === 'error' ? 'text-[#ff6b5f]' :
-                              output.type === 'warning' ? 'text-[#ffbd2e]' :
-                              'text-gray-300'
-                            }`}
+                            className={`mb-1 ${output.type === 'command' ? 'text-gray-400' :
+                                output.type === 'success' ? 'text-[#00ff9d]' :
+                                  output.type === 'error' ? 'text-[#ff6b5f]' :
+                                    output.type === 'warning' ? 'text-[#ffbd2e]' :
+                                      'text-gray-300'
+                              }`}
                           >
                             {output.content}
                           </motion.div>
@@ -766,7 +768,7 @@ const HeroSection = () => {
                         {/* Current Command Input - Appears After All Output */}
                         <form onSubmit={handleCommandSubmit} className="flex items-center gap-2 mt-1">
                           <span className="text-[#00ff9d] animate-terminal-arrow-glow">➜</span>
-                          <span className="text-[#64b5f6]" style={{textShadow: '0 0 8px rgba(100,181,246,0.4)'}}>~</span>
+                          <span className="text-[#64b5f6]" style={{ textShadow: '0 0 8px rgba(100,181,246,0.4)' }}>~</span>
                           <span className="text-gray-400">$</span>
                           <input
                             ref={terminalInputRef}
@@ -783,10 +785,9 @@ const HeroSection = () => {
                             autoCorrect="off"
                             autoCapitalize="off"
                           />
-                          <span 
-                            className={`inline-block w-2 h-4 bg-[#00ff9d] shadow-[0_0_15px_rgba(74,222,128,0.8)] transition-opacity ${
-                              isTerminalFocused ? 'animate-pulse' : 'opacity-50'
-                            }`}
+                          <span
+                            className={`inline-block w-2 h-4 bg-[#00ff9d] shadow-[0_0_15px_rgba(74,222,128,0.8)] transition-opacity ${isTerminalFocused ? 'animate-pulse' : 'opacity-50'
+                              }`}
                           />
                         </form>
                       </div>
@@ -799,7 +800,7 @@ const HeroSection = () => {
 
           <AnimatedDiv delay={600} className="mt-10 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 sm:gap-6">
             <MagneticButton>
-              <Button 
+              <Button
                 onClick={() => setIsResumeOpen(true)}
                 className="font-headline text-lg sm:text-xl tracking-wider border-2 border-foreground shadow-md hover:shadow-xl transition-all"
               >
@@ -807,11 +808,11 @@ const HeroSection = () => {
                 My Resume
               </Button>
             </MagneticButton>
-            
-            <ResumePreviewModal 
-              isOpen={isResumeOpen} 
-              onClose={() => setIsResumeOpen(false)} 
-              resumeUrl="/Hakkan_Parbej_Shah_Resume.pdf" 
+
+            <ResumePreviewModal
+              isOpen={isResumeOpen}
+              onClose={() => setIsResumeOpen(false)}
+              resumeUrl="/Hakkan_Parbej_Shah_Resume.pdf"
             />
 
             <div className="flex items-center space-x-3 sm:space-x-4">
@@ -819,10 +820,10 @@ const HeroSection = () => {
                 <AnimatedDiv key={social.name} delay={700 + index * 100} variant="scale">
                   <Link href={social.url} target="_blank" rel="noopener noreferrer">
                     <MagneticButton strength={0.3}>
-                      <Button 
-                        variant="outline" 
-                        size="icon" 
-                        aria-label={social.name} 
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        aria-label={social.name}
                         className="border-2 border-foreground hover:bg-primary/10 transition-all hover:scale-110"
                       >
                         <social.icon className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -834,7 +835,7 @@ const HeroSection = () => {
             </div>
           </AnimatedDiv>
         </div>
-        
+
         <AnimatedDiv delay={400} className="relative flex flex-col justify-center items-center gap-4">
           {/* Background Blur */}
           <div className="absolute bg-accent w-64 h-64 sm:w-80 sm:h-80 md:w-[30rem] md:h-[30rem] rounded-full blur-3xl opacity-30 animate-pulse pointer-events-none"></div>
@@ -882,7 +883,7 @@ const HeroSection = () => {
             </motion.div>
           )}
 
-          
+
           {!isPuzzleMode ? (
             // Normal Image with 3D effect
             <motion.div
@@ -939,19 +940,18 @@ const HeroSection = () => {
                     onDragOver={handleDragOver}
                     onDrop={() => handleDrop(piece.currentPosition)}
                     onTouchStart={() => handleDragStart(piece.id)}
-                    className={`relative cursor-grab active:cursor-grabbing border-2 rounded-md overflow-hidden shadow-sm transition-shadow ${
-                      piece.currentPosition === piece.correctPosition
+                    className={`relative cursor-grab active:cursor-grabbing border-2 rounded-md overflow-hidden shadow-sm transition-shadow ${piece.currentPosition === piece.correctPosition
                         ? 'border-green-500/50 z-0'
                         : 'border-white/20 hover:border-primary z-10 hover:z-20 hover:shadow-lg'
-                    }`}
+                      }`}
                     style={getPieceStyle(piece)}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    transition={{ 
-                      type: 'spring', 
-                      stiffness: 400, 
+                    transition={{
+                      type: 'spring',
+                      stiffness: 400,
                       damping: 25,
-                      layout: { duration: 0.2 } 
+                      layout: { duration: 0.2 }
                     }}
                   />
                 ))}
