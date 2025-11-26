@@ -302,7 +302,7 @@ const HeroSection = () => {
                 onClick={initializePuzzle}
                 className="border-2 border-foreground text-xs sm:text-sm"
               >
-                <RotateCcw className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <RotateCcw className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-1.5" />
                 Shuffle
               </Button>
               <Button
@@ -316,6 +316,18 @@ const HeroSection = () => {
             </motion.div>
           )}
 
+          {/* How to Play Instructions */}
+          {isPuzzleMode && !isComplete && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="relative z-10 text-center max-w-xs px-4"
+            >
+              <p className="text-xs sm:text-sm text-muted-foreground font-medium">
+                ℹ️ <span className="font-bold"></span> Drag pieces and solve the puzzle
+              </p>
+            </motion.div>
+          )}
 
           
           {!isPuzzleMode ? (
@@ -373,6 +385,7 @@ const HeroSection = () => {
                     onDragStart={() => handleDragStart(piece.id)}
                     onDragOver={handleDragOver}
                     onDrop={() => handleDrop(piece.currentPosition)}
+                    onTouchStart={() => handleDragStart(piece.id)}
                     className={`relative cursor-grab active:cursor-grabbing border-2 rounded-md overflow-hidden shadow-sm transition-shadow ${
                       piece.currentPosition === piece.correctPosition
                         ? 'border-green-500/50 z-0'
@@ -393,28 +406,90 @@ const HeroSection = () => {
             </motion.div>
           )}
 
-          {/* Success Message */}
+          {/* Tip for Green Pieces */}
+          {isPuzzleMode && !isComplete && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="relative z-10 text-center max-w-xs"
+            >
+              <p className="text-sm text-green-500 font-semibold flex items-center justify-center gap-2">
+                💡<span>Green pieces are in correct position</span>
+              </p>
+            </motion.div>
+          )}
+
+          {/* Success Message with Confetti */}
           <AnimatePresence>
             {isComplete && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                className="absolute inset-0 flex items-center justify-center bg-black/80 rounded-lg backdrop-blur-sm p-4"
-              >
-                <div className="text-center p-4 sm:p-6 bg-background border-4 border-green-500 rounded-lg max-w-xs">
-                  <Trophy className="h-10 w-10 sm:h-12 sm:w-12 text-green-500 mx-auto mb-2 sm:mb-3 animate-bounce" />
-                  <h3 className="font-headline text-xl sm:text-2xl font-bold text-green-500 mb-1 sm:mb-2">
-                    🎉 Puzzle Complete!
-                  </h3>
-                  <p className="text-sm sm:text-base text-foreground/80 mb-3 sm:mb-4">
-                    Solved in {moves} moves!
-                  </p>
-                  <Button onClick={resetPuzzle} className="border-2 border-foreground text-sm sm:text-base">
-                    Play Again
-                  </Button>
-                </div>
-              </motion.div>
+              <>
+                {/* Confetti Animation */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0 pointer-events-none z-20 overflow-hidden"
+                >
+                  {[...Array(50)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{
+                        x: '50%',
+                        y: '50%',
+                        scale: 0,
+                        rotate: 0,
+                      }}
+                      animate={{
+                        x: `${50 + (Math.random() - 0.5) * 200}%`,
+                        y: `${50 + (Math.random() - 0.5) * 200}%`,
+                        scale: [0, 1, 0.8],
+                        rotate: Math.random() * 360,
+                      }}
+                      transition={{
+                        duration: 1.5 + Math.random(),
+                        ease: 'easeOut',
+                      }}
+                      className="absolute w-3 h-3 rounded-full"
+                      style={{
+                        backgroundColor: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'][i % 6],
+                      }}
+                    />
+                  ))}
+                </motion.div>
+
+                {/* Success Modal */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="absolute inset-0 flex items-center justify-center bg-black/80 rounded-lg backdrop-blur-sm p-4 z-30"
+                >
+                  <div className="text-center p-4 sm:p-6 bg-background border-4 border-green-500 rounded-lg max-w-xs">
+                    <motion.div
+                      animate={{
+                        rotate: [0, -10, 10, -10, 10, 0],
+                        scale: [1, 1.2, 1.2, 1.2, 1.2, 1],
+                      }}
+                      transition={{
+                        duration: 0.6,
+                        times: [0, 0.2, 0.4, 0.6, 0.8, 1],
+                      }}
+                    >
+                      <Trophy className="h-10 w-10 sm:h-12 sm:w-12 text-green-500 mx-auto mb-2 sm:mb-3" />
+                    </motion.div>
+                    <h3 className="font-headline text-xl sm:text-2xl font-bold text-green-500 mb-1 sm:mb-2">
+                      🎉 Puzzle Complete!
+                    </h3>
+                    <p className="text-sm sm:text-base text-foreground/80 mb-3 sm:mb-4">
+                      Solved in {moves} moves!
+                    </p>
+                    <Button onClick={resetPuzzle} className="border-2 border-foreground text-sm sm:text-base">
+                      Play Again
+                    </Button>
+                  </div>
+                </motion.div>
+              </>
             )}
           </AnimatePresence>
         </AnimatedDiv>

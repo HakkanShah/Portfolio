@@ -184,24 +184,22 @@ const ProjectsSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
-              <Button
-                variant="default"
-                size="default"
-                className="gap-2 font-bold text-sm px-6 py-5 shadow-[0_0_15px_rgba(var(--primary),0.4)] hover:shadow-[0_0_20px_rgba(var(--primary),0.6)] transition-all duration-300 border-2 border-foreground"
+              <button
                 onClick={() => setShowAll(!showAll)}
+                className="group flex items-center gap-2 text-base font-bold text-foreground hover:text-primary transition-colors duration-300"
               >
                 {showAll ? (
                   <>
-                    <ChevronUp className="w-5 h-5" />
-                    Show Less Projects
+                    <ChevronUp className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" />
+                    <span>Show Less Projects</span>
                   </>
                 ) : (
                   <>
-                    <ChevronDown className="w-5 h-5 animate-bounce" />
-                    View More Projects ({PROJECTS.length - INITIAL_PROJECTS_COUNT} more)
+                    <ChevronDown className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
+                    <span>View More Projects ({PROJECTS.length - INITIAL_PROJECTS_COUNT} more)</span>
                   </>
                 )}
-              </Button>
+              </button>
             </motion.div>
           )}
         </div>
