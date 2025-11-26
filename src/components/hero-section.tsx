@@ -113,6 +113,37 @@ const MagneticButton = ({ children, strength = 0.5 }: { children: React.ReactNod
   );
 };
 
+// Levenshtein distance for fuzzy matching
+const levenshteinDistance = (a: string, b: string): number => {
+  const matrix = [];
+
+  for (let i = 0; i <= b.length; i++) {
+    matrix[i] = [i];
+  }
+
+  for (let j = 0; j <= a.length; j++) {
+    matrix[0][j] = j;
+  }
+
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {
+        matrix[i][j] = matrix[i - 1][j - 1];
+      } else {
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j - 1] + 1, // substitution
+          Math.min(
+            matrix[i][j - 1] + 1, // insertion
+            matrix[i - 1][j] + 1 // deletion
+          )
+        );
+      }
+    }
+  }
+
+  return matrix[b.length][a.length];
+};
+
 const HeroSection = () => {
   // Terminal state
   const [commandInput, setCommandInput] = useState('');
@@ -383,9 +414,20 @@ const HeroSection = () => {
               addOutput('error', `❌ Failed to navigate to ${section}`);
             }
           } else {
-            addOutput('error', `❌ Section "${section}" not found`);
-            addOutput('warning', `💡 Available sections: ${SECTIONS.join(', ')}`);
-            addOutput('warning', '💡 Try "ls" to see all sections');
+            // Fuzzy match for section
+            const closestSection = SECTIONS.reduce((closest, curr) => {
+              const dist = levenshteinDistance(section, curr);
+              return dist < closest.dist ? { str: curr, dist } : closest;
+            }, { str: '', dist: Infinity });
+
+            if (closestSection.dist <= 2) {
+              addOutput('error', `❌ Section "${section}" not found`);
+              addOutput('warning', `💡 Did you mean "cd ${closestSection.str}"?`);
+            } else {
+              addOutput('error', `❌ Section "${section}" not found`);
+              addOutput('warning', `💡 Available sections: ${SECTIONS.join(', ')}`);
+              addOutput('warning', '💡 Try "ls" to see all sections');
+            }
           }
         }
         break;
@@ -468,8 +510,37 @@ const HeroSection = () => {
         break;
 
       default:
-        addOutput('error', `❌ Command not found: ${command}`);
-        addOutput('warning', '💡 Type "help" to see available commands');
+        // Check if input is a section name (shortcut for cd)
+        if (SECTIONS.includes(command)) {
+          addOutput('warning', `💡 Did you mean "cd ${command}"?`);
+          break;
+        }
+
+        // Fuzzy match for commands
+        const availableCommands = ['help', 'cd', 'ls', 'sections', 'clear', 'hakkan', 'pwd', 'resume', 'github', 'linkedin', 'email', 'puzzle'];
+        const closestCommand = availableCommands.reduce((closest, curr) => {
+          const dist = levenshteinDistance(command, curr);
+          return dist < closest.dist ? { str: curr, dist } : closest;
+        }, { str: '', dist: Infinity });
+
+        if (closestCommand.dist <= 2) {
+          addOutput('error', `❌ Command not found: ${command}`);
+          addOutput('warning', `💡 Did you mean "${closestCommand.str}"?`);
+        } else {
+          // Check fuzzy match for sections as fallback (e.g. "contac" -> "cd contact")
+          const closestSection = SECTIONS.reduce((closest, curr) => {
+            const dist = levenshteinDistance(command, curr);
+            return dist < closest.dist ? { str: curr, dist } : closest;
+          }, { str: '', dist: Infinity });
+
+          if (closestSection.dist <= 2) {
+            addOutput('error', `❌ Command not found: ${command}`);
+            addOutput('warning', `💡 Did you mean "cd ${closestSection.str}"?`);
+          } else {
+            addOutput('error', `❌ Command not found: ${command}`);
+            addOutput('warning', '💡 Type "help" to see available commands');
+          }
+        }
     }
   };
 
@@ -755,10 +826,10 @@ const HeroSection = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.2 }}
                             className={`mb-1 ${output.type === 'command' ? 'text-gray-400' :
-                                output.type === 'success' ? 'text-[#00ff9d]' :
-                                  output.type === 'error' ? 'text-[#ff6b5f]' :
-                                    output.type === 'warning' ? 'text-[#ffbd2e]' :
-                                      'text-gray-300'
+                              output.type === 'success' ? 'text-[#00ff9d]' :
+                                output.type === 'error' ? 'text-[#ff6b5f]' :
+                                  output.type === 'warning' ? 'text-[#ffbd2e]' :
+                                    'text-gray-300'
                               }`}
                           >
                             {output.content}
@@ -941,8 +1012,8 @@ const HeroSection = () => {
                     onDrop={() => handleDrop(piece.currentPosition)}
                     onTouchStart={() => handleDragStart(piece.id)}
                     className={`relative cursor-grab active:cursor-grabbing border-2 rounded-md overflow-hidden shadow-sm transition-shadow ${piece.currentPosition === piece.correctPosition
-                        ? 'border-green-500/50 z-0'
-                        : 'border-white/20 hover:border-primary z-10 hover:z-20 hover:shadow-lg'
+                      ? 'border-green-500/50 z-0'
+                      : 'border-white/20 hover:border-primary z-10 hover:z-20 hover:shadow-lg'
                       }`}
                     style={getPieceStyle(piece)}
                     whileHover={{ scale: 1.05 }}
