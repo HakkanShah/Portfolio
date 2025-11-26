@@ -19,9 +19,83 @@ interface PuzzlePiece {
   col: number;
 }
 
+interface TerminalOutput {
+  type: 'command' | 'success' | 'error' | 'info' | 'warning';
+  content: string | React.ReactNode;
+  timestamp: number;
+}
+
+const SECTIONS = ['home', 'about', 'skills', 'projects', 'experience', 'education', 'certifications', 'contact'];
+
+const COMMANDS = {
+  help: {
+    description: 'Display all available commands',
+    usage: 'help'
+  },
+  cd: {
+    description: 'Navigate to a section',
+    usage: 'cd <section>'
+  },
+  ls: {
+    description: 'List all available sections',
+    usage: 'ls'
+  },
+  sections: {
+    description: 'List all available sections (alias for ls)',
+    usage: 'sections'
+  },
+  clear: {
+    description: 'Clear terminal history',
+    usage: 'clear'
+  },
+  whoami: {
+    description: 'Display information about the portfolio owner',
+    usage: 'whoami'
+  },
+  pwd: {
+    description: 'Show current section',
+    usage: 'pwd'
+  },
+  resume: {
+    description: 'Open resume preview',
+    usage: 'resume'
+  },
+  github: {
+    description: 'Open GitHub profile',
+    usage: 'github'
+  },
+  linkedin: {
+    description: 'Open LinkedIn profile',
+    usage: 'linkedin'
+  },
+  email: {
+    description: 'Open email client',
+    usage: 'email'
+  },
+  puzzle: {
+    description: 'Start the jigsaw puzzle game',
+    usage: 'puzzle'
+  }
+};
+
 const HeroSection = () => {
-  const [typedText, setTypedText] = useState('');
-  const fullText = "Turning Ideas into Reality – One Line of Code at a Time";
+  // Terminal state
+  const [commandInput, setCommandInput] = useState('');
+  const [commandHistory, setCommandHistory] = useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+  const [terminalOutput, setTerminalOutput] = useState<TerminalOutput[]>([
+    { type: 'info', content: 'Welcome to Hakkan\'s Portfolio Terminal! 🚀', timestamp: Date.now() },
+    { type: 'info', content: 'Type "help" to see available commands.', timestamp: Date.now() + 1 }
+  ]);
+  const [currentSection, setCurrentSection] = useState('home');
+  const [isTerminalFocused, setIsTerminalFocused] = useState(false);
+  
+  // Terminal popup state
+  const [isTerminalExpanded, setIsTerminalExpanded] = useState(false);
+  
+  const terminalInputRef = useRef<HTMLInputElement>(null);
+  const terminalOutputRef = useRef<HTMLDivElement>(null);
+
   const imageRef = useRef<HTMLDivElement>(null);
   const [isPuzzleMode, setIsPuzzleMode] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
@@ -43,28 +117,12 @@ const HeroSection = () => {
     damping: 30,
   });
 
-  // Typing animation
+  // Auto-scroll terminal output to bottom
   useEffect(() => {
-    let index = 0;
-    let timer: NodeJS.Timeout;
-    
-    // Start typing after 1.5s delay (wait for enter animation)
-    const startTimer = setTimeout(() => {
-      timer = setInterval(() => {
-        if (index <= fullText.length) {
-          setTypedText(fullText.slice(0, index));
-          index++;
-        } else {
-          clearInterval(timer);
-        }
-      }, 50);
-    }, 1500);
-
-    return () => {
-      clearTimeout(startTimer);
-      clearInterval(timer);
-    };
-  }, []);
+    if (terminalOutputRef.current) {
+      terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
+    }
+  }, [terminalOutput]);
 
   const handleImageMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!imageRef.current || window.innerWidth < 768 || isPuzzleMode) return;
@@ -195,6 +253,290 @@ const HeroSection = () => {
 
   const sortedPieces = [...pieces].sort((a, b) => a.currentPosition - b.currentPosition);
 
+  // Terminal command handlers
+  const addOutput = (type: TerminalOutput['type'], content: string | React.ReactNode) => {
+    setTerminalOutput(prev => [...prev, { type, content, timestamp: Date.now() }]);
+    // Auto-scroll to bottom to show new output and input prompt
+    setTimeout(() => {
+      if (terminalOutputRef.current) {
+        terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
+      }
+    }, 50);
+  };
+
+  const navigateToSection = (section: string) => {
+    const element = document.getElementById(section);
+    if (element) {
+      const headerOffset = 100;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      setCurrentSection(section);
+      return true;
+    }
+    return false;
+  };
+
+  const executeCommand = (input: string) => {
+    const trimmedInput = input.trim();
+    if (!trimmedInput) return;
+
+    // Add command to output
+    addOutput('command', `$ ${trimmedInput}`);
+
+    // Parse command
+    const [command, ...args] = trimmedInput.toLowerCase().split(/\s+/);
+
+    // Execute command
+    switch (command) {
+      case 'help':
+        addOutput('info', '📚 Available Commands:');
+        addOutput('info', '────────────────────────────────────────');
+        
+        const HelpItem = ({ cmd, desc }: { cmd: string, desc: string }) => (
+          <div className="flex flex-col items-start sm:flex-row sm:items-baseline gap-1 sm:gap-2 text-left">
+            <span className="min-w-[150px] whitespace-nowrap">
+              Run <span className="text-[#ffbd2e] font-bold">{cmd}</span>
+            </span>
+            <span className="text-gray-400 text-xs sm:text-sm">- {desc}</span>
+          </div>
+        );
+
+        addOutput('success', '🧭 Navigation:');
+        addOutput('info', <HelpItem cmd="cd <section>" desc="Navigate to a section" />);
+        addOutput('info', <HelpItem cmd="ls / sections" desc="List all available sections" />);
+        addOutput('info', <HelpItem cmd="pwd" desc="Show current section" />);
+        addOutput('info', '');
+
+        addOutput('success', '🌐 Social & Contact:');
+        addOutput('info', <HelpItem cmd="github" desc="Open GitHub profile" />);
+        addOutput('info', <HelpItem cmd="linkedin" desc="Open LinkedIn profile" />);
+        addOutput('info', <HelpItem cmd="email" desc="Send an email" />);
+        addOutput('info', <HelpItem cmd="resume" desc="View resume" />);
+        addOutput('info', '');
+
+        addOutput('success', '🛠️  Utilities:');
+        addOutput('info', <HelpItem cmd="help" desc="Show this help message" />);
+        addOutput('info', <HelpItem cmd="clear" desc="Clear terminal history" />);
+        addOutput('info', <HelpItem cmd="whoami" desc="Display user info" />);
+        addOutput('info', '');
+
+        addOutput('success', '🎮 Fun:');
+        addOutput('info', <HelpItem cmd="puzzle" desc="Play a game" />);
+        addOutput('info', '────────────────────────────────────────');
+        addOutput('warning', '💡 Tip: Use Tab for auto-completion, ↑↓ for history');
+        break;
+
+      case 'cd':
+        if (args.length === 0) {
+          addOutput('error', '❌ Error: Missing section name');
+          addOutput('warning', '💡 Usage: cd <section>. Try "ls" to see available sections.');
+        } else {
+          const section = args[0];
+          if (SECTIONS.includes(section)) {
+            if (navigateToSection(section)) {
+              addOutput('success', `✅ Navigated to ${section}`);
+              // Auto-close terminal after navigation
+              setTimeout(() => {
+                setIsTerminalExpanded(false);
+              }, 1000);
+            } else {
+              addOutput('error', `❌ Failed to navigate to ${section}`);
+            }
+          } else {
+            addOutput('error', `❌ Section "${section}" not found`);
+            addOutput('warning', `💡 Available sections: ${SECTIONS.join(', ')}`);
+            addOutput('warning', '💡 Try "ls" to see all sections');
+          }
+        }
+        break;
+
+      case 'ls':
+      case 'sections':
+        addOutput('info', '📂 Available Sections:');
+        addOutput('info', '');
+        SECTIONS.forEach(section => {
+          const indicator = section === currentSection ? '📍' : '  ';
+          addOutput('info', `  ${indicator} ${section}`);
+        });
+        addOutput('info', '');
+        addOutput('info', '💡 Use "cd <section>" to navigate');
+        break;
+
+      case 'clear':
+        setTerminalOutput([]);
+        break;
+
+      case 'whoami':
+        addOutput('info', '👨‍💻 Hakkan Parbej Shah');
+        addOutput('info', '💼 Full Stack Developer');
+        addOutput('info', '🚀 Turning Ideas into Reality – One Line of Code at a Time');
+        addOutput('info', '');
+        addOutput('info', '📧 Want to connect? Try "cd contact"');
+        break;
+
+      case 'pwd':
+        addOutput('info', `📍 Current section: ${currentSection}`);
+        break;
+
+      case 'resume':
+        addOutput('success', '📄 Opening resume preview...');
+        setIsResumeOpen(true);
+        // Auto-close terminal
+        setTimeout(() => {
+          setIsTerminalExpanded(false);
+        }, 1000);
+        break;
+
+      case 'github':
+        addOutput('success', '🔗 Opening GitHub profile...');
+        window.open('https://github.com/HakkanShah', '_blank');
+        // Auto-close terminal
+        setTimeout(() => {
+          setIsTerminalExpanded(false);
+        }, 1000);
+        break;
+
+      case 'linkedin':
+        addOutput('success', '🔗 Opening LinkedIn profile...');
+        window.open('https://www.linkedin.com/in/hakkan', '_blank');
+        // Auto-close terminal
+        setTimeout(() => {
+          setIsTerminalExpanded(false);
+        }, 1000);
+        break; 
+
+      case 'email':
+        addOutput('success', '📧 Opening email client...');
+        window.location.href = 'mailto:hakkanparbej@gmail.com';
+        // Auto-close terminal
+        setTimeout(() => {
+          setIsTerminalExpanded(false);
+        }, 1000);
+        break;
+
+      case 'puzzle':
+        addOutput('success', '🧩 Starting jigsaw puzzle game...');
+        setIsPuzzleMode(true);
+        initializePuzzle();
+        // Auto-close terminal
+        setTimeout(() => {
+          setIsTerminalExpanded(false);
+        }, 1000);
+        break;
+
+      default:
+        addOutput('error', `❌ Command not found: ${command}`);
+        addOutput('warning', '💡 Type "help" to see available commands');
+    }
+  };
+
+  const handleCommandSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!commandInput.trim()) return;
+
+    // Execute command
+    executeCommand(commandInput);
+
+    // Add to history
+    setCommandHistory(prev => [...prev, commandInput]);
+    setHistoryIndex(-1);
+
+    // Clear input
+    setCommandInput('');
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (commandHistory.length === 0) return;
+      
+      const newIndex = historyIndex === -1 
+        ? commandHistory.length - 1 
+        : Math.max(0, historyIndex - 1);
+      
+      setHistoryIndex(newIndex);
+      setCommandInput(commandHistory[newIndex]);
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIndex === -1) return;
+
+      const newIndex = historyIndex + 1;
+      if (newIndex >= commandHistory.length) {
+        setHistoryIndex(-1);
+        setCommandInput('');
+      } else {
+        setHistoryIndex(newIndex);
+        setCommandInput(commandHistory[newIndex]);
+      }
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      const input = commandInput.toLowerCase().trim();
+      
+      // Auto-complete commands
+      const matchingCommands = Object.keys(COMMANDS).filter(cmd => cmd.startsWith(input));
+      if (matchingCommands.length === 1) {
+        setCommandInput(matchingCommands[0] + ' ');
+        return;
+      }
+
+      // Auto-complete sections for cd command
+      const cdMatch = input.match(/^cd\s+(.*)$/);
+      if (cdMatch) {
+        const sectionPrefix = cdMatch[1];
+        const matchingSections = SECTIONS.filter(s => s.startsWith(sectionPrefix));
+        if (matchingSections.length === 1) {
+          setCommandInput(`cd ${matchingSections[0]}`);
+        }
+      }
+    } else if (e.key === 'Escape') {
+      terminalInputRef.current?.blur();
+    }
+  };
+
+  const handleTerminalClick = () => {
+    terminalInputRef.current?.focus();
+  };
+
+  // Traffic light control handlers
+  const handleRedButton = () => {
+    setIsTerminalExpanded(false);
+  };
+
+  const handleYellowButton = () => {
+    setIsTerminalExpanded(false);
+  };
+
+  const handleGreenButton = () => {
+    setIsTerminalExpanded(false);
+  };
+
+  const expandTerminal = () => {
+    setIsTerminalExpanded(true);
+    // Small delay to ensure DOM is ready before focusing
+    setTimeout(() => {
+      terminalInputRef.current?.focus();
+    }, 100);
+  };
+
+  // ESC key handler for expanded terminal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isTerminalExpanded) {
+        handleRedButton();
+      }
+    };
+
+    if (isTerminalExpanded) {
+      window.addEventListener('keydown', handleEscape);
+      return () => window.removeEventListener('keydown', handleEscape);
+    }
+  }, [isTerminalExpanded]);
+
   return (
     <section id="home" className="section-padding border-b-4 border-foreground overflow-hidden relative">
       <div className="section-container grid md:grid-cols-2 gap-10 items-center min-h-[70vh]">
@@ -210,39 +552,200 @@ const HeroSection = () => {
             </p>
           </AnimatedDiv>
           <AnimatedDiv delay={400} className="mt-8 max-w-xl mx-auto md:mx-0">
-            <div className="relative bg-[#1e1e1e] rounded-lg border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+            {/* Compact Terminal View */}
+            <div 
+              onClick={expandTerminal}
+              className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] rounded-xl border-2 border-[#2d2d2d] shadow-[0_0_40px_rgba(0,255,157,0.15),0_20px_60px_rgba(0,0,0,0.8)] hover:shadow-[0_0_60px_rgba(0,255,157,0.3),0_30px_80px_rgba(0,0,0,0.9)] overflow-hidden group hover:-translate-y-1 hover:scale-[1.02] hover:border-[#00ff9d] transition-all duration-300 cursor-pointer"
+            >
+              {/* CRT Scanlines Effect */}
+              <div className="absolute inset-0 pointer-events-none z-10 animate-terminal-scanlines opacity-30" style={{
+                background: 'repeating-linear-gradient(0deg, rgba(0,255,157,0.03) 0px, transparent 1px, transparent 2px, rgba(0,255,157,0.03) 3px)'
+              }} />
+              
+              {/* Radial Vignette */}
+              <div className="absolute inset-0 pointer-events-none z-[9]" style={{
+                background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 100%)'
+              }} />
+              
               {/* Terminal Header */}
-              <div className="flex items-center gap-2 px-4 py-2 bg-[#2d2d2d] border-b-2 border-foreground/20">
+              <div className="flex items-center gap-2 px-4 py-3 bg-gradient-to-b from-[#2d2d2d] to-[#1e1e1e] border-b-2 border-[rgba(0,255,157,0.2)] relative z-[11]">
                 <div className="flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]" />
-                  <div className="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#dea123]" />
-                  <div className="w-3 h-3 rounded-full bg-[#27c93f] border border-[#1aab29]" />
+                  <div className="w-3 h-3 rounded-full bg-gradient-to-br from-[#ff6b5f] to-[#ff5f56] border border-[#e0443e] shadow-[0_2px_8px_rgba(255,95,86,0.4)]" />
+                  <div className="w-3 h-3 rounded-full bg-gradient-to-br from-[#ffca3a] to-[#ffbd2e] border border-[#dea123] shadow-[0_2px_8px_rgba(255,189,46,0.4)]" />
+                  <div className="w-3 h-3 rounded-full bg-gradient-to-br from-[#32d74b] to-[#27c93f] border border-[#1aab29] shadow-[0_2px_8px_rgba(39,201,63,0.4)]" />
                 </div>
-                <div className="ml-4 text-[10px] sm:text-xs text-gray-400 font-mono flex-1 text-center pr-12">
-                  mission_statement.sh
+                <div className="ml-4 text-[10px] sm:text-xs text-gray-500 font-mono flex-1 text-center pr-12 tracking-wide">
+                  portfolio.terminal
                 </div>
               </div>
               
-              {/* Terminal Content */}
-              <div className="p-4 sm:p-6 font-mono text-sm sm:text-base min-h-[5rem] sm:min-h-[6rem]">
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2 text-gray-400 text-xs">
-                    <span>$</span>
-                    <span className="text-green-400">run</span>
-                    <span>start-dev-journey</span>
-                  </div>
-                  <div className="flex flex-wrap text-gray-100">
-                    <span className="text-green-400 mr-2">➜</span>
-                    <span className="text-blue-400 mr-2">~</span>
-                    <span>
-                      {typedText}
-                      <span className="inline-block w-2.5 h-5 bg-green-400 ml-1 animate-pulse align-middle shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
-                    </span>
-                  </div>
+              {/* Compact Terminal Preview */}
+              <div className="p-4 sm:p-6 font-mono text-sm sm:text-base min-h-[5rem] relative z-[11]">
+                <div className="flex items-center gap-2 text-gray-400">
+                  <span className="text-[#00ff9d] animate-terminal-arrow-glow">➜</span>
+                  <span className="text-[#64b5f6]" style={{textShadow: '0 0 8px rgba(100,181,246,0.4)'}}>~</span>
+                  <span>$</span>
+                  <span className="text-gray-500">Click to open terminal...</span>
+                  <span className="inline-block w-2 h-4 bg-[#00ff9d] animate-pulse shadow-[0_0_15px_rgba(74,222,128,0.8)] animate-terminal-cursor-glow ml-2" />
                 </div>
               </div>
             </div>
           </AnimatedDiv>
+
+          {/* Expanded Terminal Popup Modal */}
+          <AnimatePresence>
+            {isTerminalExpanded && (
+              <>
+                {/* Backdrop */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={handleRedButton}
+                  className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99998]"
+                />
+
+                {/* Terminal Window - Draggable */}
+                <motion.div
+                  drag
+                  dragConstraints={{
+                    left: -window.innerWidth / 2 + 200,
+                    right: window.innerWidth / 2 - 200,
+                    top: -window.innerHeight / 2 + 100,
+                    bottom: window.innerHeight / 2 - 100,
+                  }}
+                  dragElastic={0}
+                  dragMomentum={false}
+                  initial={{ opacity: 0, scale: 0.95, y: 20, x: '-50%' }}
+                  animate={{ opacity: 1, scale: 1, y: '-50%', x: '-50%' }}
+                  exit={{ opacity: 0, scale: 0.95, y: 20, x: '-50%' }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  className="fixed top-1/2 left-1/2 z-[99999] w-[95vw] sm:w-[90vw] md:w-[800px] h-[60vh] sm:h-[65vh] md:h-[500px]"
+                  style={{ x: '-50%', y: '-50%' }}
+                >
+                  <div className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] rounded-xl border-2 border-[#00ff9d] shadow-[0_0_60px_rgba(0,255,157,0.4),0_30px_100px_rgba(0,0,0,0.9)] overflow-hidden h-full flex flex-col">
+                    {/* CRT Scanlines Effect */}
+                    <div className="absolute inset-0 pointer-events-none z-10 animate-terminal-scanlines opacity-30" style={{
+                      background: 'repeating-linear-gradient(0deg, rgba(0,255,157,0.03) 0px, transparent 1px, transparent 2px, rgba(0,255,157,0.03) 3px)'
+                    }} />
+                    
+                    {/* Radial Vignette */}
+                    <div className="absolute inset-0 pointer-events-none z-[9]" style={{
+                      background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 100%)'
+                    }} />
+                    
+                    {/* Terminal Header with Traffic Lights - Draggable Handle */}
+                    <div className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-b from-[#2d2d2d] to-[#1e1e1e] border-b-2 border-[rgba(0,255,157,0.2)] relative z-[11] cursor-move select-none">
+                      <div className="flex gap-1.5 sm:gap-2" onClick={(e) => e.stopPropagation()}>
+                        {/* Red - Close */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRedButton();
+                          }}
+                          className="relative w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gradient-to-br from-[#ff6b5f] to-[#ff5f56] border border-[#e0443e] shadow-[0_2px_8px_rgba(255,95,86,0.4)] cursor-pointer transition-all hover:scale-125 active:scale-95 group/red"
+                          title="Close terminal"
+                        >
+                          <div className="absolute inset-[-2px] rounded-full opacity-0 group-hover/red:opacity-100 group-hover/red:animate-[terminal-control-pulse_1.5s_ease-in-out_infinite]" style={{
+                            background: 'radial-gradient(circle, rgba(255,95,86,0.6) 0%, transparent 70%)'
+                          }} />
+                        </button>
+                        
+                        {/* Yellow - Minimize */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleYellowButton();
+                          }}
+                          className="relative w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gradient-to-br from-[#ffca3a] to-[#ffbd2e] border border-[#dea123] shadow-[0_2px_8px_rgba(255,189,46,0.4)] cursor-pointer transition-all hover:scale-125 active:scale-95 group/yellow"
+                          title="Minimize terminal"
+                        >
+                          <div className="absolute inset-[-2px] rounded-full opacity-0 group-hover/yellow:opacity-100 group-hover/yellow:animate-[terminal-control-pulse_1.5s_ease-in-out_infinite]" style={{
+                            background: 'radial-gradient(circle, rgba(255,189,46,0.6) 0%, transparent 70%)'
+                          }} />
+                        </button>
+                        
+                        {/* Green - Close */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleGreenButton();
+                          }}
+                          className="relative w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gradient-to-br from-[#32d74b] to-[#27c93f] border border-[#1aab29] shadow-[0_2px_8px_rgba(39,201,63,0.4)] cursor-pointer transition-all hover:scale-125 active:scale-95 group/green"
+                          title="Close terminal"
+                        >
+                          <div className="absolute inset-[-2px] rounded-full opacity-0 group-hover/green:opacity-100 group-hover/green:animate-[terminal-control-pulse_1.5s_ease-in-out_infinite]" style={{
+                            background: 'radial-gradient(circle, rgba(39,201,63,0.6) 0%, transparent 70%)'
+                          }} />
+                        </button>
+                      </div>
+                      <div className="ml-2 sm:ml-4 text-[10px] sm:text-xs text-gray-500 font-mono flex-1 text-center pr-8 sm:pr-12 tracking-wide truncate">
+                        portfolio.terminal - {currentSection}
+                      </div>
+                    </div>
+                    
+                    {/* Terminal Content - Traditional Style */}
+                    <div 
+                      className="flex-1 p-2 sm:p-4 md:p-6 font-mono text-xs sm:text-sm md:text-base relative z-[11] overflow-hidden flex flex-col"
+                      onClick={handleTerminalClick}
+                    >
+                      {/* Scrollable Container - Output + Current Input */}
+                      <div 
+                        ref={terminalOutputRef}
+                        className="flex-1 overflow-y-auto pr-2 scrollbar-thin"
+                      >
+                        {/* Previous Output */}
+                        {terminalOutput.map((output, index) => (
+                          <motion.div
+                            key={`${output.timestamp}-${index}`}
+                            initial={{ opacity: 0, y: -5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className={`mb-1 ${
+                              output.type === 'command' ? 'text-gray-400' :
+                              output.type === 'success' ? 'text-[#00ff9d]' :
+                              output.type === 'error' ? 'text-[#ff6b5f]' :
+                              output.type === 'warning' ? 'text-[#ffbd2e]' :
+                              'text-gray-300'
+                            }`}
+                          >
+                            {output.content}
+                          </motion.div>
+                        ))}
+
+                        {/* Current Command Input - Appears After All Output */}
+                        <form onSubmit={handleCommandSubmit} className="flex items-center gap-2 mt-1">
+                          <span className="text-[#00ff9d] animate-terminal-arrow-glow">➜</span>
+                          <span className="text-[#64b5f6]" style={{textShadow: '0 0 8px rgba(100,181,246,0.4)'}}>~</span>
+                          <span className="text-gray-400">$</span>
+                          <input
+                            ref={terminalInputRef}
+                            type="text"
+                            value={commandInput}
+                            onChange={(e) => setCommandInput(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            onFocus={() => setIsTerminalFocused(true)}
+                            onBlur={() => setIsTerminalFocused(false)}
+                            className="flex-1 bg-transparent outline-none text-gray-100 placeholder-gray-600 caret-[#00ff9d]"
+                            placeholder="Type 'help' to get started..."
+                            spellCheck={false}
+                            autoComplete="off"
+                            autoCorrect="off"
+                            autoCapitalize="off"
+                          />
+                          <span 
+                            className={`inline-block w-2 h-4 bg-[#00ff9d] shadow-[0_0_15px_rgba(74,222,128,0.8)] transition-opacity ${
+                              isTerminalFocused ? 'animate-pulse' : 'opacity-50'
+                            }`}
+                          />
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
 
           <AnimatedDiv delay={600} className="mt-10 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 sm:gap-6">
             <MagneticButton>
