@@ -739,24 +739,32 @@ const HeroSection = () => {
                   initial={{ opacity: 0, scale: 0.95, y: 20, x: '-50%' }}
                   animate={{ opacity: 1, scale: 1, y: '-50%', x: '-50%' }}
                   exit={{ opacity: 0, scale: 0.95, y: 20, x: '-50%' }}
-                  transition={{
+                  transition={isMobile ? { duration: 0.2, ease: 'easeOut' } : {
                     type: 'spring',
-                    stiffness: isMobile ? 200 : 300,
-                    damping: isMobile ? 25 : 30
+                    stiffness: 300,
+                    damping: 30
                   }}
-                  className="fixed top-1/2 left-1/2 z-[99999] w-[95vw] sm:w-[90vw] md:w-[800px] h-[60vh] sm:h-[65vh] md:h-[500px]"
+                  className={`fixed top-1/2 left-1/2 z-[99999] ${isMobile
+                      ? 'w-[95vw] h-[85vh]'
+                      : 'w-[95vw] sm:w-[90vw] md:w-[800px] h-[60vh] sm:h-[65vh] md:h-[500px]'
+                    }`}
                   style={{ x: '-50%', y: '-50%' }}
                 >
-                  <div className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] rounded-xl border-2 border-[#00ff9d] shadow-[0_0_60px_rgba(0,255,157,0.4),0_30px_100px_rgba(0,0,0,0.9)] overflow-hidden h-full flex flex-col">
-                    {/* CRT Scanlines Effect */}
-                    <div className="absolute inset-0 pointer-events-none z-10 animate-terminal-scanlines opacity-30" style={{
-                      background: 'repeating-linear-gradient(0deg, rgba(0,255,157,0.03) 0px, transparent 1px, transparent 2px, rgba(0,255,157,0.03) 3px)'
-                    }} />
-
-                    {/* Radial Vignette */}
-                    <div className="absolute inset-0 pointer-events-none z-[9]" style={{
-                      background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 100%)'
-                    }} />
+                  <div className={`relative bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] border-[#00ff9d] overflow-hidden h-full flex flex-col ${isMobile
+                      ? 'rounded-lg border shadow-lg'
+                      : 'rounded-xl border-2 shadow-[0_0_60px_rgba(0,255,157,0.4),0_30px_100px_rgba(0,0,0,0.9)]'
+                    }`}>
+                    {/* Visual Effects - Desktop Only */}
+                    {!isMobile && (
+                      <>
+                        <div className="absolute inset-0 pointer-events-none z-10 animate-terminal-scanlines opacity-30" style={{
+                          background: 'repeating-linear-gradient(0deg, rgba(0,255,157,0.03) 0px, transparent 1px, transparent 2px, rgba(0,255,157,0.03) 3px)'
+                        }} />
+                        <div className="absolute inset-0 pointer-events-none z-[9]" style={{
+                          background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 100%)'
+                        }} />
+                      </>
+                    )}
 
                     {/* Terminal Header with Traffic Lights - Draggable Handle */}
                     <div className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-b from-[#2d2d2d] to-[#1e1e1e] border-b-2 border-[rgba(0,255,157,0.2)] relative z-[11] cursor-move select-none">
@@ -810,7 +818,7 @@ const HeroSection = () => {
 
                     {/* Terminal Content - Traditional Style */}
                     <div
-                      className="flex-1 p-2 sm:p-4 md:p-6 font-mono text-xs sm:text-sm md:text-base relative z-[11] overflow-hidden flex flex-col text-left"
+                      className="flex-1 p-3 sm:p-4 md:p-6 font-mono text-sm sm:text-base relative z-[11] overflow-hidden flex flex-col text-left"
                       onClick={handleTerminalClick}
                     >
                       {/* Scrollable Container - Output + Current Input */}
