@@ -45,7 +45,7 @@ const JigsawPuzzle = ({ imageUrl, isOpen, onClose }: JigsawPuzzleProps) => {
         col: i % gridSize,
       });
     }
-    
+
     // Shuffle pieces
     const shuffled = [...newPieces];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -54,7 +54,7 @@ const JigsawPuzzle = ({ imageUrl, isOpen, onClose }: JigsawPuzzleProps) => {
       shuffled[i].currentPosition = shuffled[j].currentPosition;
       shuffled[j].currentPosition = tempPos;
     }
-    
+
     setPieces(shuffled);
     setIsComplete(false);
     setMoves(0);
@@ -72,24 +72,24 @@ const JigsawPuzzle = ({ imageUrl, isOpen, onClose }: JigsawPuzzleProps) => {
     if (typeof window !== 'undefined') {
       try {
         const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-        
+
         // Create a satisfying "pop" sound
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
-        
+
         oscillator.frequency.value = 800; // High pitch for a nice pop
         oscillator.type = 'sine';
-        
+
         const now = audioContext.currentTime;
-        
+
         // Quick attack and decay for a pop sound
         gainNode.gain.setValueAtTime(0, now);
         gainNode.gain.linearRampToValueAtTime(0.3, now + 0.01);
         gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
-        
+
         oscillator.connect(gainNode);
         gainNode.connect(audioContext.destination);
-        
+
         oscillator.start(now);
         oscillator.stop(now + 0.1);
       } catch (error) {
@@ -137,26 +137,26 @@ const JigsawPuzzle = ({ imageUrl, isOpen, onClose }: JigsawPuzzleProps) => {
   const playSuccessSound = () => {
     if (typeof window !== 'undefined') {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      
+
       // Play a cheerful success melody
       const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
       notes.forEach((freq, index) => {
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
-        
+
         oscillator.frequency.value = freq;
         oscillator.type = 'sine';
-        
+
         const now = audioContext.currentTime;
         const startTime = now + index * 0.15;
-        
+
         gainNode.gain.setValueAtTime(0, startTime);
         gainNode.gain.linearRampToValueAtTime(0.3, startTime + 0.01);
         gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + 0.3);
-        
+
         oscillator.connect(gainNode);
         gainNode.connect(audioContext.destination);
-        
+
         oscillator.start(startTime);
         oscillator.stop(startTime + 0.3);
       });
@@ -176,117 +176,69 @@ const JigsawPuzzle = ({ imageUrl, isOpen, onClose }: JigsawPuzzleProps) => {
   const sortedPieces = [...pieces].sort((a, b) => a.currentPosition - b.currentPosition);
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
-          onClick={onClose}
+    <div className="w-full h-full flex flex-col p-1 sm:p-2">
+      {/* Stats */}
+      <div className="flex items-center justify-between mb-1.5 sm:mb-2 p-1.5 sm:p-2 bg-accent/10 rounded-lg border border-foreground shrink-0">
+        <div className="text-[10px] sm:text-xs font-bold">
+          Moves: <span className="text-primary">{moves}</span>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={initializePuzzle}
+          className="h-5 sm:h-6 text-[10px] sm:text-xs border border-foreground px-1.5 sm:px-2"
         >
+          <RotateCcw className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />
+          Reset
+        </Button>
+      </div>
+
+      {/* Puzzle Grid */}
+      <div className="relative aspect-square w-full bg-muted/20 rounded-lg border-2 border-foreground overflow-hidden flex-1 flex items-center justify-center">
+        <div className="grid grid-cols-3 gap-0.5 p-0.5 h-full w-full max-h-full">
+          {sortedPieces.map((piece) => (
+            <motion.div
+              key={piece.id}
+              layout
+              draggable
+              onDragStart={() => handleDragStart(piece.id)}
+              onDragOver={handleDragOver}
+              onDrop={() => handleDrop(piece.currentPosition)}
+              className={`relative cursor-move border border-foreground rounded-sm overflow-hidden touch-none select-none ${piece.currentPosition === piece.correctPosition
+                  ? 'ring-1 sm:ring-2 ring-green-500 z-10'
+                  : ''
+                }`}
+              style={getPieceStyle(piece)}
+              whileHover={{ scale: 1.05, zIndex: 20 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            >
+              {/* Piece number indicator */}
+              <div className="absolute top-0 right-0 bg-foreground/80 text-background text-[8px] sm:text-[10px] px-0.5 sm:px-1 py-0 rounded-bl font-bold opacity-50 hover:opacity-100">
+                {piece.id + 1}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Success Message */}
+      <AnimatePresence>
+        {isComplete && (
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative bg-background border-4 border-foreground rounded-lg p-4 sm:p-8 max-w-2xl w-full shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="mt-1.5 sm:mt-2 p-1.5 sm:p-2 bg-green-500/20 border border-green-500 rounded-lg text-center shrink-0"
           >
-            {/* Header */}
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="font-headline text-2xl sm:text-3xl font-bold text-primary tracking-wider">
-                  🧩 Jigsaw Puzzle
-                </h2>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Drag pieces to solve the puzzle!
-                </p>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="border-2 border-foreground"
-              >
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
-
-            {/* Stats */}
-            <div className="flex items-center justify-between mb-4 p-3 bg-accent/10 rounded-lg border-2 border-foreground">
-              <div className="text-sm font-bold">
-                Moves: <span className="text-primary">{moves}</span>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={initializePuzzle}
-                className="border-2 border-foreground"
-              >
-                <RotateCcw className="h-4 w-4 mr-2" />
-                Reset
-              </Button>
-            </div>
-
-            {/* Puzzle Grid */}
-            <div className="relative aspect-square w-full max-w-md mx-auto bg-muted/20 rounded-lg border-4 border-foreground overflow-hidden">
-              <div className="grid grid-cols-3 gap-1 p-1 h-full">
-                {sortedPieces.map((piece) => (
-                  <motion.div
-                    key={piece.id}
-                    layout
-                    draggable
-                    onDragStart={() => handleDragStart(piece.id)}
-                    onDragOver={handleDragOver}
-                    onDrop={() => handleDrop(piece.currentPosition)}
-                    className={`relative cursor-move border-2 border-foreground rounded-sm overflow-hidden touch-none select-none ${
-                      piece.currentPosition === piece.correctPosition
-                        ? 'ring-2 ring-green-500'
-                        : ''
-                    }`}
-                    style={getPieceStyle(piece)}
-                    whileHover={{ scale: 1.05, zIndex: 10 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                  >
-                    {/* Piece number indicator */}
-                    <div className="absolute top-0 right-0 bg-foreground/80 text-background text-xs px-1.5 py-0.5 rounded-bl font-bold">
-                      {piece.id + 1}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Success Message */}
-            <AnimatePresence>
-              {isComplete && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="mt-4 p-4 bg-green-500/20 border-2 border-green-500 rounded-lg text-center"
-                >
-                  <Trophy className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                  <h3 className="font-headline text-xl font-bold text-green-500">
-                    🎉 Puzzle Complete!
-                  </h3>
-                  <p className="text-sm text-foreground/80 mt-1">
-                    Solved in {moves} moves!
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Hint */}
-            <p className="text-xs text-center text-muted-foreground mt-4">
-              💡 Tip: Pieces with green rings are in the correct position!
-            </p>
+            <Trophy className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 mx-auto mb-0.5 sm:mb-1" />
+            <h3 className="font-headline text-xs sm:text-sm font-bold text-green-500">
+              🎉 Complete!
+            </h3>
           </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 
