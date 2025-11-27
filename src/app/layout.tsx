@@ -4,6 +4,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://hakkan.is-a.dev'),
   title: "Hakkan Parbej Shah - Full Stack Developer",
   description:
     "Hakkan Parbej Shah is a Full Stack Developer skilled in building modern, scalable, and efficient web applications. Passionate about clean code, seamless user experiences, and turning ideas into impactful digital products.",
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
   category: "Personal Portfolio / Web Development",
   applicationName: "Hakkan Portfolio",
   robots: "index, follow",
-  themeColor: "#00ffff", 
+  themeColor: "#00ffff",
   openGraph: {
     title: "Hakkan Parbej Shah - Full Stack Developer",
     description:
@@ -57,7 +58,13 @@ export const metadata: Metadata = {
       "Full Stack Developer passionate about building scalable, modern, and user-focused web applications. Explore my portfolio and projects.",
     creator: "@HakkanShah",
     images: ["https://hakkan.is-a.dev/profile.jpg"]
-  }
+  },
+  alternates: {
+    canonical: '/',
+  },
+  verification: {
+    google: 'google-site-verification-code', // Replace with your actual code
+  },
 };
 
 export default function RootLayout({
@@ -74,14 +81,36 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
           {children}
           <Toaster />
         </ThemeProvider>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              "name": "Hakkan Parbej Shah",
+              "url": "https://hakkan.is-a.dev",
+              "image": "https://hakkan.is-a.dev/profile.jpg",
+              "sameAs": [
+                "https://github.com/HakkanShah",
+                "https://www.linkedin.com/in/hakkan/",
+                "https://g.dev/hakkan"
+              ],
+              "jobTitle": "Full Stack Developer",
+              "worksFor": {
+                "@type": "Organization",
+                "name": "Self-Employed"
+              }
+            })
+          }}
+        />
       </body>
     </html>
   );

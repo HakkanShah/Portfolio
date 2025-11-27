@@ -814,6 +814,7 @@ const HeroSection = () => {
                       <div className="ml-2 sm:ml-4 text-[10px] sm:text-xs text-gray-500 font-mono flex-1 text-center pr-8 sm:pr-12 tracking-wide truncate">
                         Portfolio Terminal - {currentSection}
                       </div>
+                      
                     </div>
 
                     {/* Terminal Content - Traditional Style */}

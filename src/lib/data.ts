@@ -31,12 +31,13 @@ import {
 import { VscVscode } from 'react-icons/vsc';
 import { DiJava } from 'react-icons/di';
 import { FaLightbulb, FaUsers, FaComments } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
 
 export const NAV_LINKS = [
   { name: 'Home', href: '#home' },
   { name: 'About', href: '#about' },
-  { name: 'Projects', href: '#projects' },
   { name: 'Experience', href: '#experience' },
+  { name: 'Projects', href: '#projects' },
   { name: 'Skills', href: '#skills' },
   { name: 'Education', href: '#education' },
   { name: 'Certifications', href: '#certifications' },
@@ -45,6 +46,7 @@ export const NAV_LINKS = [
 export const SOCIAL_LINKS = [
   { name: 'GitHub', url: 'https://github.com/HakkanShah', icon: Github },
   { name: 'LinkedIn', url: 'https://www.linkedin.com/in/hakkan/', icon: Linkedin },
+  { name: 'Google Developer Profile', url: 'https://g.dev/hakkan', icon: SiGoogle },
   { name: 'Gmail', url: 'mailto:hakkanparbej@gmail.com', icon: Mail },
 ];
 
@@ -243,7 +245,7 @@ export const EXPERIENCE = [
     company: 'UDRCRAFTS INDIA PVT. LTD.',
     period: 'Present',
     description: 'Developed full-stack solutions, handling both frontend interfaces and backend logic to deliver robust web products.',
-    reality: 'Blaming the backend for frontend bugs and the frontend for backend bugs. Mastered the art of "it works on my machine."',
+    reality: "Honestly? It's mostly me fighting with CSS to center things while simultaneously praying the database doesn't catch fire. Full stack means full responsibility for the mess.",
     offerLetter: '/UdrCrafts_Internship_Offer_Letter.pdf',
     details: {
       overview: 'Developed a comprehensive e-commerce platform from scratch, handling both frontend and backend development.',
@@ -257,13 +259,13 @@ export const EXPERIENCE = [
         'Integrated payment gateway for secure transactions',
       ],
       realityResponsibilities: [
-        'Spent 3 hours making a button perfectly centered, then the client said "move it 2px left"',
-        'Implemented search that works 60% of the time, every time. The other 40%? "Feature, not a bug"',
-        'Created product grids that look perfect on my screen but break on literally every other device',
-        'Copy-pasted Stack Overflow code for APIs, then spent 2 days figuring out why it doesn\'t work',
-        'Routing? More like "rerouting my life choices" after dealing with nested route hell',
-        'Database operations: AKA googling "MongoDB queries" for the 47th time this week',
-        'Payment gateway integration: Praying it works in production because it barely works locally',
+        "Spent 3 hours making a button perfectly centered, only for the client to say 'can we make it pop more?'",
+        "The search bar works perfectly, as long as you type exactly what I tested with.",
+        "Made the product grid responsive. By responsive, I mean it stacks vertically on mobile. Groundbreaking.",
+        "Backend logic consisted of 50% actual code and 50% console.log('here?').",
+        "Routing was a maze I built myself and then immediately got lost in.",
+        "Database operations involved a lot of nervous sweating while running update queries.",
+        "Payment integration: The most stressful part of my life. Please don't use real money yet.",
       ],
       technologies: ['React', 'Node.js', 'Express', 'MongoDB', 'Payment Gateway APIs', 'RESTful APIs', 'Database Design'],
       achievements: [
@@ -272,9 +274,9 @@ export const EXPERIENCE = [
         'Optimized database queries for improved performance',
       ],
       realityAchievements: [
-        'Successfully convinced myself that "it works on localhost" counts as deployment-ready',
-        'Implemented a payment system that I\'m 70% sure won\'t accidentally charge people twice',
-        'Optimized queries from "painfully slow" to "just slow enough to blame on the internet"',
+        "The site didn't crash during the client demo. Huge success.",
+        "Payment gateway works (I think). No one has complained about lost money yet.",
+        "Made the database faster by adding indexes I should have added on day one.",
       ],
     },
   },
@@ -283,7 +285,7 @@ export const EXPERIENCE = [
     company: 'AIKing Solutions',
     period: 'Previous',
     description: 'Working on cutting-edge web applications using React and Next.js, focusing on performance optimization and modern UI/UX practices.',
-    reality: 'Centering divs, fighting with hydration errors, and pretending I understand useEffect dependencies. Basically Stack Overflow with extra steps.',
+    reality: "React state management is my personal hell. Also, teaching an AI to interview people is harder than it sounds—mostly it just wants to take over the world or hallucinate.",
     offerLetter: '/AIKing_Solutions_Internship_Offer_Letter.pdf',
     details: {
       overview: 'Built an AI-powered voice/video-driven mock interview system enabling users to practice interviews with real-time AI feedback.',
@@ -296,12 +298,12 @@ export const EXPERIENCE = [
         'Enabled one-click download of recorded interview videos with audio',
       ],
       realityResponsibilities: [
-        'Built a communication system that\'s "seamless" until someone\'s internet hiccups for 0.5 seconds',
-        'Developed an algorithm that generates questions... and sometimes the same question 3 times in a row',
-        'Made the AI voice sound "human-like" by adjusting pitch until it stopped sounding like a demon',
-        'Implemented live transcription that works great, except when you have an accent, speak fast, or breathe',
-        'Fixed bugs by creating new bugs, then fixing those bugs with more bugs. It\'s bugs all the way down',
-        'One-click download that sometimes takes 5 clicks and a browser refresh. Close enough',
+        "Built a 'seamless' chat system that only lags when you really need it to work.",
+        "The AI generates questions. Sometimes they even make sense.",
+        "Spent days tweaking the voice so it doesn't sound like a haunted GPS.",
+        "Transcription works great if you speak like a news anchor in a soundproof room.",
+        "Squashed bugs. Well, I hid them under the rug with try-catch blocks.",
+        "The download button works, but don't ask me how the blob conversion happens.",
       ],
       technologies: ['React', 'Next.js', 'Google TTS', 'WaveNet', 'AI/ML Integration', 'WebRTC', 'Real-time Communication'],
       achievements: [
@@ -310,9 +312,9 @@ export const EXPERIENCE = [
         'Reduced user friction with streamlined download functionality',
       ],
       realityAchievements: [
-        'Created a platform that\'s "production-ready" if we ignore the 23 open issues labeled "fix later"',
-        'Made the AI voice sound less robotic and more like a very tired human who hates their job',
-        'Reduced user friction by removing features that didn\'t work anyway and calling it "minimalism"',
+        "It actually works in production! (Most of the time).",
+        "The AI voice is now only slightly terrifying.",
+        "Users can download videos, and the file size isn't 0 bytes. Progress.",
       ],
     },
   },
@@ -352,6 +354,7 @@ export const CONTACT_INFO = [
   { name: 'Phone', value: '+91-7810843038', icon: Phone, href: 'tel:+917810843038', color: '#43C59E' },
   { name: 'GitHub', value: 'HakkanShah', icon: Github, href: 'https://github.com/HakkanShah', color: '#FFFFFF' },
   { name: 'LinkedIn', value: 'hakkan', icon: Linkedin, href: 'https://www.linkedin.com/in/hakkan/', color: '#0A66C2' },
+  { name: 'G.Dev Profile', value: 'hakkan', icon: FcGoogle, href: 'https://g.dev/hakkan' },
 ];
 
 export const ABOUT_ME = "Innovative and detail-oriented B.Tech CSE student passionate about building impactful web applications, blending creativity with technical expertise. Experienced in frontend & backend development, AI integration, and UI/UX design. Skilled at leading teams, solving complex problems, and delivering high-quality solutions under deadlines."

@@ -22,8 +22,8 @@ export default function Home() {
       <main className="flex-1 relative z-10">
         <HeroSection />
         <AboutSection />
-        <ProjectsSection />
         <ExperienceSection />
+        <ProjectsSection />
         <SkillsSection />
         <EducationSection />
         <CertificationsSection />
