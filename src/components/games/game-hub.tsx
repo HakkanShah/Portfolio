@@ -9,6 +9,7 @@ import JigsawPuzzle from './jigsaw-puzzle';
 import FlappyHakkan from './flappy-hakkan';
 import TicTacToe from './tic-tac-toe';
 import MemoryMatch from './memory-match';
+import Snake from './snake';
 
 interface GameHubProps {
     isOpen: boolean;
@@ -117,7 +118,7 @@ export default function GameHub({ isOpen, onClose }: GameHubProps) {
                         exit={{ opacity: 0, x: -20 }}
                         className="w-full h-full relative z-20"
                     >
-                        <div className="absolute top-1 right-1 sm:top-2 sm:right-2 z-50 flex gap-2">
+                        <div className="absolute top-1 right-1 sm:top-2 sm:right-2 z-[100] flex gap-2">
                             <Button
                                 variant="ghost"
                                 size="icon"
@@ -154,7 +155,10 @@ export default function GameHub({ isOpen, onClose }: GameHubProps) {
                             {activeGame === 'memory' && (
                                 <MemoryMatch onClose={handleCloseGame} />
                             )}
-                            {activeGame !== 'jigsaw' && activeGame !== 'flappy' && activeGame !== 'tictactoe' && activeGame !== 'memory' && (
+                            {activeGame === 'snake' && (
+                                <Snake onClose={handleCloseGame} />
+                            )}
+                            {activeGame !== 'jigsaw' && activeGame !== 'flappy' && activeGame !== 'tictactoe' && activeGame !== 'memory' && activeGame !== 'snake' && (
                                 <div className="flex flex-col items-center justify-center h-full p-6 text-center">
                                     <Gamepad2 className="w-12 h-12 text-muted-foreground opacity-50 mb-4" />
                                     <h3 className="text-lg font-bold mb-2">Coming Soon!</h3>
