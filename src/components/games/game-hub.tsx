@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import JigsawPuzzle from './jigsaw-puzzle';
 import FlappyHakkan from './flappy-hakkan';
 import TicTacToe from './tic-tac-toe';
+import MemoryMatch from './memory-match';
 
 interface GameHubProps {
     isOpen: boolean;
@@ -150,7 +151,10 @@ export default function GameHub({ isOpen, onClose }: GameHubProps) {
                             {activeGame === 'tictactoe' && (
                                 <TicTacToe onClose={handleCloseGame} />
                             )}
-                            {activeGame !== 'jigsaw' && activeGame !== 'flappy' && activeGame !== 'tictactoe' && (
+                            {activeGame === 'memory' && (
+                                <MemoryMatch onClose={handleCloseGame} />
+                            )}
+                            {activeGame !== 'jigsaw' && activeGame !== 'flappy' && activeGame !== 'tictactoe' && activeGame !== 'memory' && (
                                 <div className="flex flex-col items-center justify-center h-full p-6 text-center">
                                     <Gamepad2 className="w-12 h-12 text-muted-foreground opacity-50 mb-4" />
                                     <h3 className="text-lg font-bold mb-2">Coming Soon!</h3>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, X, Circle } from 'lucide-react';
+import { RotateCcw, X } from 'lucide-react';
 
 interface TicTacToeProps {
     onClose?: () => void;
@@ -72,10 +72,24 @@ export default function TicTacToe({ onClose }: TicTacToeProps) {
                     winner === 'Draw' ? (
                         <span className="text-yellow-500">It's a Draw!</span>
                     ) : (
-                        <span className="text-green-500">Winner: {winner}</span>
+                        <div className="flex items-center gap-2 justify-center">
+                            <span className="text-green-500">Winner:</span>
+                            {winner === 'X' ? (
+                                <img src="https://github.com/HakkanShah.png" alt="Hakkan" className="w-6 h-6 rounded-full" />
+                            ) : (
+                                <span className="text-xl">🤡</span>
+                            )}
+                        </div>
                     )
                 ) : (
-                    <span>Next Player: <span className={isXNext ? 'text-blue-500' : 'text-red-500'}>{isXNext ? 'X' : 'O'}</span></span>
+                    <div className="flex items-center gap-2 justify-center">
+                        <span>Next Player:</span>
+                        {isXNext ? (
+                            <img src="https://github.com/HakkanShah.png" alt="Hakkan" className="w-6 h-6 rounded-full" />
+                        ) : (
+                            <span className="text-xl">🤡</span>
+                        )}
+                    </div>
                 )}
             </div>
 
@@ -86,11 +100,11 @@ export default function TicTacToe({ onClose }: TicTacToeProps) {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleClick(index)}
-                        className={`flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-lg border-2 border-foreground/20 ${cell === 'X' ? 'bg-blue-500/10 text-blue-500' : cell === 'O' ? 'bg-red-500/10 text-red-500' : 'bg-muted/30 hover:bg-muted/50'
+                        className={`flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-lg border-2 border-foreground/20 ${cell === 'X' ? 'bg-blue-500/10' : cell === 'O' ? 'bg-red-500/10' : 'bg-muted/30 hover:bg-muted/50'
                             }`}
                     >
-                        {cell === 'X' && <X className="w-10 h-10 sm:w-12 sm:h-12" />}
-                        {cell === 'O' && <Circle className="w-8 h-8 sm:w-10 sm:h-10" />}
+                        {cell === 'X' && <img src="https://github.com/HakkanShah.png" alt="Hakkan" className="w-10 h-10 sm:w-12 sm:h-12 rounded-full" />}
+                        {cell === 'O' && <span className="text-3xl sm:text-4xl">🤡</span>}
                     </motion.button>
                 ))}
             </div>
