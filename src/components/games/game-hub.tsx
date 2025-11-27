@@ -130,7 +130,7 @@ export default function GameHub({ isOpen, onClose }: GameHubProps) {
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={handleCloseGame}
+                                onClick={onClose}
                                 className="bg-background/80 backdrop-blur-sm border border-foreground hover:bg-background h-7 w-7 sm:h-8 sm:w-8"
                             >
                                 <X className="w-3 h-3 sm:w-4 sm:h-4" />
