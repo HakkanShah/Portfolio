@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 
 interface FloatingShape {
   id: number;
@@ -15,56 +15,56 @@ interface FloatingShape {
 
 const FloatingElements = () => {
   const [shapes, setShapes] = useState<FloatingShape[]>([]);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Optimized parallax transform
+  const x = useTransform(mouseX, [-1, 1], [-20, 20]);
+  const y = useTransform(mouseY, [-1, 1], [-20, 20]);
 
   useEffect(() => {
-    // Generate random floating shapes
-    const generatedShapes: FloatingShape[] = Array.from({ length: 15 }, (_, i) => ({
+    // Reduce shape count on mobile for performance
+    const isMobile = window.innerWidth < 768;
+    const count = isMobile ? 6 : 15;
+
+    const generatedShapes: FloatingShape[] = Array.from({ length: count }, (_, i) => ({
       id: i,
       type: ['circle', 'square', 'triangle'][Math.floor(Math.random() * 3)] as FloatingShape['type'],
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: Math.random() * 60 + 20,
+      size: Math.random() * (isMobile ? 40 : 60) + 20,
       duration: Math.random() * 20 + 15,
       delay: Math.random() * 5,
     }));
     setShapes(generatedShapes);
-  }, []);
 
-  useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth - 0.5) * 20,
-        y: (e.clientY / window.innerHeight - 0.5) * 20,
-      });
+      // Normalize mouse position from -1 to 1
+      mouseX.set((e.clientX / window.innerWidth) * 2 - 1);
+      mouseY.set((e.clientY / window.innerHeight) * 2 - 1);
     };
 
-    // Only add mouse tracking on desktop
-    if (window.innerWidth >= 768) {
+    if (!isMobile) {
       window.addEventListener('mousemove', handleMouseMove);
-      return () => window.removeEventListener('mousemove', handleMouseMove);
     }
-  }, []);
+
+    return () => {
+      if (!isMobile) {
+        window.removeEventListener('mousemove', handleMouseMove);
+      }
+    };
+  }, [mouseX, mouseY]);
 
   const renderShape = (shape: FloatingShape) => {
     const baseClasses = "absolute opacity-10 dark:opacity-5";
     const colorClasses = shape.id % 2 === 0 ? "bg-primary" : "bg-accent";
+    const style = { width: shape.size, height: shape.size };
 
     switch (shape.type) {
       case 'circle':
-        return (
-          <div
-            className={`${baseClasses} ${colorClasses} rounded-full`}
-            style={{ width: shape.size, height: shape.size }}
-          />
-        );
+        return <div className={`${baseClasses} ${colorClasses} rounded-full`} style={style} />;
       case 'square':
-        return (
-          <div
-            className={`${baseClasses} ${colorClasses} rounded-lg rotate-45`}
-            style={{ width: shape.size, height: shape.size }}
-          />
-        );
+        return <div className={`${baseClasses} ${colorClasses} rounded-lg rotate-45`} style={style} />;
       case 'triangle':
         return (
           <div
@@ -83,33 +83,27 @@ const FloatingElements = () => {
 
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      {shapes.map((shape) => (
-        <motion.div
-          key={shape.id}
-          className="absolute"
-          initial={{
-            left: `${shape.x}%`,
-            top: `${shape.y}%`,
-          }}
-          animate={{
-            y: [0, -30, 0],
-            x: [0, shape.id % 2 === 0 ? 20 : -20, 0],
-            rotate: [0, 360],
-          }}
-          transition={{
-            duration: shape.duration,
-            repeat: Infinity,
-            delay: shape.delay,
-            ease: "linear",
-          }}
-          style={{
-            transform: `translate(${mousePosition.x}px, ${mousePosition.y}px)`,
-            transition: 'transform 0.3s ease-out',
-          }}
-        >
-          {renderShape(shape)}
-        </motion.div>
-      ))}
+      <motion.div
+        className="absolute inset-0"
+        style={{ x, y }}
+      >
+        {shapes.map((shape) => (
+          <div
+            key={shape.id}
+            className="absolute animate-float will-change-transform"
+            style={{
+              left: `${shape.x}%`,
+              top: `${shape.y}%`,
+              animationDuration: `${shape.duration}s`,
+              animationDelay: `${shape.delay}s`,
+            }}
+          >
+            <div className="animate-rotate-slow" style={{ animationDuration: `${shape.duration * 1.5}s` }}>
+              {renderShape(shape)}
+            </div>
+          </div>
+        ))}
+      </motion.div>
     </div>
   );
 };
