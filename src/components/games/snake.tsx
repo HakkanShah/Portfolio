@@ -30,6 +30,7 @@ const TECH_ICONS = [
 ];
 
 export default function Snake({ onClose }: SnakeProps) {
+    const [gridSize, setGridSize] = useState(20);
     const [snake, setSnake] = useState<Point[]>([{ x: 10, y: 10 }]);
     const [food, setFood] = useState<FoodItem | null>(null);
     const [direction, setDirection] = useState<Direction>('RIGHT');
@@ -49,26 +50,43 @@ export default function Snake({ onClose }: SnakeProps) {
     useEffect(() => {
         const savedBest = localStorage.getItem('snake-best');
         if (savedBest) setHighScore(parseInt(savedBest));
-        spawnFood();
+
+        // Set grid size based on screen width
+        const handleResize = () => {
+            const newSize = window.innerWidth < 768 ? 14 : 20;
+            setGridSize(newSize);
+        };
+
+        handleResize(); // Initial check
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    // Respawn food when grid size changes to ensure it's within bounds
+    useEffect(() => {
+        if (!isPlaying) {
+            // Reset snake to center if grid changes while not playing
+            setSnake([{ x: Math.floor(gridSize / 2), y: Math.floor(gridSize / 2) }]);
+            spawnFood();
+        }
+    }, [gridSize]);
 
     const spawnFood = useCallback(() => {
         let newFood: FoodItem;
         let isOnSnake;
         do {
-            const x = Math.floor(Math.random() * GRID_SIZE);
-            const y = Math.floor(Math.random() * GRID_SIZE);
+            const x = Math.floor(Math.random() * gridSize);
+            const y = Math.floor(Math.random() * gridSize);
             const randomTech = TECH_ICONS[Math.floor(Math.random() * TECH_ICONS.length)];
             newFood = { x, y, icon: randomTech.icon, color: randomTech.color };
 
-            // Check if food spawns on snake (using current state ref would be better but this is simple enough for now)
-            // We'll just check against the current snake state in the next render cycle effectively, 
-            // but for initial spawn it's fine. 
-            // To be perfectly safe, we'd pass snake as arg, but let's keep it simple.
-            isOnSnake = false; // Simplified for initial implementation
+            isOnSnake = false;
+            // We can't easily check against current snake state here without adding it to dependency array
+            // which might cause loops. For now, simple random is "good enough" for this simple game.
         } while (isOnSnake);
         setFood(newFood);
-    }, []);
+    }, [gridSize]);
 
     const playSound = (type: 'eat' | 'die') => {
         if (typeof window === 'undefined') return;
@@ -132,7 +150,7 @@ export default function Snake({ onClose }: SnakeProps) {
             }
 
             // Wall collision
-            if (head.x < 0 || head.x >= GRID_SIZE || head.y < 0 || head.y >= GRID_SIZE) {
+            if (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize) {
                 gameOver();
                 return prevSnake;
             }
@@ -157,7 +175,7 @@ export default function Snake({ onClose }: SnakeProps) {
 
             return newSnake;
         });
-    }, [food, nextDirection, isGameOver, spawnFood]);
+    }, [food, nextDirection, isGameOver, spawnFood, gridSize]);
 
     useEffect(() => {
         if (isPlaying && !isGameOver) {
@@ -231,7 +249,7 @@ export default function Snake({ onClose }: SnakeProps) {
     };
 
     const startGame = () => {
-        setSnake([{ x: 10, y: 10 }]);
+        setSnake([{ x: Math.floor(gridSize / 2), y: Math.floor(gridSize / 2) }]);
         setDirection('RIGHT');
         setNextDirection('RIGHT');
         setScore(0);
@@ -260,31 +278,41 @@ export default function Snake({ onClose }: SnakeProps) {
             >
                 <div
                     ref={boardRef}
-                    className="relative bg-muted/10 border-2 border-primary/20 rounded-lg overflow-hidden"
+                    className="relative bg-muted/5 border-2 border-primary/20 rounded-xl overflow-hidden shadow-2xl"
                     style={{
                         height: '100%',
                         width: 'auto',
                         maxWidth: '100%',
                         aspectRatio: '1/1',
                         display: 'grid',
-                        gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)`,
-                        gridTemplateRows: `repeat(${GRID_SIZE}, 1fr)`
+                        gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
+                        gridTemplateRows: `repeat(${gridSize}, 1fr)`
                     }}
                 >
-                    {/* Grid Background (Optional, maybe too noisy) */}
+                    {/* Grid Background */}
+                    <div className="absolute inset-0 opacity-10"
+                        style={{
+                            backgroundImage: `linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)`,
+                            backgroundSize: `${100 / gridSize}% ${100 / gridSize}%`
+                        }}
+                    />
 
                     {/* Food */}
                     {food && (
                         <div
-                            className="absolute flex items-center justify-center animate-pulse"
+                            className="absolute flex items-center justify-center animate-pulse z-20"
                             style={{
-                                left: `${(food.x / GRID_SIZE) * 100}%`,
-                                top: `${(food.y / GRID_SIZE) * 100}%`,
-                                width: `${100 / GRID_SIZE}%`,
-                                height: `${100 / GRID_SIZE}%`,
+                                left: `${(food.x / gridSize) * 100}%`,
+                                top: `${(food.y / gridSize) * 100}%`,
+                                width: `${100 / gridSize}%`,
+                                height: `${100 / gridSize}%`,
                             }}
                         >
-                            <food.icon className={`w-full h-full p-0.5 ${food.color}`} />
+                            <div className="relative w-[85%] h-[85%] flex items-center justify-center">
+                                <div className={`absolute inset-0 bg-current opacity-20 rounded-full blur-sm ${food.color}`}></div>
+                                <div className={`absolute inset-0 bg-background rounded-full border-2 border-current ${food.color}`}></div>
+                                <food.icon className={`relative w-[70%] h-[70%] ${food.color}`} />
+                            </div>
                         </div>
                     )}
 
@@ -292,20 +320,30 @@ export default function Snake({ onClose }: SnakeProps) {
                     {snake.map((segment, index) => (
                         <div
                             key={`${segment.x}-${segment.y}-${index}`}
-                            className="absolute"
+                            className="absolute flex items-center justify-center"
                             style={{
-                                left: `${(segment.x / GRID_SIZE) * 100}%`,
-                                top: `${(segment.y / GRID_SIZE) * 100}%`,
-                                width: `${100 / GRID_SIZE}%`,
-                                height: `${100 / GRID_SIZE}%`,
-                                zIndex: snake.length - index, // Head on top
+                                left: `${(segment.x / gridSize) * 100}%`,
+                                top: `${(segment.y / gridSize) * 100}%`,
+                                width: `${100 / gridSize}%`,
+                                height: `${100 / gridSize}%`,
+                                zIndex: snake.length - index + 30, // Ensure snake is above food
                             }}
                         >
-                            <img
-                                src="https://github.com/HakkanShah.png"
-                                alt="Snake"
-                                className={`w-full h-full rounded-full object-cover border border-primary/50 ${index === 0 ? 'ring-2 ring-primary z-10' : 'opacity-80'}`}
-                            />
+                            <div className={`w-[95%] h-[95%] rounded-sm transition-all duration-100 ${index === 0
+                                    ? 'bg-primary shadow-[0_0_10px_rgba(0,255,157,0.5)] z-10 scale-110'
+                                    : 'bg-primary/80'
+                                }`}
+                                style={{
+                                    borderRadius: index === 0 ? '4px' : '2px'
+                                }}
+                            >
+                                {index === 0 && (
+                                    <div className="absolute inset-0 flex items-center justify-center gap-[2px]">
+                                        <div className="w-1 h-1 bg-black rounded-full animate-blink"></div>
+                                        <div className="w-1 h-1 bg-black rounded-full animate-blink"></div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     ))}
                 </div>
