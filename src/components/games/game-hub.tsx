@@ -37,6 +37,10 @@ export default function GameHub({ isOpen, onClose }: GameHubProps) {
 
     useEffect(() => {
         setMounted(true);
+        // Default to maximized on mobile
+        if (window.innerWidth < 768) {
+            setIsMaximized(true);
+        }
         return () => setMounted(false);
     }, []);
 
