@@ -34,6 +34,7 @@ yarn-error.log*
 .vercel
 .idx
 .idx/*
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
@@ -44,3 +45,7 @@ next-env.d.ts
 # firebase
 firebase-debug.log
 firestore-debug.log
+
+# development
+.modified
+src/ai
