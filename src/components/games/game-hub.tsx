@@ -44,6 +44,28 @@ export default function GameHub({ isOpen, onClose }: GameHubProps) {
         return () => setMounted(false);
     }, []);
 
+    // Prevent scrolling when game is active
+    useEffect(() => {
+        if (activeGame) {
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+
+            // Prevent keyboard scroll
+            const handleKeyDown = (e: KeyboardEvent) => {
+                if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
+                    e.preventDefault();
+                }
+            };
+
+            window.addEventListener('keydown', handleKeyDown, { passive: false });
+
+            return () => {
+                document.body.style.overflow = 'unset';
+                window.removeEventListener('keydown', handleKeyDown);
+            };
+        }
+    }, [activeGame]);
+
     const handleCloseGame = () => {
         setActiveGame(null);
     };
@@ -121,6 +143,7 @@ export default function GameHub({ isOpen, onClose }: GameHubProps) {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20 }}
                         className="w-full h-full relative z-20"
+                        style={{ touchAction: 'none' }}
                     >
                         <div className="absolute top-1 right-1 sm:top-2 sm:right-2 z-[100] flex gap-2">
                             <Button
