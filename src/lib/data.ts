@@ -357,6 +357,6 @@ export const CONTACT_INFO = [
   { name: 'G.Dev Profile', value: 'hakkan', icon: FcGoogle, href: 'https://g.dev/hakkan' },
 ];
 
-export const ABOUT_ME = "Innovative and detail-oriented B.Tech CSE student passionate about building impactful web applications, blending creativity with technical expertise. Experienced in frontend & backend development, AI integration, and UI/UX design. Skilled at leading teams, solving complex problems, and delivering high-quality solutions under deadlines."
+export const ABOUT_ME = "Innovative and detail-oriented B.Tech CSE student passionate about building impactful web applications, blending creativity with technical expertise. Experienced in frontend & backend development, AI integration, and UI/UX design. Skilled at leading teams, solving complex problems, and delivering high-quality solutions under deadlines ."
 
 
