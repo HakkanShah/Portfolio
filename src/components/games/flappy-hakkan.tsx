@@ -60,32 +60,47 @@ export default function FlappyHakkan({ onClose }: FlappyHakkanProps) {
         if (saved) setHighScore(parseInt(saved));
     }, []);
 
+    const audioContextRef = useRef<AudioContext | null>(null);
+
     const playJumpSound = () => {
-        if (typeof window !== 'undefined') {
-            try {
-                const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
+        if (typeof window === 'undefined') return;
 
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(300, audioContext.currentTime);
-                oscillator.frequency.linearRampToValueAtTime(500, audioContext.currentTime + 0.1);
-
-                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.1);
-
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.1);
-            } catch (e) {
-                console.error("Audio error", e);
+        try {
+            if (!audioContextRef.current) {
+                audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
             }
+
+            const ctx = audioContextRef.current;
+
+            // Resume context if suspended (common on browsers requiring user interaction)
+            if (ctx.state === 'suspended') {
+                ctx.resume();
+            }
+
+            const oscillator = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(300, ctx.currentTime);
+            oscillator.frequency.linearRampToValueAtTime(500, ctx.currentTime + 0.1);
+
+            gainNode.gain.setValueAtTime(0.2, ctx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.1);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(ctx.destination);
+
+            oscillator.start();
+            oscillator.stop(ctx.currentTime + 0.1);
+        } catch (e) {
+            console.error("Audio error", e);
         }
     };
 
-    const jump = useCallback(() => {
+    const jump = useCallback((e?: React.SyntheticEvent | Event) => {
+        if (e && e.type !== 'keydown') {
+            e.preventDefault();
+        }
         playJumpSound();
         if (gameState === 'playing') {
             birdVelocity.current = JUMP_STRENGTH;
@@ -312,7 +327,7 @@ export default function FlappyHakkan({ onClose }: FlappyHakkanProps) {
                         ref={canvasRef}
                         width={400}
                         height={400}
-                        onClick={jump}
+                        onPointerDown={jump}
                         className="w-full h-full bg-gradient-to-b from-blue-900/20 to-blue-500/10 rounded-lg border-2 border-foreground cursor-pointer shadow-inner touch-none"
                     />
                 </div>
@@ -328,7 +343,7 @@ export default function FlappyHakkan({ onClose }: FlappyHakkanProps) {
                         <Play className="w-12 h-12 sm:w-16 sm:h-16 text-primary mx-auto mb-3 animate-pulse" />
                         <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">Ready?</h3>
                         <p className="text-white/80 text-sm mb-4">Click or Press Space</p>
-                        <Button onClick={jump} className="font-bold px-6 py-2">
+                        <Button onPointerDown={jump} className="font-bold px-6 py-2">
                             Start Game
                         </Button>
                     </motion.div>
@@ -356,12 +371,12 @@ export default function FlappyHakkan({ onClose }: FlappyHakkanProps) {
                             </div>
                         </div>
                         <div className="flex gap-2 justify-center">
-                            <Button onClick={resetGame} className="flex-1">
+                            <Button onPointerDown={resetGame} className="flex-1">
                                 <RotateCcw className="w-4 h-4 mr-1" />
                                 Retry
                             </Button>
                             {onClose && (
-                                <Button variant="outline" onClick={onClose} className="flex-1">
+                                <Button variant="outline" onPointerDown={onClose} className="flex-1">
                                     Exit
                                 </Button>
                             )}
