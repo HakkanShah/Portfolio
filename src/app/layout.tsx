@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     "Hakkan Parbej Shah is a Full Stack Developer skilled in building modern, scalable, and efficient web applications. Passionate about clean code, seamless user experiences, and turning ideas into impactful digital products.",
   manifest: "/manifest.webmanifest",
   keywords: [
+    "Hakkan",
     "Hakkan Parbej Shah",
     "Hakkan Shah",
     "Full Stack Developer",
