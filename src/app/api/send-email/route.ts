@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend('');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   try {
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     }
     await resend.emails.send({
       from: 'Hero Portfolio <onboarding@resend.dev>',
-      to: 'hakkanparbej@gmail.com', 
+      to: 'hakkanparbej@gmail.com',
       subject: `New Portfolio Message from ${name}`,
       html: `<p><b>Name:</b> ${name}<br/><b>Email:</b> ${email}<br/><b>Message:</b> ${message}</p>`
     });
