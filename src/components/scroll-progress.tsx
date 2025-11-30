@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 
 const ScrollProgress = () => {
@@ -12,10 +11,12 @@ const ScrollProgress = () => {
   });
 
   return (
-    <motion.div
-      className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-accent to-primary origin-left z-50"
-      style={{ scaleX }}
-    />
+    <div className="fixed top-0 left-0 right-0 h-1.5 z-[100] pointer-events-none">
+      <motion.div
+        className="absolute top-0 left-0 bottom-0 w-full origin-left bg-gradient-to-r from-[#013871] via-[#E23636] to-[#013871]"
+        style={{ scaleX }}
+      />
+    </div>
   );
 };
 
