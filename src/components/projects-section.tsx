@@ -4,15 +4,18 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PROJECTS, type Project } from '@/lib/data';
 import AnimatedDiv from './animated-div';
 import Card3D from './3d-card';
 import { Eye, ExternalLink, Github, ChevronDown, ChevronUp } from 'lucide-react';
-import ProjectDetailsModal from './project-details-modal';
-import FullScreenImageModal from './full-screen-image-modal';
 import { motion } from 'framer-motion';
+
+// Lazy load modal components
+const ProjectDetailsModal = dynamic(() => import('./project-details-modal'), { ssr: false });
+const FullScreenImageModal = dynamic(() => import('./full-screen-image-modal'), { ssr: false });
 
 const ProjectsSection = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -34,7 +37,7 @@ const ProjectsSection = () => {
         {/* Background decoration */}
         <div className="absolute top-20 right-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
         <div className="absolute bottom-20 left-10 w-64 h-64 bg-accent/5 rounded-full blur-3xl" />
-        
+
         <div className="section-container relative z-10">
           <AnimatedDiv className="text-center mb-8 sm:mb-12 md:mb-16" variant="scale">
             <h2 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-primary tracking-wider">
@@ -49,13 +52,13 @@ const ProjectsSection = () => {
             {displayedProjects.map((project, index) => (
               <AnimatedDiv key={project.title} delay={index * 100} variant="slide">
                 <Card3D className="h-full" intensity={10}>
-                  <motion.div 
+                  <motion.div
                     className="h-full flex flex-col overflow-hidden bg-background border-4 border-foreground rounded-lg shadow-lg group"
                     whileHover={{ y: -8 }}
                     transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                   >
                     {/* Project Image */}
-                    <div 
+                    <div
                       className="relative w-full h-48 sm:h-52 md:h-56 overflow-hidden cursor-pointer"
                       onClick={() => setSelectedProject(project)}
                     >
@@ -69,21 +72,21 @@ const ProjectsSection = () => {
                       />
                       {/* Gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                      
+
                       {/* Shine effect on hover */}
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full"
                         whileHover={{ x: '200%' }}
                         transition={{ duration: 0.6 }}
                       />
-                      
+
                       {/* Title overlay */}
                       <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
                         <h3 className="font-headline text-lg sm:text-xl md:text-2xl text-white tracking-wide drop-shadow-lg line-clamp-1">
                           {project.title}
                         </h3>
                       </div>
-                      
+
                       {/* View icon hint */}
                       <motion.div
                         initial={{ opacity: 0, scale: 0.8 }}
@@ -104,17 +107,17 @@ const ProjectsSection = () => {
                       {/* Tags */}
                       <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
                         {project.tags.slice(0, 4).map(tag => (
-                          <Badge 
-                            key={tag} 
-                            variant="secondary" 
+                          <Badge
+                            key={tag}
+                            variant="secondary"
                             className="border border-foreground/30 text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5"
                           >
                             {tag}
                           </Badge>
                         ))}
                         {project.tags.length > 4 && (
-                          <Badge 
-                            variant="outline" 
+                          <Badge
+                            variant="outline"
                             className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 border-foreground/50"
                           >
                             +{project.tags.length - 4}
@@ -135,14 +138,14 @@ const ProjectsSection = () => {
                             <Eye className="mr-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                             Details
                           </Button>
-                          <Link 
-                            href={project.liveUrl || '#'} 
-                            target="_blank" 
+                          <Link
+                            href={project.liveUrl || '#'}
+                            target="_blank"
                             className="flex-1"
                           >
-                            <Button 
-                              size="sm" 
-                              className="font-bold border-2 border-foreground text-xs sm:text-sm w-full h-9 sm:h-10" 
+                            <Button
+                              size="sm"
+                              className="font-bold border-2 border-foreground text-xs sm:text-sm w-full h-9 sm:h-10"
                               disabled={!project.liveUrl || project.liveUrl === '#'}
                             >
                               <ExternalLink className="mr-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -154,8 +157,8 @@ const ProjectsSection = () => {
 
                         {/* Bottom row: View Code full width (if available) */}
                         {project.repoUrl && project.repoUrl !== '#' && (
-                          <Link 
-                            href={project.repoUrl} 
+                          <Link
+                            href={project.repoUrl}
                             target="_blank"
                           >
                             <Button
@@ -178,7 +181,7 @@ const ProjectsSection = () => {
 
           {/* View More Projects Button */}
           {hasMoreProjects && (
-            <motion.div 
+            <motion.div
               className="flex justify-center mt-12"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -204,14 +207,14 @@ const ProjectsSection = () => {
           )}
         </div>
       </section>
-      
+
       <ProjectDetailsModal
         project={selectedProject}
         isOpen={!!selectedProject}
         onClose={() => setSelectedProject(null)}
         onImageClick={handleImageClick}
       />
-      <FullScreenImageModal 
+      <FullScreenImageModal
         project={fullScreenProject}
         isOpen={!!fullScreenProject}
         onClose={() => setFullScreenProject(null)}

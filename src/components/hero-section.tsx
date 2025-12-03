@@ -2,15 +2,27 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { SOCIAL_LINKS } from '@/lib/data';
 import AnimatedDiv from './animated-div';
 import { Button } from './ui/button';
 import { Download, RotateCcw, Trophy } from 'lucide-react';
-import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
-import GameHub from './games/game-hub';
 
-import ResumePreviewModal from './resume-preview-modal';
+// Lazy load heavy components for better performance
+const GameHub = dynamic(() => import('./games/game-hub'), {
+  loading: () => (
+    <div className="flex items-center justify-center h-full">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+    </div>
+  ),
+  ssr: false
+});
+
+const ResumePreviewModal = dynamic(() => import('./resume-preview-modal'), {
+  ssr: false
+});
 
 
 
@@ -67,10 +79,10 @@ const COMMANDS = {
     description: 'Open email client',
     usage: 'email'
   },
-  puzzle: {
-    puzzle: {
+  game: {
+    game: {
       description: 'Open Game Hub',
-      usage: 'puzzle'
+      usage: 'game'
     }
   }
 };
@@ -142,60 +154,62 @@ const levenshteinDistance = (a: string, b: string): number => {
 };
 
 const HeroSection = () => {
-  // Terminal state
+  const [terminalOutput, setTerminalOutput] = useState<TerminalOutput[]>([
+    {
+      type: 'success',
+      content: (
+        <>
+          <div className="text-[#00ff9d] font-bold">Welcome to my portfolio! 🚀</div>
+          <div className="text-gray-400 mt-1">Type <span className="text-[#64b5f6]">help</span> to see all available commands.</div>
+        </>
+      ),
+      timestamp: Date.now(),
+    }
+  ]);
   const [commandInput, setCommandInput] = useState('');
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [terminalOutput, setTerminalOutput] = useState<TerminalOutput[]>([
-    { type: 'info', content: 'Welcome to Hakkan\'s Portfolio Terminal! 🚀', timestamp: Date.now() },
-    { type: 'info', content: 'Type "help" to see available commands.', timestamp: Date.now() + 1 }
-  ]);
   const [currentSection, setCurrentSection] = useState('home');
-  const [isTerminalFocused, setIsTerminalFocused] = useState(false);
-
-  // Terminal popup state
   const [isTerminalExpanded, setIsTerminalExpanded] = useState(false);
+  const [isTerminalFocused, setIsTerminalFocused] = useState(false);
+  const [isResumeOpen, setIsResumeOpen] = useState(false);
+  const [isGameHubOpen, setIsGameHubOpen] = useState(false);
+  const [gameHubInitialMaximized, setGameHubInitialMaximized] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Typing effect for collapsed terminal
+  const [typingText, setTypingText] = useState('');
+  const fullText = "Click to open terminal OR (Press Ctrl+`)";
+
+  // Reduced motion support
+  const shouldReduceMotion = useReducedMotion();
 
   const terminalInputRef = useRef<HTMLInputElement>(null);
   const terminalOutputRef = useRef<HTMLDivElement>(null);
-
   const imageRef = useRef<HTMLDivElement>(null);
-  const [isGameHubOpen, setIsGameHubOpen] = useState(false);
-  const [isResumeOpen, setIsResumeOpen] = useState(false);
 
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
 
-  const rotateX = useSpring(useTransform(mouseY, [-300, 300], [15, -15]), {
-    stiffness: 300,
-    damping: 30,
-  });
-  const rotateY = useSpring(useTransform(mouseX, [-300, 300], [-15, 15]), {
-    stiffness: 300,
-    damping: 30,
-  });
+  const smoothRotateX = useSpring(rotateX, { stiffness: 150, damping: 15 });
+  const smoothRotateY = useSpring(rotateY, { stiffness: 150, damping: 15 });
 
-  // Auto-scroll terminal output to bottom
-  useEffect(() => {
-    if (terminalOutputRef.current) {
-      terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
-    }
-  }, [terminalOutput]);
-
+  // Image interaction handlers
   const handleImageMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!imageRef.current || window.innerWidth < 768) return;
+    if (!imageRef.current || window.innerWidth < 768 || shouldReduceMotion) return;
 
     const rect = imageRef.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
 
-    mouseX.set(e.clientX - centerX);
-    mouseY.set(e.clientY - centerY);
+    rotateX.set(((e.clientY - centerY) / rect.height) * 15);
+    rotateY.set(((e.clientX - centerX) / rect.width) * 15);
   };
 
   const handleImageMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
+    if (shouldReduceMotion) return;
+    rotateX.set(0);
+    rotateY.set(0);
   };
 
   const handleImageClick = () => {
@@ -249,7 +263,7 @@ const HeroSection = () => {
         const HelpItem = ({ cmd, desc }: { cmd: string, desc: string }) => (
           <div className="flex flex-col items-start sm:flex-row sm:items-baseline gap-1 sm:gap-2 text-left">
             <span className="min-w-[150px] whitespace-nowrap">
-              Run <span className="text-[#ffbd2e] font-bold">{cmd}</span>
+              Type <span className="text-[#ffbd2e] font-bold">{cmd}</span>
             </span>
             <span className="text-gray-400 text-xs sm:text-sm">- {desc}</span>
           </div>
@@ -275,7 +289,7 @@ const HeroSection = () => {
         addOutput('info', '');
 
         addOutput('success', '🎮 Fun:');
-        addOutput('info', <HelpItem cmd="puzzle" desc="Open Game Hub" />);
+        addOutput('info', <HelpItem cmd="game" desc="Open Game Hub" />);
         addOutput('info', '────────────────────────────────────────');
         addOutput('warning', '💡 Tip: Use Tab for auto-completion, ↑↓ for history');
         break;
@@ -382,9 +396,10 @@ const HeroSection = () => {
         }, 1000);
         break;
 
-      case 'puzzle':
-      case 'puzzle':
+      case 'game':
+      case 'game':
         addOutput('success', '🎮 Opening Game Hub...');
+        setGameHubInitialMaximized(true);
         setIsGameHubOpen(true);
         // Auto-close terminal
         setTimeout(() => {
@@ -400,7 +415,7 @@ const HeroSection = () => {
         }
 
         // Fuzzy match for commands
-        const availableCommands = ['help', 'cd', 'ls', 'sections', 'clear', 'hakkan', 'pwd', 'resume', 'github', 'linkedin', 'email', 'puzzle'];
+        const availableCommands = ['help', 'cd', 'ls', 'sections', 'clear', 'hakkan', 'pwd', 'resume', 'github', 'linkedin', 'email', 'game'];
         const closestCommand = availableCommands.reduce((closest, curr) => {
           const dist = levenshteinDistance(command, curr);
           return dist < closest.dist ? { str: curr, dist } : closest;
@@ -514,9 +529,8 @@ const HeroSection = () => {
       terminalInputRef.current?.focus();
     }, 100);
   };
-  // Mobile detection for performance
-  const [isMobile, setIsMobile] = useState(false);
 
+  // Mobile detection for performance
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -538,6 +552,40 @@ const HeroSection = () => {
       window.addEventListener('keydown', handleEscape);
       return () => window.removeEventListener('keydown', handleEscape);
     }
+  }, [isTerminalExpanded]);
+
+  // Ctrl+` keyboard shortcut to toggle terminal
+  useEffect(() => {
+    const handleKeyboardShortcut = (e: KeyboardEvent) => {
+      // Check for Ctrl+` or Cmd+` (backtick)
+      if ((e.ctrlKey || e.metaKey) && e.key === '`') {
+        e.preventDefault();
+        setIsTerminalExpanded(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyboardShortcut);
+    return () => window.removeEventListener('keydown', handleKeyboardShortcut);
+  }, []);
+
+  // Typing effect for collapsed terminal placeholder
+  useEffect(() => {
+    if (isTerminalExpanded) {
+      setTypingText('');
+      return;
+    }
+
+    let currentIndex = 0;
+    const typingInterval = setInterval(() => {
+      if (currentIndex <= fullText.length) {
+        setTypingText(fullText.slice(0, currentIndex));
+        currentIndex++;
+      } else {
+        clearInterval(typingInterval);
+      }
+    }, 80); // Typing speed
+
+    return () => clearInterval(typingInterval);
   }, [isTerminalExpanded]);
 
   return (
@@ -588,7 +636,7 @@ const HeroSection = () => {
                   <span className="text-[#00ff9d] animate-terminal-arrow-glow">➜</span>
                   <span className="text-[#64b5f6]" style={{ textShadow: '0 0 8px rgba(100,181,246,0.4)' }}>~</span>
                   <span>$</span>
-                  <span className="text-gray-500">Click to open terminal...</span>
+                  <span className="text-gray-500">{typingText}</span>
                   <span className="inline-block w-2 h-4 bg-[#00ff9d] animate-pulse ml-2" />
                 </div>
               </div>
@@ -802,8 +850,8 @@ const HeroSection = () => {
 
 
         <AnimatedDiv delay={400} className="relative flex flex-col justify-center items-center gap-4">
-          {/* Background Blur */}
-          <div className="absolute bg-accent w-64 h-64 sm:w-80 sm:h-80 md:w-[30rem] md:h-[30rem] rounded-full blur-3xl opacity-30 animate-pulse pointer-events-none"></div>
+          {/* Background Blur - disabled animation with reduced motion */}
+          <div className={`absolute bg-accent w-64 h-64 sm:w-80 sm:h-80 md:w-[30rem] md:h-[30rem] rounded-full blur-3xl opacity-30 pointer-events-none ${shouldReduceMotion ? '' : 'animate-pulse'}`}></div>
 
           {/* Normal Image with 3D effect */}
           <motion.div
@@ -812,8 +860,8 @@ const HeroSection = () => {
             onMouseLeave={handleImageMouseLeave}
             onClick={!isGameHubOpen ? handleImageClick : undefined}
             style={{
-              rotateX: isGameHubOpen ? 0 : rotateX,
-              rotateY: isGameHubOpen ? 0 : rotateY,
+              rotateX: isGameHubOpen || shouldReduceMotion ? 0 : smoothRotateX,
+              rotateY: isGameHubOpen || shouldReduceMotion ? 0 : smoothRotateY,
               transformStyle: 'preserve-3d',
             }}
             className={`relative z-10 w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-xl overflow-hidden border-4 border-foreground shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] ${!isGameHubOpen ? 'cursor-pointer group' : ''}`}
@@ -861,7 +909,14 @@ const HeroSection = () => {
                   className="w-full h-full bg-background"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <GameHub isOpen={true} onClose={() => setIsGameHubOpen(false)} />
+                  <GameHub
+                    isOpen={true}
+                    onClose={() => {
+                      setIsGameHubOpen(false);
+                      setGameHubInitialMaximized(false);
+                    }}
+                    initialMaximized={gameHubInitialMaximized}
+                  />
                 </motion.div>
               )}
             </AnimatePresence>

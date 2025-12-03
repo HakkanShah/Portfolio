@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useTransform, useReducedMotion } from 'framer-motion';
 
 interface FloatingShape {
   id: number;
@@ -17,10 +17,11 @@ const FloatingElements = () => {
   const [shapes, setShapes] = useState<FloatingShape[]>([]);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const shouldReduceMotion = useReducedMotion();
 
-  // Optimized parallax transform
-  const x = useTransform(mouseX, [-1, 1], [-20, 20]);
-  const y = useTransform(mouseY, [-1, 1], [-20, 20]);
+  // Optimized parallax transform - disabled for reduced motion
+  const x = useTransform(mouseX, [-1, 1], shouldReduceMotion ? [0, 0] : [-20, 20]);
+  const y = useTransform(mouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [-20, 20]);
 
   useEffect(() => {
     // Reduce shape count on mobile for performance
@@ -90,7 +91,7 @@ const FloatingElements = () => {
         {shapes.map((shape) => (
           <div
             key={shape.id}
-            className="absolute animate-float will-change-transform"
+            className={shouldReduceMotion ? "absolute" : "absolute animate-float will-change-transform"}
             style={{
               left: `${shape.x}%`,
               top: `${shape.y}%`,
@@ -98,7 +99,10 @@ const FloatingElements = () => {
               animationDelay: `${shape.delay}s`,
             }}
           >
-            <div className="animate-rotate-slow" style={{ animationDuration: `${shape.duration * 1.5}s` }}>
+            <div
+              className={shouldReduceMotion ? "" : "animate-rotate-slow"}
+              style={{ animationDuration: `${shape.duration * 1.5}s` }}
+            >
               {renderShape(shape)}
             </div>
           </div>

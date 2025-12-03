@@ -46,11 +46,16 @@ const CursorFollower = () => {
     };
 
     const createWeb = (x: number, y: number) => {
+      // Smaller web on mobile devices
+      const isMobile = window.innerWidth < 768;
+      const baseSize = isMobile ? 60 : 100;
+      const randomSize = isMobile ? 20 : 50;
+
       webs.current.push({
         x,
         y,
         size: 0,
-        maxSize: 100 + Math.random() * 50,
+        maxSize: baseSize + Math.random() * randomSize,
         life: 1.0,
         rotation: Math.random() * Math.PI * 2,
       });

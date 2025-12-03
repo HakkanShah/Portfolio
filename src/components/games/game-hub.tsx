@@ -14,6 +14,7 @@ import Snake from './snake';
 interface GameHubProps {
     isOpen: boolean;
     onClose: () => void;
+    initialMaximized?: boolean;
 }
 
 type GameType = 'jigsaw' | 'flappy' | 'tictactoe' | 'memory' | 'snake' | 'pong' | 'rps' | 'whack' | '2048' | null;
@@ -30,19 +31,19 @@ const GAMES = [
     { id: '2048', name: '2048', icon: Calculator, color: 'text-cyan-500', bg: 'bg-cyan-500/10', border: 'border-cyan-500' },
 ];
 
-export default function GameHub({ isOpen, onClose }: GameHubProps) {
+export default function GameHub({ isOpen, onClose, initialMaximized = false }: GameHubProps) {
     const [activeGame, setActiveGame] = useState<GameType>(null);
-    const [isMaximized, setIsMaximized] = useState(false);
+    const [isMaximized, setIsMaximized] = useState(initialMaximized);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
-        // Default to maximized on mobile
-        if (window.innerWidth < 768) {
+        // Default to maximized on mobile, or if initialMaximized is true
+        if (window.innerWidth < 768 || initialMaximized) {
             setIsMaximized(true);
         }
         return () => setMounted(false);
-    }, []);
+    }, [initialMaximized]);
 
     // Prevent scrolling when game is active
     useEffect(() => {
