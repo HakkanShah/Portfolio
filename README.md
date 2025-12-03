@@ -28,7 +28,7 @@ A modern, interactive portfolio website built with Next.js 15, featuring stunnin
 - **Certifications** - Professional certifications
 - **Contact** - Get in touch via integrated form
 
-> **🎁 Hidden Features**: This portfolio contains several delightful easter eggs and interactive surprises. Explore and discover them yourself!
+> **🐣 Easter Eggs**: This portfolio contains several delightful easter eggs and interactive surprises. Explore and discover them yourself!
 
 ## 🛠️ Tech Stack
 
