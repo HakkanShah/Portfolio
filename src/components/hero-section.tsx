@@ -191,7 +191,7 @@ const HeroSection = () => {
       ]
     },
     {
-      text: "NextJS Developer",
+      text: "Next.JS Developer",
       icons: [
         { Icon: SiNextdotjs, color: "#ffffff" },
         { Icon: SiTypescript, color: "#3178C6" },
@@ -700,8 +700,18 @@ const HeroSection = () => {
                   <p className="font-headline text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-wider text-accent">
                     {phraseData[currentPhraseIndex].text}
                   </p>
-                  {/* Icons - hidden on mobile, visible from sm breakpoint */}
+                  {/* Arrow and Icons - hidden on mobile, visible from sm breakpoint */}
                   <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
+                    <motion.div
+                      initial={{ opacity: 0, x: -5 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.4, duration: 0.3 }}
+                      className="text-primary"
+                    >
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </motion.div>
                     {phraseData[currentPhraseIndex].icons.map((icon, idx) => (
                       <motion.div
                         key={idx}
@@ -751,7 +761,7 @@ const HeroSection = () => {
                   <div className="w-3 h-3 rounded-full bg-gradient-to-br from-[#32d74b] to-[#27c93f] border border-[#1aab29] shadow-[0_2px_8px_rgba(39,201,63,0.4)]" />
                 </div>
                 <div className="ml-4 text-[10px] sm:text-xs text-gray-500 font-mono flex-1 text-center pr-12 tracking-wide">
-                  portfolio.terminal
+                  Portfolio Terminal
                 </div>
               </div>
 
