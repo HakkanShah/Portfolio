@@ -7,6 +7,7 @@ import { SOCIAL_LINKS } from '@/lib/data';
 import AnimatedDiv from './animated-div';
 import { Button } from './ui/button';
 import { Download, RotateCcw, Trophy } from 'lucide-react';
+import { SiMongodb, SiExpress, SiReact, SiNodedotjs, SiNextdotjs, SiTypescript } from 'react-icons/si';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 
@@ -176,6 +177,44 @@ const HeroSection = () => {
   const [isGameHubOpen, setIsGameHubOpen] = useState(false);
   const [gameHubInitialMaximized, setGameHubInitialMaximized] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Cycling subtitle effect - smooth phrase switching
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+  const phraseData = [
+    {
+      text: "Full Stack Developer",
+      icons: [
+        { Icon: SiMongodb, color: "#47A248" },
+        { Icon: SiExpress, color: "#ffffff" },
+        { Icon: SiReact, color: "#61DAFB" },
+        { Icon: SiNodedotjs, color: "#339933" },
+      ]
+    },
+    {
+      text: "NextJS Developer",
+      icons: [
+        { Icon: SiNextdotjs, color: "#ffffff" },
+        { Icon: SiTypescript, color: "#3178C6" },
+      ]
+    }
+  ];
+
+  useEffect(() => {
+    // Wait for initial slide animation, then start cycling
+    const initialDelay = setTimeout(() => {
+      // Change to next phrase immediately
+      setCurrentPhraseIndex(1);
+
+      // Then continue cycling every 3 seconds
+      const interval = setInterval(() => {
+        setCurrentPhraseIndex(prev => (prev + 1) % phraseData.length);
+      }, 3000);
+
+      return () => clearInterval(interval);
+    }, 2000); // Start cycling after initial reveal
+
+    return () => clearTimeout(initialDelay);
+  }, [phraseData.length]);
 
   // Typing effect for collapsed terminal
   const [typingText, setTypingText] = useState('');
@@ -592,16 +631,102 @@ const HeroSection = () => {
     <section id="home" className="section-padding border-b-4 border-foreground overflow-hidden relative">
       <div className="section-container grid md:grid-cols-2 gap-10 items-center min-h-[70vh]">
         <div className="text-center md:text-left">
-          <AnimatedDiv variant="scale">
-            <h1 className="font-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-wider text-primary drop-shadow-[2px_2px_0_hsl(var(--foreground))]">
-              Hakkan Parbej Shah
-            </h1>
-          </AnimatedDiv>
-          <AnimatedDiv delay={200} variant="slideLeft">
-            <p className="mt-4 font-headline text-2xl sm:text-3xl md:text-4xl font-bold tracking-wider text-accent">
-              Full Stack Developer
-            </p>
-          </AnimatedDiv>
+          <motion.h1
+            className="font-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-wider text-primary drop-shadow-[2px_2px_0_hsl(var(--foreground))] flex flex-wrap justify-center md:justify-start gap-x-[0.2em] gap-y-2"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.05,
+                  delayChildren: 0.2
+                }
+              }
+            }}
+          >
+            {"Hakkan Parbej Shah".split(" ").map((word, i) => (
+              <div key={i} className="flex whitespace-nowrap">
+                {word.split("").map((char, j) => (
+                  <motion.span
+                    key={j}
+                    variants={{
+                      hidden: { opacity: 0, y: 50, rotateX: 90, filter: 'blur(10px)' },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        rotateX: 0,
+                        filter: 'blur(0px)',
+                        transition: {
+                          type: "spring",
+                          damping: 12,
+                          stiffness: 100,
+                          filter: { type: "tween", duration: 0.4, ease: "easeOut" }
+                        }
+                      }
+                    }}
+                    whileHover={{
+                      y: -5,
+                      color: '#ff0055',
+                      textShadow: '0 0 8px rgba(255,0,85,0.5)',
+                      transition: { duration: 0.1 }
+                    }}
+                    className="inline-block origin-bottom"
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </div>
+            ))}
+          </motion.h1>
+
+          {/* Cycling Subtitle with Tech Icons */}
+          <div className="mt-4 flex items-center justify-center md:justify-start h-[40px] sm:h-[48px] md:h-[56px]">
+            <div className="overflow-hidden whitespace-nowrap relative">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentPhraseIndex}
+                  initial={{ opacity: 0, y: 20, width: 0 }}
+                  animate={{ opacity: 1, y: 0, width: "auto" }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{
+                    duration: 0.8,
+                    ease: "easeOut",
+                    width: { duration: 1.5, ease: "linear" }
+                  }}
+                  className="flex items-center gap-2 sm:gap-3"
+                >
+                  <p className="font-headline text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-wider text-accent">
+                    {phraseData[currentPhraseIndex].text}
+                  </p>
+                  {/* Icons - hidden on mobile, visible from sm breakpoint */}
+                  <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
+                    {phraseData[currentPhraseIndex].icons.map((icon, idx) => (
+                      <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.5 + idx * 0.1, duration: 0.3 }}
+                      >
+                        <icon.Icon
+                          className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7"
+                          style={{ color: icon.color }}
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 1, 0] }}
+              transition={{ duration: 0.8, repeat: Infinity, ease: "linear", delay: 1 }}
+              className="w-2 h-6 sm:h-8 md:h-10 bg-primary ml-1"
+            />
+          </div>
+
           <AnimatedDiv delay={400} className="mt-8 max-w-xl mx-auto md:mx-0">
             {/* Compact Terminal View */}
             <div
