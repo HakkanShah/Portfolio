@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { NAV_LINKS } from '@/lib/data';
 import { useScrollSpy } from '@/hooks/use-scroll-spy';
@@ -40,7 +41,7 @@ const Header = () => {
         <Link href="/" className="block">
           <AnimatedTitle />
         </Link>
-        
+
         <nav className="hidden md:flex items-center space-x-1">
           {NAV_LINKS.map(link => (
             <Link key={link.href} href={link.href} passHref>
@@ -60,12 +61,12 @@ const Header = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
-            <Link href="#contact">
-              <Button variant="default" className="font-bold border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all active:translate-x-[4px] active:translate-y-[4px] active:shadow-none dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] dark:hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
-                Contact Me
-              </Button>
-            </Link>
-            <ThemeToggle />
+          <Link href="#contact">
+            <Button variant="default" className="font-bold border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all active:translate-x-[4px] active:translate-y-[4px] active:shadow-none dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] dark:hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
+              Contact Me
+            </Button>
+          </Link>
+          <ThemeToggle />
         </div>
 
         <div className="md:hidden flex items-center gap-2">
@@ -76,37 +77,71 @@ const Header = () => {
         </div>
       </div>
 
-      {isOpen && (
-        <div className="md:hidden bg-background/95 backdrop-blur-lg pb-4 border-t-4 border-foreground">
-          <nav className="flex flex-col items-center space-y-2 pt-4">
-            {NAV_LINKS.map(link => (
-              <Link key={link.href} href={link.href} passHref>
-                <Button
-                  variant="ghost"
-                  className={cn(
-                    'w-full text-xl font-headline tracking-wider',
-                    activeId === link.href.substring(1)
-                      ? 'text-primary'
-                      : 'text-foreground/80'
-                  )}
-                  onClick={() => setIsOpen(false)}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="md:hidden bg-background/95 backdrop-blur-lg border-b-4 border-foreground overflow-hidden"
+          >
+            <motion.nav
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={{
+                open: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
+                closed: { transition: { staggerChildren: 0.05, staggerDirection: -1 } }
+              }}
+              className="flex flex-col items-center space-y-2 py-4"
+            >
+              {NAV_LINKS.map(link => (
+                <motion.div
+                  key={link.href}
+                  variants={{
+                    open: { y: 0, opacity: 1 },
+                    closed: { y: -20, opacity: 0 }
+                  }}
+                  className="w-full"
                 >
-                  {link.name}
-                </Button>
-              </Link>
-            ))}
-            <Link href="#contact" className="w-full px-4 pt-2">
-              <Button 
-                variant="default" 
-                className="w-full font-bold border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] dark:active:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]"
-                onClick={() => setIsOpen(false)}
+                  <Link href={link.href} passHref>
+                    <Button
+                      variant="ghost"
+                      className={cn(
+                        'w-full text-xl font-headline tracking-wider',
+                        activeId === link.href.substring(1)
+                          ? 'text-primary'
+                          : 'text-foreground/80'
+                      )}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {link.name}
+                    </Button>
+                  </Link>
+                </motion.div>
+              ))}
+              <motion.div
+                variants={{
+                  open: { y: 0, opacity: 1 },
+                  closed: { y: -20, opacity: 0 }
+                }}
+                className="w-full px-4 pt-2"
               >
-                Contact Me
-              </Button>
-            </Link>
-          </nav>
-        </div>
-      )}
+                <Link href="#contact">
+                  <Button
+                    variant="default"
+                    className="w-full font-bold border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] dark:active:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Contact Me
+                  </Button>
+                </Link>
+              </motion.div>
+            </motion.nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
