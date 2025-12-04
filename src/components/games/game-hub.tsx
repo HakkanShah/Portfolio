@@ -74,7 +74,7 @@ export default function GameHub({ isOpen, onClose, initialMaximized = false }: G
     if (!isOpen) return null;
 
     const content = (
-        <div className={`w-full h-full bg-background flex flex-col overflow-hidden relative ${isMaximized ? 'rounded-xl border-2 border-[#00ff9d] shadow-[0_0_60px_rgba(0,255,157,0.4),0_30px_100px_rgba(0,0,0,0.9)]' : ''}`}>
+        <div className={`w-full h-full bg-background flex flex-col overflow-hidden relative no-custom-cursor ${isMaximized ? 'rounded-xl border-2 border-[#00ff9d] shadow-[0_0_60px_rgba(0,255,157,0.4),0_30px_100px_rgba(0,0,0,0.9)]' : ''}`}>
             {/* Visual Effects - Only when maximized */}
             {isMaximized && (
                 <>

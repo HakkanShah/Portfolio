@@ -30,6 +30,7 @@ const CursorFollower = () => {
 
   const touchStartPos = useRef({ x: 0, y: 0 });
   const isScrolling = useRef(false);
+  const lastTouchTime = useRef(0);
 
   useEffect(() => {
     // Run on all devices
@@ -246,9 +247,16 @@ const CursorFollower = () => {
       }
     };
 
-    const handleMouseDown = () => {
+    const handleMouseDown = (e: MouseEvent) => {
+      // Prevent double firing from touch events
+      if (Date.now() - lastTouchTime.current < 500) return;
+
       // Don't create effects if hidden
       if (canvasRef.current && canvasRef.current.style.opacity === '0') return;
+
+      // Don't trigger in no-custom-cursor areas (Game Hub, Terminal)
+      const target = e.target as HTMLElement;
+      if (target.closest('.no-custom-cursor')) return;
 
       createWeb(mouse.current.x, mouse.current.y);
       playWebSound();
@@ -307,8 +315,14 @@ const CursorFollower = () => {
       }
     };
 
-    const handleTouchEnd = () => {
+    const handleTouchEnd = (e: TouchEvent) => {
       if (!isScrolling.current) {
+        lastTouchTime.current = Date.now();
+
+        // Don't trigger in no-custom-cursor areas
+        const target = e.target as HTMLElement;
+        if (target.closest('.no-custom-cursor')) return;
+
         // It was a tap, not a scroll
         if (canvasRef.current && canvasRef.current.style.opacity === '0') return;
         createWeb(mouse.current.x, mouse.current.y);
