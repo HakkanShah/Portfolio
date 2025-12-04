@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { Geist, Geist_Mono, Bangers, Comic_Neue } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster"
 import './globals.css';
@@ -109,7 +110,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <VisitorTracker />
+          <Suspense fallback={null}>
+            <VisitorTracker />
+          </Suspense>
           {children}
           <Toaster />
         </ThemeProvider>

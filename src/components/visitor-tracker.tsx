@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 export default function VisitorTracker() {
     const hasNotified = useRef(false);
+    const searchParams = useSearchParams();
 
     useEffect(() => {
         // Prevent double firing in React Strict Mode
@@ -19,11 +21,18 @@ export default function VisitorTracker() {
             try {
                 hasNotified.current = true;
 
+                // Get source from URL (e.g., ?ref=linkedin or ?source=twitter)
+                const source = searchParams.get('ref') || searchParams.get('source');
+
                 // Mark as notified immediately to prevent race conditions
                 sessionStorage.setItem(sessionKey, 'true');
 
                 await fetch('/api/visit-notify', {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ source }),
                 });
             } catch (error) {
                 // Silently fail - don't disturb the user
@@ -37,7 +46,7 @@ export default function VisitorTracker() {
         }, 2000);
 
         return () => clearTimeout(timer);
-    }, []);
+    }, [searchParams]);
 
     return null; // Render nothing
 }
