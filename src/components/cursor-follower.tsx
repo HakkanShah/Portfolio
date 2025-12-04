@@ -28,10 +28,11 @@ const CursorFollower = () => {
   const glitchIntensity = useRef(0);
   const spiderSenseFrame = useRef(0);
 
+  const touchStartPos = useRef({ x: 0, y: 0 });
+  const isScrolling = useRef(false);
+
   useEffect(() => {
     // Run on all devices
-
-
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -233,11 +234,24 @@ const CursorFollower = () => {
       }
     };
 
+    const playWebSound = () => {
+      try {
+        const audio = new Audio('/sounds/thwip.mp3');
+        audio.volume = 0.2; // Reduced volume
+        audio.play().catch(e => {
+          // Ignore autoplay errors
+        });
+      } catch (e) {
+        // Ignore audio errors
+      }
+    };
+
     const handleMouseDown = () => {
       // Don't create effects if hidden
       if (canvasRef.current && canvasRef.current.style.opacity === '0') return;
 
       createWeb(mouse.current.x, mouse.current.y);
+      playWebSound();
     };
 
     const handleMouseOver = (e: MouseEvent) => {
@@ -258,8 +272,16 @@ const CursorFollower = () => {
 
     const handleTouchMove = (e: TouchEvent) => {
       if (e.touches.length > 0) {
-        mouse.current.x = e.touches[0].clientX;
-        mouse.current.y = e.touches[0].clientY;
+        const touch = e.touches[0];
+        mouse.current.x = touch.clientX;
+        mouse.current.y = touch.clientY;
+
+        // Calculate distance moved
+        const dx = touch.clientX - touchStartPos.current.x;
+        const dy = touch.clientY - touchStartPos.current.y;
+        if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+          isScrolling.current = true;
+        }
 
         // Check for terminal on mobile too
         const target = e.target as HTMLElement;
@@ -273,13 +295,24 @@ const CursorFollower = () => {
 
     const handleTouchStart = (e: TouchEvent) => {
       if (e.touches.length > 0) {
-        mouse.current.x = e.touches[0].clientX;
-        mouse.current.y = e.touches[0].clientY;
+        const touch = e.touches[0];
+        mouse.current.x = touch.clientX;
+        mouse.current.y = touch.clientY;
+
+        touchStartPos.current = { x: touch.clientX, y: touch.clientY };
+        isScrolling.current = false;
 
         // Don't create effects if hidden
         if (canvasRef.current && canvasRef.current.style.opacity === '0') return;
+      }
+    };
 
+    const handleTouchEnd = () => {
+      if (!isScrolling.current) {
+        // It was a tap, not a scroll
+        if (canvasRef.current && canvasRef.current.style.opacity === '0') return;
         createWeb(mouse.current.x, mouse.current.y);
+        playWebSound();
       }
     };
 
@@ -288,6 +321,7 @@ const CursorFollower = () => {
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('touchmove', handleTouchMove);
     window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchend', handleTouchEnd);
     document.addEventListener('mouseover', handleMouseOver);
 
     resizeCanvas();
@@ -299,6 +333,7 @@ const CursorFollower = () => {
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
       document.removeEventListener('mouseover', handleMouseOver);
       cancelAnimationFrame(animationFrameId);
     };
