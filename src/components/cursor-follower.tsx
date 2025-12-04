@@ -14,12 +14,16 @@ interface SpiderWeb {
   x: number;
   y: number;
   size: number;
-  maxSize: number;
+  targetSize: number; // For elastic animation
+  velocity: number;   // For elastic animation
   life: number;
   rotation: number;
+  spokeAngles: number[]; // Random angles for organic look
+  ringDistances: number[]; // Random distances for organic look
 }
 
 const CursorFollower = () => {
+  // ... refs ...
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const trail = useRef<Point[]>([]);
   const webs = useRef<SpiderWeb[]>([]);
@@ -33,7 +37,7 @@ const CursorFollower = () => {
   const lastTouchTime = useRef(0);
 
   useEffect(() => {
-    // Run on all devices
+    // ... setup ...
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -48,21 +52,63 @@ const CursorFollower = () => {
     };
 
     const createWeb = (x: number, y: number) => {
-      // Smaller web on mobile devices
       const isMobile = window.innerWidth < 768;
-      const baseSize = isMobile ? 60 : 100;
-      const randomSize = isMobile ? 20 : 50;
+      // Reduced sizes by ~30%
+      const baseSize = isMobile ? 40 : 70;
+      const randomSize = isMobile ? 15 : 30;
+      const targetSize = baseSize + Math.random() * randomSize;
+
+      // Generate organic structure
+      const spokeCount = Math.floor(Math.random() * 5) + 8; // 8-12 spokes
+      const spokeAngles = [];
+      for (let i = 0; i < spokeCount; i++) {
+        // Add jitter to perfect angles
+        const baseAngle = (Math.PI * 2 / spokeCount) * i;
+        const jitter = (Math.random() - 0.5) * 0.5; // +/- 0.25 radians
+        spokeAngles.push(baseAngle + jitter);
+      }
+
+      const ringCount = 5;
+      const ringDistances = [];
+      for (let i = 1; i <= ringCount; i++) {
+        // Non-uniform ring spacing
+        const progress = i / ringCount;
+        const variation = (Math.random() - 0.5) * 0.1;
+        ringDistances.push(progress + variation);
+      }
 
       webs.current.push({
         x,
         y,
         size: 0,
-        maxSize: baseSize + Math.random() * randomSize,
+        targetSize,
+        velocity: 0,
         life: 1.0,
         rotation: Math.random() * Math.PI * 2,
+        spokeAngles,
+        ringDistances,
       });
-      // Trigger glitch on click
       glitchIntensity.current = 10;
+    };
+
+    const updateWebs = () => {
+      for (let i = webs.current.length - 1; i >= 0; i--) {
+        const w = webs.current[i];
+
+        // Elastic spring animation
+        const tension = 0.15;
+        const damping = 0.75;
+        const force = (w.targetSize - w.size) * tension;
+        w.velocity += force;
+        w.velocity *= damping;
+        w.size += w.velocity;
+
+        w.life -= 0.015;
+
+        if (w.life <= 0) {
+          webs.current.splice(i, 1);
+        }
+      }
     };
 
     const updateTrail = () => {
@@ -79,18 +125,6 @@ const CursorFollower = () => {
         p.life -= 0.05;
         if (p.life <= 0) {
           trail.current.splice(i, 1);
-        }
-      }
-    };
-
-    const updateWebs = () => {
-      for (let i = webs.current.length - 1; i >= 0; i--) {
-        const w = webs.current[i];
-        w.size += (w.maxSize - w.size) * 0.1; // Ease out expansion
-        w.life -= 0.015;
-
-        if (w.life <= 0) {
-          webs.current.splice(i, 1);
         }
       }
     };
@@ -124,43 +158,73 @@ const CursorFollower = () => {
       ctx.translate(web.x, web.y);
       ctx.rotate(web.rotation);
       ctx.globalAlpha = web.life;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-      ctx.lineWidth = 1;
 
-      // Draw radials (spokes)
-      const spokes = 8;
-      for (let i = 0; i < spokes; i++) {
-        const angle = (Math.PI * 2 / spokes) * i;
+      // Silk glow effect
+      ctx.shadowBlur = 5;
+      ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.lineWidth = 0.8; // Thinner, more realistic lines
+
+      // Draw organic spokes
+      web.spokeAngles.forEach(angle => {
         ctx.beginPath();
         ctx.moveTo(0, 0);
         ctx.lineTo(Math.cos(angle) * web.size, Math.sin(angle) * web.size);
         ctx.stroke();
-      }
+      });
 
-      // Draw spirals
-      const rings = 5;
-      for (let i = 1; i <= rings; i++) {
-        const radius = (web.size / rings) * i;
+      // Draw organic spirals
+      web.ringDistances.forEach(dist => {
+        const radius = web.size * dist;
         ctx.beginPath();
-        for (let j = 0; j <= spokes; j++) {
-          const angle = (Math.PI * 2 / spokes) * j;
-          // Add slight curve/sag to web
+
+        web.spokeAngles.forEach((angle, j) => {
           const x = Math.cos(angle) * radius;
           const y = Math.sin(angle) * radius;
-          if (j === 0) ctx.moveTo(x, y);
-          else {
+
+          if (j === 0) {
+            ctx.moveTo(x, y);
+          } else {
             // Quadratic curve for sag
-            const prevAngle = (Math.PI * 2 / spokes) * (j - 1);
+            const prevAngle = web.spokeAngles[j - 1];
             const midAngle = (prevAngle + angle) / 2;
-            const sagFactor = 0.8; // How much the web sags inwards
+
+            // Calculate mid-point with sag
+            const sagFactor = 0.85; // Less sag for tighter web
             const midRadius = radius * sagFactor;
             const cx = Math.cos(midAngle) * midRadius;
             const cy = Math.sin(midAngle) * midRadius;
+
             ctx.quadraticCurveTo(cx, cy, x, y);
           }
-        }
+        });
+
+        // Close the loop
+        const firstAngle = web.spokeAngles[0];
+        const lastAngle = web.spokeAngles[web.spokeAngles.length - 1];
+        const midAngle = (lastAngle + firstAngle + Math.PI * 2) / 2;
+        const radiusFirst = web.size * dist;
+        const xFirst = Math.cos(firstAngle) * radiusFirst;
+        const yFirst = Math.sin(firstAngle) * radiusFirst;
+
+        const sagFactor = 0.85;
+        const midRadius = radius * sagFactor;
+        const cx = Math.cos(midAngle) * midRadius;
+        const cy = Math.sin(midAngle) * midRadius;
+
+        ctx.quadraticCurveTo(cx, cy, xFirst, yFirst);
         ctx.stroke();
-      }
+
+        // Draw "nodes" (sticky glue points) at intersections
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        web.spokeAngles.forEach(angle => {
+          const nx = Math.cos(angle) * radius;
+          const ny = Math.sin(angle) * radius;
+          ctx.beginPath();
+          ctx.arc(nx, ny, 1.2, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      });
 
       ctx.restore();
     };
