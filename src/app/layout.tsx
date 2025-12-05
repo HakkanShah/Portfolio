@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Suspense } from 'react';
 import { Geist, Geist_Mono, Bangers, Comic_Neue } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster"
@@ -29,9 +29,13 @@ const comicNeue = Comic_Neue({
   style: ['normal', 'italic'],
 });
 
+export const viewport: Viewport = {
+  themeColor: "#00ffff",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://hakkan.is-a.dev'),
-  title: "Hakkan Parbej Shah - Full Stack Developer",
+  title: "Hakkan - Full Stack Developer",
   description:
     "Hakkan Parbej Shah is a Full Stack Developer skilled in building modern, scalable, and efficient web applications. Passionate about clean code, seamless user experiences, and turning ideas into impactful digital products.",
   manifest: "/manifest.webmanifest",
@@ -60,7 +64,6 @@ export const metadata: Metadata = {
   category: "Personal Portfolio / Web Development",
   applicationName: "Hakkan Portfolio",
   robots: "index, follow",
-  themeColor: "#00ffff",
   openGraph: {
     title: "Hakkan Parbej Shah - Full Stack Developer",
     description:

@@ -6,6 +6,7 @@ export const CursorIcon = ({ className, style }: { className?: string; style?: R
             src="/icons/cursor.png"
             alt="Cursor"
             fill
+            sizes="96px"
             className="object-contain"
         />
     </div>
@@ -17,6 +18,7 @@ export const AntigravityIcon = ({ className, style }: { className?: string; styl
             src="/icons/antigravity.png"
             alt="Google Antigravity"
             fill
+            sizes="96px"
             className="object-contain"
         />
     </div>

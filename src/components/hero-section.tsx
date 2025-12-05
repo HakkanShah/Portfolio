@@ -185,7 +185,7 @@ const HeroSection = () => {
       text: "Full Stack Developer",
       icons: [
         { Icon: SiMongodb, color: "#47A248" },
-        { Icon: SiExpress, color: "#ffffff" },
+        { Icon: SiExpress },
         { Icon: SiReact, color: "#61DAFB" },
         { Icon: SiNodedotjs, color: "#339933" },
       ]
@@ -193,7 +193,7 @@ const HeroSection = () => {
     {
       text: "Next.JS Developer",
       icons: [
-        { Icon: SiNextdotjs, color: "#ffffff" },
+        { Icon: SiNextdotjs },
         { Icon: SiTypescript, color: "#3178C6" },
       ]
     }
