@@ -71,10 +71,8 @@ A modern, interactive portfolio website built with Next.js 15, featuring stunnin
    ```env
    # 📧 Email Service (Resend)
    RESEND_API_KEY=your_resend_api_key
-
    # 👾 Discord Webhook (Visitor Notifications)
    DISCORD_WEBHOOK_URL=your_discord_webhook_url
-
    # 🔥 Firebase Configuration (Visitor Counter)
    NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
