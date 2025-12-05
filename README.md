@@ -64,7 +64,7 @@ A modern, interactive portfolio website built with Next.js 15, featuring stunnin
    ```bash
    npm install
    ```
-
+ 
 3. **Set up environment variables**
    
    Create a `.env.local` file in the root directory:
