@@ -1,4 +1,4 @@
-# 🚀 Hakkan Shah's Portfolio
+# My Portfolio 🚀 
 
 A modern, interactive portfolio website built with Next.js 15, featuring stunning animations, interactive mini games, and a beautiful dark/light theme.
 
@@ -28,7 +28,7 @@ A modern, interactive portfolio website built with Next.js 15, featuring stunnin
 - **Certifications** - Professional certifications
 - **Contact** - Get in touch via integrated form
 
-> **🎁 Hidden Features**: This portfolio contains several delightful easter eggs and interactive surprises. Explore and discover them yourself!
+> **🐣 Easter Eggs**: This portfolio contains several delightful easter eggs and interactive surprises. Explore and discover them yourself!
 
 ## 🛠️ Tech Stack
 
@@ -64,18 +64,23 @@ A modern, interactive portfolio website built with Next.js 15, featuring stunnin
    ```bash
    npm install
    ```
-
+ 
 3. **Set up environment variables**
    
    Create a `.env.local` file in the root directory:
    ```env
-   # Add your environment variables here
-   NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
-   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
-   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_firebase_project_id
-   # ... other Firebase config
-   
+   # 📧 Email Service (Resend)
    RESEND_API_KEY=your_resend_api_key
+   # 👾 Discord Webhook (Visitor Notifications)
+   DISCORD_WEBHOOK_URL=your_discord_webhook_url
+   # 🔥 Firebase Configuration (Visitor Counter)
+   NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project_id.firebasestorage.app
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+   NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
    ```
 
 4. **Run the development server**
@@ -86,6 +91,41 @@ A modern, interactive portfolio website built with Next.js 15, featuring stunnin
 5. **Open your browser**
    
    Navigate to [http://localhost:9002](http://localhost:9002)
+
+## 🛠️ Setup Guide
+
+### 👾 Discord Notifications
+1. Create a server (or use an existing one) on Discord.
+2. Go to **Server Settings** > **Integrations** > **Webhooks**.
+3. Click **New Webhook**, give it a name (e.g., "Portfolio Bot"), and copy the **Webhook URL**.
+4. Paste it into your `.env.local` as `DISCORD_WEBHOOK_URL`.
+
+### 🔥 Firebase Visitor Counter
+1. Go to [Firebase Console](https://console.firebase.google.com/) and create a new project.
+2. Navigate to **Firestore Database** and create a database (Start in production mode).
+3. Go to **Project Settings** > **General** > **Your apps** > **Web app** (</> icon).
+4. Register the app and copy the `firebaseConfig` object values to your `.env.local`.
+5. **Important**: Set Firestore Rules to allow read/write for the counter:
+   ```javascript
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /site_stats/visitors {
+         allow read, write: if true;
+       }
+     }
+   }
+   ```
+
+## 💡 Features & Usage
+
+### 🔗 Source Tracking
+Track where your visitors are coming from by adding a `?ref=` parameter to your URL.
+- **LinkedIn**: `your-site.com/?ref=linkedin`
+- **Twitter**: `your-site.com/?ref=twitter`
+- **Instagram**: `your-site.com/?ref=instagram`
+
+The Discord notification will show **"🔗 Source: linkedin"**.
 
 ### Available Scripts
 
@@ -206,7 +246,7 @@ This project is open source and available under the [MIT License](LICENSE).
 ## 🤝 Connect
 
 - **Portfolio**: [hakkan.is-a.dev](https://hakkan.is-a.dev)
-- **LinkedIn**: [linkedin.com/in/Hakkan](https://www.linkedin.com/in/Hakkan)
+- **LinkedIn**: [Hakkan](https://www.linkedin.com/in/Hakkan)
 - **GitHub**: [@HakkanShah](https://github.com/HakkanShah)
 - **Email**: [hakkanparbej@gamil.com](mailto:hakkanparbej@gamil.com)
 
@@ -222,4 +262,4 @@ This project is open source and available under the [MIT License](LICENSE).
 <div align="center">
   <p>Built with ❤️ by Hakkan Shah</p>
   <p>⭐ Star this repo if you find it helpful!</p>
-</div>
+</div 
