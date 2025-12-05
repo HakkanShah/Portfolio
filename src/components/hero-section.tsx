@@ -199,7 +199,7 @@ const HeroVisual = ({
           rotateY: isGameHubOpen || shouldReduceMotion || !smoothRotateY ? 0 : smoothRotateY,
           transformStyle: 'preserve-3d',
         }}
-        className={`relative z-10 w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-xl overflow-hidden border-4 border-foreground shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] ${!isGameHubOpen ? 'cursor-pointer group' : ''}`}
+        className={`relative z-10 w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-xl overflow-hidden border-4 border-foreground shadow-none md:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] md:dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] ${!isGameHubOpen ? 'cursor-pointer group' : ''}`}
         whileHover={!isGameHubOpen ? { scale: 1.02 } : {}}
         whileTap={!isGameHubOpen ? { scale: 0.98 } : {}}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -735,7 +735,7 @@ const HeroSection = () => {
 
   return (
     <section id="home" className="section-padding border-b-4 border-foreground overflow-hidden relative">
-      <div className="section-container grid md:grid-cols-2 gap-10 items-center min-h-[70vh]">
+      <div className="section-container grid md:grid-cols-2 gap-10 items-center justify-items-center md:justify-items-start min-h-[70vh]">
         <div className="text-center md:text-left">
           <motion.h1
             className="font-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-wider text-primary drop-shadow-[2px_2px_0_hsl(var(--foreground))] flex flex-wrap justify-center md:justify-start gap-x-[0.2em] gap-y-2"
@@ -1104,7 +1104,7 @@ const HeroSection = () => {
           handleImageClick={handleImageClick}
           smoothRotateX={smoothRotateX}
           smoothRotateY={smoothRotateY}
-          className="order-last translate-x-6 md:translate-x-0"
+          className="order-last"
         />
       </div >
     </section >
