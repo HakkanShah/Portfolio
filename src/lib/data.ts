@@ -93,7 +93,7 @@ export const PROJECTS: Project[] = [
     why: 'With the rise of AI-generated content, I saw a need for a tool that could help users distinguish between authentic and fake information. This project was my attempt to address that challenge using machine learning.',
     thumbnail: '/project-images/verifyai.png',
     tags: ['JavaScript', 'Python', 'Next.js', 'Gemini API', 'TensorFlow'],
-    liveUrl: 'https://verifyai-nine.vercel.app/',
+    liveUrl: 'https://verifyai.is-a.software/',
     repoUrl: 'https://github.com/HakkanShah/VerifyAI',
     aiHint: 'deepfake detection',
   },
