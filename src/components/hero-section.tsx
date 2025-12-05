@@ -199,7 +199,7 @@ const HeroVisual = ({
           rotateY: isGameHubOpen || shouldReduceMotion || !smoothRotateY ? 0 : smoothRotateY,
           transformStyle: 'preserve-3d',
         }}
-        className={`relative z-10 w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-xl overflow-hidden border-4 border-foreground shadow-none md:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] md:dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] ${!isGameHubOpen ? 'cursor-pointer group' : ''}`}
+        className={`relative z-10 w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-xl overflow-hidden border-4 border-foreground shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] ${!isGameHubOpen ? 'cursor-pointer group' : ''}`}
         whileHover={!isGameHubOpen ? { scale: 1.02 } : {}}
         whileTap={!isGameHubOpen ? { scale: 0.98 } : {}}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -735,10 +735,10 @@ const HeroSection = () => {
 
   return (
     <section id="home" className="section-padding border-b-4 border-foreground overflow-hidden relative">
-      <div className="section-container grid md:grid-cols-2 gap-10 items-center justify-items-center md:justify-items-start min-h-[70vh]">
-        <div className="text-center md:text-left">
+      <div className="section-container grid md:grid-cols-2 gap-10 items-center min-h-[70vh]">
+        <div className="text-center md:text-left flex flex-col">
           <motion.h1
-            className="font-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-wider text-primary drop-shadow-[2px_2px_0_hsl(var(--foreground))] flex flex-wrap justify-center md:justify-start gap-x-[0.2em] gap-y-2"
+            className="font-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-wider text-primary drop-shadow-[2px_2px_0_hsl(var(--foreground))] flex flex-wrap justify-center md:justify-start gap-x-[0.2em] gap-y-2 order-1"
             initial="hidden"
             animate="visible"
             variants={{
@@ -788,7 +788,7 @@ const HeroSection = () => {
           </motion.h1>
 
           {/* Cycling Subtitle with Tech Icons */}
-          <div className="mt-4 flex items-center justify-center md:justify-start h-[40px] sm:h-[48px] md:h-[56px]">
+          <div className="mt-4 flex items-center justify-center md:justify-start h-[40px] sm:h-[48px] md:h-[56px] order-2">
             <div className="overflow-hidden whitespace-nowrap relative">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -843,8 +843,55 @@ const HeroSection = () => {
             />
           </div>
 
+          {/* Hero Visual for Mobile - inserted between subtitle and terminal */}
+          <HeroVisual
+            isGameHubOpen={isGameHubOpen}
+            gameHubInitialMaximized={gameHubInitialMaximized}
+            setIsGameHubOpen={setIsGameHubOpen}
+            setGameHubInitialMaximized={setGameHubInitialMaximized}
+            shouldReduceMotion={shouldReduceMotion}
+            handleImageClick={handleImageClick}
+            className="block md:hidden my-8 order-3 mx-auto"
+          />
 
-          <AnimatedDiv delay={400} className="mt-8 max-w-xl mx-auto md:mx-0">
+          <AnimatedDiv delay={400} className="mt-8 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 sm:gap-6 order-4 md:order-4">
+            <MagneticButton>
+              <Button
+                onClick={() => setIsResumeOpen(true)}
+                className="font-headline text-lg sm:text-xl tracking-wider border-2 border-foreground shadow-md hover:shadow-xl transition-all"
+              >
+                <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                My Resume
+              </Button>
+            </MagneticButton>
+
+            <ResumePreviewModal
+              isOpen={isResumeOpen}
+              onClose={() => setIsResumeOpen(false)}
+              resumeUrl="/Hakkan_Parbej_Shah_Resume.pdf"
+            />
+
+            <div className="flex items-center space-x-3 sm:space-x-4">
+              {SOCIAL_LINKS.map((social, index) => (
+                <AnimatedDiv key={social.name} delay={500 + index * 100} variant="scale">
+                  <Link href={social.url} target="_blank" rel="noopener noreferrer">
+                    <MagneticButton strength={0.3}>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        aria-label={social.name}
+                        className="border-2 border-foreground hover:bg-primary/10 transition-all hover:scale-110"
+                      >
+                        <social.icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                      </Button>
+                    </MagneticButton>
+                  </Link>
+                </AnimatedDiv>
+              ))}
+            </div>
+          </AnimatedDiv>
+
+          <AnimatedDiv delay={600} className="mt-10 max-w-xl mx-auto md:mx-0 order-5 md:order-3">
             {/* Compact Terminal View */}
             <div
               onClick={expandTerminal}
@@ -882,43 +929,6 @@ const HeroSection = () => {
                   <span className="inline-block w-2 h-4 bg-[#00ff9d] animate-pulse ml-2" />
                 </div>
               </div>
-            </div>
-          </AnimatedDiv>
-
-          <AnimatedDiv delay={600} className="mt-8 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 sm:gap-6">
-            <MagneticButton>
-              <Button
-                onClick={() => setIsResumeOpen(true)}
-                className="font-headline text-lg sm:text-xl tracking-wider border-2 border-foreground shadow-md hover:shadow-xl transition-all"
-              >
-                <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                My Resume
-              </Button>
-            </MagneticButton>
-
-            <ResumePreviewModal
-              isOpen={isResumeOpen}
-              onClose={() => setIsResumeOpen(false)}
-              resumeUrl="/Hakkan_Parbej_Shah_Resume.pdf"
-            />
-
-            <div className="flex items-center space-x-3 sm:space-x-4">
-              {SOCIAL_LINKS.map((social, index) => (
-                <AnimatedDiv key={social.name} delay={700 + index * 100} variant="scale">
-                  <Link href={social.url} target="_blank" rel="noopener noreferrer">
-                    <MagneticButton strength={0.3}>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        aria-label={social.name}
-                        className="border-2 border-foreground hover:bg-primary/10 transition-all hover:scale-110"
-                      >
-                        <social.icon className="h-5 w-5 sm:h-6 sm:w-6" />
-                      </Button>
-                    </MagneticButton>
-                  </Link>
-                </AnimatedDiv>
-              ))}
             </div>
           </AnimatedDiv>
 
@@ -1104,7 +1114,7 @@ const HeroSection = () => {
           handleImageClick={handleImageClick}
           smoothRotateX={smoothRotateX}
           smoothRotateY={smoothRotateY}
-          className="order-last"
+          className="hidden md:flex order-2"
         />
       </div >
     </section >
