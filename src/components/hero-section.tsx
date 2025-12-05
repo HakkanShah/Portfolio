@@ -154,6 +154,112 @@ const levenshteinDistance = (a: string, b: string): number => {
   return matrix[b.length][a.length];
 };
 
+interface HeroVisualProps {
+  isGameHubOpen: boolean;
+  gameHubInitialMaximized: boolean;
+  setIsGameHubOpen: (open: boolean) => void;
+  setGameHubInitialMaximized: (maximized: boolean) => void;
+  shouldReduceMotion: boolean | null;
+  imageRef?: React.RefObject<HTMLDivElement>;
+  handleImageMouseMove?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  handleImageMouseLeave?: () => void;
+  handleImageClick?: () => void;
+  smoothRotateX?: any;
+  smoothRotateY?: any;
+  className?: string;
+}
+
+const HeroVisual = ({
+  isGameHubOpen,
+  gameHubInitialMaximized,
+  setIsGameHubOpen,
+  setGameHubInitialMaximized,
+  shouldReduceMotion,
+  imageRef,
+  handleImageMouseMove,
+  handleImageMouseLeave,
+  handleImageClick,
+  smoothRotateX,
+  smoothRotateY,
+  className = ""
+}: HeroVisualProps) => {
+  return (
+    <AnimatedDiv delay={400} className={`relative flex flex-col justify-center items-center gap-4 ${className}`}>
+      {/* Background Blur - disabled animation with reduced motion */}
+      <div className={`absolute bg-accent w-64 h-64 sm:w-80 sm:h-80 md:w-[30rem] md:h-[30rem] rounded-full blur-3xl opacity-30 pointer-events-none ${shouldReduceMotion ? '' : 'animate-pulse'}`}></div>
+
+      {/* Normal Image with 3D effect */}
+      <motion.div
+        ref={imageRef}
+        onMouseMove={!isGameHubOpen && handleImageMouseMove ? handleImageMouseMove : undefined}
+        onMouseLeave={handleImageMouseLeave}
+        onClick={!isGameHubOpen && handleImageClick ? handleImageClick : undefined}
+        style={{
+          rotateX: isGameHubOpen || shouldReduceMotion || !smoothRotateX ? 0 : smoothRotateX,
+          rotateY: isGameHubOpen || shouldReduceMotion || !smoothRotateY ? 0 : smoothRotateY,
+          transformStyle: 'preserve-3d',
+        }}
+        className={`relative z-10 w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-xl overflow-hidden border-4 border-foreground shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] ${!isGameHubOpen ? 'cursor-pointer group' : ''}`}
+        whileHover={!isGameHubOpen ? { scale: 1.02 } : {}}
+        whileTap={!isGameHubOpen ? { scale: 0.98 } : {}}
+        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      >
+        <AnimatePresence mode="wait">
+          {!isGameHubOpen ? (
+            <motion.div
+              key="image"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="w-full h-full relative"
+            >
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-primary rounded-lg blur opacity-75 animate-gradient"></div>
+              <div className="relative w-full h-full rounded-lg overflow-hidden bg-background">
+                <Image
+                  src="https://github.com/HakkanShah.png"
+                  alt="Hakkan Parbej Shah"
+                  width={400}
+                  height={400}
+                  className="object-cover w-full h-full"
+                  priority
+                />
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <div className="text-center px-4">
+                    <p className="text-white font-headline text-lg sm:text-xl md:text-2xl font-bold">
+                      🎮 Click to Play
+                    </p>
+                    <p className="text-white/80 text-xs sm:text-sm mt-1">
+                      Fun Minigames!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="gamehub"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="w-full h-full bg-background"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <GameHub
+                isOpen={true}
+                onClose={() => {
+                  setIsGameHubOpen(false);
+                  setGameHubInitialMaximized(false);
+                }}
+                initialMaximized={gameHubInitialMaximized}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </AnimatedDiv>
+  );
+};
+
 const HeroSection = () => {
   const [terminalOutput, setTerminalOutput] = useState<TerminalOutput[]>([
     {
@@ -630,9 +736,9 @@ const HeroSection = () => {
   return (
     <section id="home" className="section-padding border-b-4 border-foreground overflow-hidden relative">
       <div className="section-container grid md:grid-cols-2 gap-10 items-center min-h-[70vh]">
-        <div className="text-center md:text-left">
+        <div className="text-center md:text-left flex flex-col">
           <motion.h1
-            className="font-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-wider text-primary drop-shadow-[2px_2px_0_hsl(var(--foreground))] flex flex-wrap justify-center md:justify-start gap-x-[0.2em] gap-y-2"
+            className="font-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-wider text-primary drop-shadow-[2px_2px_0_hsl(var(--foreground))] flex flex-wrap justify-center md:justify-start gap-x-[0.2em] gap-y-2 order-1"
             initial="hidden"
             animate="visible"
             variants={{
@@ -682,7 +788,7 @@ const HeroSection = () => {
           </motion.h1>
 
           {/* Cycling Subtitle with Tech Icons */}
-          <div className="mt-4 flex items-center justify-center md:justify-start h-[40px] sm:h-[48px] md:h-[56px]">
+          <div className="mt-4 flex items-center justify-center md:justify-start h-[40px] sm:h-[48px] md:h-[56px] order-2">
             <div className="overflow-hidden whitespace-nowrap relative">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -737,7 +843,55 @@ const HeroSection = () => {
             />
           </div>
 
-          <AnimatedDiv delay={400} className="mt-8 max-w-xl mx-auto md:mx-0">
+          {/* Hero Visual for Mobile - inserted between subtitle and terminal */}
+          <HeroVisual
+            isGameHubOpen={isGameHubOpen}
+            gameHubInitialMaximized={gameHubInitialMaximized}
+            setIsGameHubOpen={setIsGameHubOpen}
+            setGameHubInitialMaximized={setGameHubInitialMaximized}
+            shouldReduceMotion={shouldReduceMotion}
+            handleImageClick={handleImageClick}
+            className="block md:hidden my-8 order-3"
+          />
+
+          <AnimatedDiv delay={400} className="mt-8 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 sm:gap-6 order-4 md:order-4">
+            <MagneticButton>
+              <Button
+                onClick={() => setIsResumeOpen(true)}
+                className="font-headline text-lg sm:text-xl tracking-wider border-2 border-foreground shadow-md hover:shadow-xl transition-all"
+              >
+                <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                My Resume
+              </Button>
+            </MagneticButton>
+
+            <ResumePreviewModal
+              isOpen={isResumeOpen}
+              onClose={() => setIsResumeOpen(false)}
+              resumeUrl="/Hakkan_Parbej_Shah_Resume.pdf"
+            />
+
+            <div className="flex items-center space-x-3 sm:space-x-4">
+              {SOCIAL_LINKS.map((social, index) => (
+                <AnimatedDiv key={social.name} delay={500 + index * 100} variant="scale">
+                  <Link href={social.url} target="_blank" rel="noopener noreferrer">
+                    <MagneticButton strength={0.3}>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        aria-label={social.name}
+                        className="border-2 border-foreground hover:bg-primary/10 transition-all hover:scale-110"
+                      >
+                        <social.icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                      </Button>
+                    </MagneticButton>
+                  </Link>
+                </AnimatedDiv>
+              ))}
+            </div>
+          </AnimatedDiv>
+
+          <AnimatedDiv delay={600} className="mt-10 max-w-xl mx-auto md:mx-0 order-5 md:order-3">
             {/* Compact Terminal View */}
             <div
               onClick={expandTerminal}
@@ -944,119 +1098,24 @@ const HeroSection = () => {
             )}
           </AnimatePresence>
 
-          <AnimatedDiv delay={600} className="mt-10 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 sm:gap-6">
-            <MagneticButton>
-              <Button
-                onClick={() => setIsResumeOpen(true)}
-                className="font-headline text-lg sm:text-xl tracking-wider border-2 border-foreground shadow-md hover:shadow-xl transition-all"
-              >
-                <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                My Resume
-              </Button>
-            </MagneticButton>
 
-            <ResumePreviewModal
-              isOpen={isResumeOpen}
-              onClose={() => setIsResumeOpen(false)}
-              resumeUrl="/Hakkan_Parbej_Shah_Resume.pdf"
-            />
-
-            <div className="flex items-center space-x-3 sm:space-x-4">
-              {SOCIAL_LINKS.map((social, index) => (
-                <AnimatedDiv key={social.name} delay={700 + index * 100} variant="scale">
-                  <Link href={social.url} target="_blank" rel="noopener noreferrer">
-                    <MagneticButton strength={0.3}>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        aria-label={social.name}
-                        className="border-2 border-foreground hover:bg-primary/10 transition-all hover:scale-110"
-                      >
-                        <social.icon className="h-5 w-5 sm:h-6 sm:w-6" />
-                      </Button>
-                    </MagneticButton>
-                  </Link>
-                </AnimatedDiv>
-              ))}
-            </div>
-          </AnimatedDiv>
         </div>
 
-
-
-        <AnimatedDiv delay={400} className="relative flex flex-col justify-center items-center gap-4">
-          {/* Background Blur - disabled animation with reduced motion */}
-          <div className={`absolute bg-accent w-64 h-64 sm:w-80 sm:h-80 md:w-[30rem] md:h-[30rem] rounded-full blur-3xl opacity-30 pointer-events-none ${shouldReduceMotion ? '' : 'animate-pulse'}`}></div>
-
-          {/* Normal Image with 3D effect */}
-          <motion.div
-            ref={imageRef}
-            onMouseMove={!isGameHubOpen ? handleImageMouseMove : undefined}
-            onMouseLeave={handleImageMouseLeave}
-            onClick={!isGameHubOpen ? handleImageClick : undefined}
-            style={{
-              rotateX: isGameHubOpen || shouldReduceMotion ? 0 : smoothRotateX,
-              rotateY: isGameHubOpen || shouldReduceMotion ? 0 : smoothRotateY,
-              transformStyle: 'preserve-3d',
-            }}
-            className={`relative z-10 w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-xl overflow-hidden border-4 border-foreground shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] ${!isGameHubOpen ? 'cursor-pointer group' : ''}`}
-            whileHover={!isGameHubOpen ? { scale: 1.02 } : {}}
-            whileTap={!isGameHubOpen ? { scale: 0.98 } : {}}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-          >
-            <AnimatePresence mode="wait">
-              {!isGameHubOpen ? (
-                <motion.div
-                  key="image"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="w-full h-full relative"
-                >
-                  <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-primary rounded-lg blur opacity-75 animate-gradient"></div>
-                  <div className="relative w-full h-full rounded-lg overflow-hidden bg-background">
-                    <Image
-                      src="https://github.com/HakkanShah.png"
-                      alt="Hakkan Parbej Shah"
-                      width={400}
-                      height={400}
-                      className="object-cover w-full h-full"
-                      priority
-                    />
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <div className="text-center px-4">
-                        <p className="text-white font-headline text-lg sm:text-xl md:text-2xl font-bold">
-                          🎮 Click to Play
-                        </p>
-                        <p className="text-white/80 text-xs sm:text-sm mt-1">
-                          Fun Minigames!
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="gamehub"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="w-full h-full bg-background"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <GameHub
-                    isOpen={true}
-                    onClose={() => {
-                      setIsGameHubOpen(false);
-                      setGameHubInitialMaximized(false);
-                    }}
-                    initialMaximized={gameHubInitialMaximized}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        </AnimatedDiv>
+        {/* Hero Visual for Desktop - kept in second column */}
+        <HeroVisual
+          isGameHubOpen={isGameHubOpen}
+          gameHubInitialMaximized={gameHubInitialMaximized}
+          setIsGameHubOpen={setIsGameHubOpen}
+          setGameHubInitialMaximized={setGameHubInitialMaximized}
+          shouldReduceMotion={shouldReduceMotion}
+          imageRef={imageRef}
+          handleImageMouseMove={handleImageMouseMove}
+          handleImageMouseLeave={handleImageMouseLeave}
+          handleImageClick={handleImageClick}
+          smoothRotateX={smoothRotateX}
+          smoothRotateY={smoothRotateY}
+          className="hidden md:flex order-2"
+        />
       </div >
     </section >
   );
