@@ -27,11 +27,13 @@ import {
   SiAnthropic,
   SiGoogle,
   SiSpring,
+  SiShadcnui,
 } from 'react-icons/si';
 import { VscVscode } from 'react-icons/vsc';
 import { DiJava } from 'react-icons/di';
 import { FaLightbulb, FaUsers, FaComments } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
+import { CursorIcon, AntigravityIcon } from '@/components/custom-icons';
 
 export const NAV_LINKS = [
   { name: 'Home', href: '#home' },
@@ -73,7 +75,7 @@ export const PROJECTS: Project[] = [
     repoUrl: 'https://github.com/HakkanShah/mockhick',
     aiHint: 'ai interview coach',
   },
-   {
+  {
     title: 'BuildMyCV',
     description: 'An AI-powered resume builder for creating professional CVs in minutes.',
     longDescription: 'BuildMyCV uses AI to help users craft the perfect resume. It suggests powerful action verbs, formats content professionally, and tailors the resume to specific job descriptions, making job applications faster and more effective.',
@@ -172,16 +174,16 @@ export const SKILLS = [
       { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E" },
       { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
       { name: "React.js", icon: SiReact, color: "#61DAFB" },
-      { name: "Next.js", icon: SiNextdotjs, color: "#000000" },
+      { name: "Next.js", icon: SiNextdotjs },
     ],
   },
   {
     name: "Backend",
     skills: [
       { name: "Node.js", icon: SiNodedotjs, color: "#339933" },
-      { name: "Next.js", icon: SiNextdotjs, color: "#000000" },
-      { name: "Express.js", icon: SiExpress, color: "#000000" },
-      { name: "Flask", icon: SiFlask, color: "#000000" },
+      { name: "Next.js", icon: SiNextdotjs },
+      { name: "Express.js", icon: SiExpress },
+      { name: "Flask", icon: SiFlask },
     ],
   },
   {
@@ -192,6 +194,7 @@ export const SKILLS = [
       { name: "PostgreSQL", icon: SiPostgresql, color: "#4169E1" },
       { name: "Supabase", icon: SiSupabase, color: "#3ECF8E" },
       { name: "Redis", icon: SiRedis, color: "#DC382D" },
+      { name: "Firestore", icon: SiFirebase, color: "#FFCA28" },
     ],
   },
   {
@@ -199,17 +202,21 @@ export const SKILLS = [
     skills: [
       { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4" },
       { name: "Framer Motion", icon: SiFramer, color: "#0055FF" },
+      { name: "shadcn/ui", icon: SiShadcnui },
     ],
   },
   {
     name: "Tools",
     skills: [
       { name: "Git", icon: SiGit, color: "#F05032" },
-      { name: "GitHub", icon: SiGithub, color: "#FFFFFF" },
+      { name: "GitHub", icon: SiGithub },
       { name: "VS Code", icon: VscVscode, color: "#007ACC" },
       { name: "Firebase", icon: SiFirebase, color: "#FFCA28" },
-      { name: "Vercel", icon: SiVercel, color: "#000000" },
+      { name: "Vercel", icon: SiVercel },
       { name: "Netlify", icon: SiNetlify, color: "#00C7B7" },
+      { name: "Cursor", icon: CursorIcon },
+      { name: "Google's Antigravity", icon: AntigravityIcon, color: "#4285F4" },
+      { name: "Firebase Studio", icon: SiFirebase, color: "#FFCA28" },
     ],
   },
   {
@@ -351,7 +358,7 @@ export const CERTIFICATIONS = [
 export const CONTACT_INFO = [
   { name: 'Email', value: 'hakkanparbej@gmail.com', icon: Mail, href: 'mailto:hakkanparbej@gmail.com', color: '#EA4335' },
   { name: 'Phone', value: '+91-7810843038', icon: Phone, href: 'tel:+917810843038', color: '#43C59E' },
-  { name: 'GitHub', value: 'HakkanShah', icon: Github, href: 'https://github.com/HakkanShah', color: '#FFFFFF' },
+  { name: 'GitHub', value: 'HakkanShah', icon: Github, href: 'https://github.com/HakkanShah' },
   { name: 'LinkedIn', value: 'hakkan', icon: Linkedin, href: 'https://www.linkedin.com/in/hakkan/', color: '#0A66C2' },
   { name: 'G.Dev Profile', value: 'hakkan', icon: FcGoogle, href: 'https://g.dev/hakkan' },
 ];
