@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, Github, Maximize2, X } from 'lucide-react';
@@ -22,7 +22,7 @@ const ProjectDetailsModal = ({ project, isOpen, onClose, onImageClick }: Project
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent 
+      <DialogContent
         className="max-w-4xl w-[95vw] sm:w-full p-0 border-4 border-foreground bg-background max-h-[90vh] flex flex-col"
         hideClose={true}
       >
@@ -32,6 +32,9 @@ const ProjectDetailsModal = ({ project, isOpen, onClose, onImageClick }: Project
             <DialogTitle className="font-headline text-2xl sm:text-3xl md:text-4xl text-primary tracking-wider pr-12">
               {project.title}
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              Details for project {project.title}
+            </DialogDescription>
           </DialogHeader>
           <Button
             variant="ghost"
@@ -47,7 +50,7 @@ const ProjectDetailsModal = ({ project, isOpen, onClose, onImageClick }: Project
         <div className="flex flex-col lg:flex-row flex-1 overflow-y-auto lg:overflow-hidden">
           {/* Project Image - Scrolls on mobile, fixed on desktop */}
           <div className="lg:w-2/5 flex-shrink-0 lg:overflow-hidden">
-            <motion.div 
+            <motion.div
               className="relative h-64 sm:h-80 lg:h-full cursor-pointer group"
               onClick={() => onImageClick(project)}
               whileHover={{ scale: 1.02 }}
@@ -122,8 +125,8 @@ const ProjectDetailsModal = ({ project, isOpen, onClose, onImageClick }: Project
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.4 + index * 0.05 }}
                       >
-                        <Badge 
-                          variant="secondary" 
+                        <Badge
+                          variant="secondary"
                           className="border-2 border-foreground/30 text-xs sm:text-sm px-2 sm:px-3 py-1 hover:border-foreground hover:scale-105 transition-all"
                         >
                           {tag}
@@ -135,34 +138,34 @@ const ProjectDetailsModal = ({ project, isOpen, onClose, onImageClick }: Project
               </div>
 
               {/* Action Buttons */}
-              <motion.div 
+              <motion.div
                 className="flex flex-col sm:flex-row gap-3 mt-6 pt-4 sm:pt-6 border-t-2 border-foreground/20"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
               >
-                <Link 
-                  href={project.liveUrl || '#'} 
-                  target="_blank" 
+                <Link
+                  href={project.liveUrl || '#'}
+                  target="_blank"
                   className="flex-1"
                 >
-                  <Button 
-                    variant="default" 
-                    className="w-full font-bold border-2 border-foreground text-sm sm:text-base h-11 sm:h-12 shadow-md hover:shadow-lg transition-shadow" 
+                  <Button
+                    variant="default"
+                    className="w-full font-bold border-2 border-foreground text-sm sm:text-base h-11 sm:h-12 shadow-md hover:shadow-lg transition-shadow"
                     disabled={!project.liveUrl || project.liveUrl === '#'}
                   >
                     <ExternalLink className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                     Live Demo
                   </Button>
                 </Link>
-                <Link 
-                  href={project.repoUrl || '#'} 
-                  target="_blank" 
+                <Link
+                  href={project.repoUrl || '#'}
+                  target="_blank"
                   className="flex-1"
                 >
-                  <Button 
-                    variant="outline" 
-                    className="w-full font-bold border-2 border-foreground text-sm sm:text-base h-11 sm:h-12 hover:bg-muted/50" 
+                  <Button
+                    variant="outline"
+                    className="w-full font-bold border-2 border-foreground text-sm sm:text-base h-11 sm:h-12 hover:bg-muted/50"
                     disabled={!project.repoUrl || project.repoUrl === '#'}
                   >
                     <Github className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogClose, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogClose, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import type { Project } from '@/lib/data';
 import Image from 'next/image';
@@ -35,12 +35,13 @@ const FullScreenImageModal = ({ project, isOpen, onClose }: FullScreenImageModal
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent hideClose className="bg-transparent border-none shadow-none p-0 w-screen h-screen max-w-none flex items-center justify-center">
         <DialogTitle className="sr-only">{project.title}</DialogTitle>
+        <DialogDescription className="sr-only">Full screen view of {project.title}</DialogDescription>
         <div className="relative w-full h-full" onClick={onClose}>
           <Image
             src={project.thumbnail}
             alt={project.title}
-            layout="fill"
-            objectFit="contain"
+            fill
+            className="object-contain"
           />
         </div>
 

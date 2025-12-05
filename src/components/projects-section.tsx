@@ -12,6 +12,7 @@ import AnimatedDiv from './animated-div';
 import Card3D from './3d-card';
 import { Eye, ExternalLink, Github, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Lazy load modal components
 const ProjectDetailsModal = dynamic(() => import('./project-details-modal'), { ssr: false });
@@ -21,6 +22,7 @@ const ProjectsSection = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [fullScreenProject, setFullScreenProject] = useState<Project | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const isMobile = useIsMobile();
 
   const INITIAL_PROJECTS_COUNT = 6;
   const displayedProjects = showAll ? PROJECTS : PROJECTS.slice(0, INITIAL_PROJECTS_COUNT);
@@ -54,7 +56,7 @@ const ProjectsSection = () => {
                 <Card3D className="h-full" intensity={10}>
                   <motion.div
                     className="h-full flex flex-col overflow-hidden bg-background border-4 border-foreground rounded-lg shadow-lg group"
-                    whileHover={{ y: -8 }}
+                    whileHover={isMobile ? {} : { y: -8 }}
                     transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                   >
                     {/* Project Image */}

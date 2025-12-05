@@ -2,6 +2,7 @@
 
 import { useRef, useState, ReactNode } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Card3DProps {
   children: ReactNode;
@@ -13,6 +14,7 @@ interface Card3DProps {
 const Card3D = ({ children, className = '', intensity = 15, disableOnMobile = true }: Card3DProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const isMobile = useIsMobile();
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -48,6 +50,10 @@ const Card3D = ({ children, className = '', intensity = 15, disableOnMobile = tr
     x.set(0);
     y.set(0);
   };
+
+  if (disableOnMobile && isMobile) {
+    return <div className={`relative ${className}`}>{children}</div>;
+  }
 
   return (
     <motion.div
