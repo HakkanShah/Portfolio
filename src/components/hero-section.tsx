@@ -220,6 +220,7 @@ const HeroVisual = ({
                   alt="Hakkan"
                   width={400}
                   height={400}
+                  unoptimized
                   className="object-cover w-full h-full"
                   priority
                 />

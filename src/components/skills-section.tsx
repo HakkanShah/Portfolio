@@ -105,7 +105,7 @@ const SkillsSection = () => {
                       }}
                       onMouseEnter={() => handleSkillHover(categoryIndex, skillIndex, skill.name)}
                       onMouseLeave={() => setHoveredSkill(null)}
-                      className="flex flex-col items-center justify-center gap-2 text-center w-20 h-20 sm:w-24 sm:h-24 bg-background p-2 rounded-lg border-2 border-foreground shadow-md hover:shadow-xl transition-shadow cursor-pointer group relative overflow-visible"
+                      className="flex flex-col items-center justify-center gap-2 text-center w-20 h-20 sm:w-24 sm:h-24 bg-background p-2 rounded-lg border-2 border-foreground shadow-md hover:shadow-xl transition-shadow cursor-pointer group relative overflow-visible no-cursor-sound"
                     >
                       {/* Floating Music Note - Realistic Animation */}
                       <AnimatePresence>

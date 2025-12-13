@@ -35,6 +35,8 @@ const CursorFollower = () => {
   const touchStartPos = useRef({ x: 0, y: 0 });
   const isScrolling = useRef(false);
   const lastTouchTime = useRef(0);
+  const lastWebTime = useRef(0); // Throttle web creation
+  const audioRef = useRef<HTMLAudioElement | null>(null); // Reuse audio object
 
   useEffect(() => {
     // ... setup ...
@@ -51,27 +53,43 @@ const CursorFollower = () => {
       canvas.height = window.innerHeight;
     };
 
+    // Performance constants
+    const MAX_WEBS = 5; // Limit max concurrent webs
+    const WEB_THROTTLE_MS = 150; // Minimum time between web creations
+    const isMobileDevice = window.innerWidth < 768;
+
     const createWeb = (x: number, y: number) => {
-      const isMobile = window.innerWidth < 768;
+      // Throttle web creation to prevent spam
+      const now = Date.now();
+      if (now - lastWebTime.current < WEB_THROTTLE_MS) return false;
+      lastWebTime.current = now;
+
+      // Limit max webs for performance
+      if (webs.current.length >= MAX_WEBS) {
+        // Remove oldest web to make room
+        webs.current.shift();
+      }
+
       // Reduced sizes by ~30%
-      const baseSize = isMobile ? 40 : 70;
-      const randomSize = isMobile ? 15 : 30;
+      const baseSize = isMobileDevice ? 40 : 70;
+      const randomSize = isMobileDevice ? 15 : 30;
       const targetSize = baseSize + Math.random() * randomSize;
 
-      // Generate organic structure
-      const spokeCount = Math.floor(Math.random() * 5) + 8; // 8-12 spokes
+      // Generate organic structure - fewer spokes on mobile
+      const spokeCount = isMobileDevice
+        ? Math.floor(Math.random() * 3) + 6 // 6-8 spokes on mobile
+        : Math.floor(Math.random() * 5) + 8; // 8-12 spokes on desktop
       const spokeAngles = [];
       for (let i = 0; i < spokeCount; i++) {
-        // Add jitter to perfect angles
         const baseAngle = (Math.PI * 2 / spokeCount) * i;
-        const jitter = (Math.random() - 0.5) * 0.5; // +/- 0.25 radians
+        const jitter = (Math.random() - 0.5) * 0.5;
         spokeAngles.push(baseAngle + jitter);
       }
 
-      const ringCount = 5;
+      // Fewer rings on mobile
+      const ringCount = isMobileDevice ? 3 : 5;
       const ringDistances = [];
       for (let i = 1; i <= ringCount; i++) {
-        // Non-uniform ring spacing
         const progress = i / ringCount;
         const variation = (Math.random() - 0.5) * 0.1;
         ringDistances.push(progress + variation);
@@ -89,6 +107,7 @@ const CursorFollower = () => {
         ringDistances,
       });
       glitchIntensity.current = 10;
+      return true;
     };
 
     const updateWebs = () => {
@@ -103,7 +122,8 @@ const CursorFollower = () => {
         w.velocity *= damping;
         w.size += w.velocity;
 
-        w.life -= 0.015;
+        // Faster decay on mobile for better performance
+        w.life -= isMobileDevice ? 0.025 : 0.015;
 
         if (w.life <= 0) {
           webs.current.splice(i, 1);
@@ -301,9 +321,14 @@ const CursorFollower = () => {
 
     const playWebSound = () => {
       try {
-        const audio = new Audio('/sounds/thwip.mp3');
-        audio.volume = 0.2; // Reduced volume
-        audio.play().catch(e => {
+        // Reuse audio object to prevent memory buildup
+        if (!audioRef.current) {
+          audioRef.current = new Audio('/sounds/thwip.mp3');
+          audioRef.current.volume = 0.2;
+        }
+        // Reset and play
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(() => {
           // Ignore autoplay errors
         });
       } catch (e) {
@@ -323,7 +348,11 @@ const CursorFollower = () => {
       if (target.closest('.no-custom-cursor')) return;
 
       createWeb(mouse.current.x, mouse.current.y);
-      playWebSound();
+
+      // Skip sound on elements with no-cursor-sound class (e.g., skill cards)
+      if (!target.closest('.no-cursor-sound')) {
+        playWebSound();
+      }
     };
 
     const handleMouseOver = (e: MouseEvent) => {
@@ -390,7 +419,11 @@ const CursorFollower = () => {
         // It was a tap, not a scroll
         if (canvasRef.current && canvasRef.current.style.opacity === '0') return;
         createWeb(mouse.current.x, mouse.current.y);
-        playWebSound();
+
+        // Skip sound on elements with no-cursor-sound class (e.g., skill cards)
+        if (!target.closest('.no-cursor-sound')) {
+          playWebSound();
+        }
       }
     };
 
