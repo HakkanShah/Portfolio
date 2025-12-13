@@ -4,7 +4,7 @@ import { useTheme } from 'next-themes';
 import { GitHubCalendar } from 'react-github-calendar';
 import AnimatedDiv from './animated-div';
 import { motion } from 'framer-motion';
-import { Github, GitPullRequest, Code2, Trophy } from 'lucide-react';
+import { Github, GitPullRequest, Flame, Trophy } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 
@@ -108,15 +108,16 @@ const GitHubActivitySection = () => {
     const statItems = [
         {
             icon: Github,
-            label: 'Repositories',
+            label: 'Repositories(Public)',
             value: stats?.publicRepos ?? '...',
             color: 'text-purple-500'
         },
         {
-            icon: Code2,
-            label: 'Top Language',
-            value: stats?.topLanguage ?? '...',
-            color: 'text-blue-500'
+            icon: Flame,
+            label: 'Longest Streak',
+            value: '77 days',
+            subtitle: 'Mar 5 - May 20',
+            color: 'text-orange-500'
         },
         {
             icon: GitPullRequest,
@@ -169,6 +170,11 @@ const GitHubActivitySection = () => {
                             <p className="text-2xl sm:text-3xl font-bold text-foreground">
                                 {stat.value}
                             </p>
+                            {'subtitle' in stat && stat.subtitle && (
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    {stat.subtitle}
+                                </p>
+                            )}
                         </motion.div>
                     ))}
                 </AnimatedDiv>
