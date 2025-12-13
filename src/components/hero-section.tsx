@@ -160,7 +160,7 @@ interface HeroVisualProps {
   setIsGameHubOpen: (open: boolean) => void;
   setGameHubInitialMaximized: (maximized: boolean) => void;
   shouldReduceMotion: boolean | null;
-  imageRef?: React.RefObject<HTMLDivElement>;
+  imageRef?: React.RefObject<HTMLDivElement | null>;
   handleImageMouseMove?: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleImageMouseLeave?: () => void;
   handleImageClick?: () => void;
@@ -217,7 +217,7 @@ const HeroVisual = ({
               <div className="relative w-full h-full rounded-lg overflow-hidden bg-background">
                 <Image
                   src="https://github.com/HakkanShah.png"
-                  alt="Hakkan Parbej Shah"
+                  alt="Hakkan"
                   width={400}
                   height={400}
                   className="object-cover w-full h-full"
