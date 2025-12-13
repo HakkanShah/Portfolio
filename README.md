@@ -1,4 +1,4 @@
-# 🚀 Hakkan Shah's Portfolio 
+# 🚀 Hakkan Shah's Portfolio
 
 A modern, interactive portfolio website built with Next.js 15, featuring stunning animations, interactive mini games, and a beautiful dark/light theme.
 
